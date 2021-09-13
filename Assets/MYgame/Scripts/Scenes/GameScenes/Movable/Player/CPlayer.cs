@@ -158,86 +158,10 @@ public class CPlayer : CActor
         }
     }
 
-    public void PlayStart()
-    {
-        ChangState = StaticGlobalDel.EMovableState.eMove;
-
-        m_MyPlayerMemoryShare.m_AllPathPoint[0] = m_StartStandPoint.transform.position;
-
-        CDragHeroFloor lTempDragHeroFloor = m_MyGameManager.MyDragHeroFloor;
-
-        bool grounded = true;
-        RaycastHit lTempRaycastHit;
-        Vector3 lTempV3 = Vector3.zero;
-        for (int i = 0; i < lTempDragHeroFloor.AllDragHeroDragHeroGroup.Count; i++)
-        {
-            lTempV3 = lTempDragHeroFloor.AllDragHeroDragHeroGroup[i].transform.position;
-            lTempV3.y = transform.position.y;
-            lTempV3.y += 1.0f;
-            grounded = Physics.Raycast(lTempV3, Vector3.down, out lTempRaycastHit, 10.0f, StaticGlobalDel.g_BridgeMask);
-            if (grounded)
-            {
-                lTempV3 = lTempRaycastHit.point;
-                lTempV3.y += -0.1f;
-            }
-            else
-                lTempV3 = Vector3.zero;
-
-            m_MyPlayerMemoryShare.m_AllPathPoint[1 + i] = lTempV3;
-        }
-        
-
-        m_MyPlayerMemoryShare.m_AllPathPoint[m_MyPlayerMemoryShare.m_AllPathPoint.Length - 1] = m_EndStandPoint.transform.position;
-
-        NextStandPoint();
-    }
-
-    public void NextStandPoint()
-    {
-        int Curindex = m_MyPlayerMemoryShare.m_CurStandPointindex;
-        int Nextindex = Curindex + 1;
-        Vector3[] lTempStandPoint = m_MyPlayerMemoryShare.m_AllPathPoint;
-        m_MyPlayerMemoryShare.m_CurStandPointindex = Nextindex;
-
-        if (Nextindex + 2 == lTempStandPoint.Length && Mathf.Abs(lTempStandPoint[lTempStandPoint.Length - 2].y - m_StartStandPoint.transform.position.y) < 0.5f)
-        {
-            ChangState = StaticGlobalDel.EMovableState.eWin;
-            return;
-        }
-
-
-        if (Mathf.Abs( lTempStandPoint[Nextindex].y - m_StartStandPoint.transform.position.y) < 0.5f)
-        {
-            m_MyPlayerMemoryShare.m_TargetStandPoint = lTempStandPoint[Nextindex];
-            ChangState = StaticGlobalDel.EMovableState.eMove;
-        }
-        else
-        {
-            m_MyGameManager.Enemy.ChangState = StaticGlobalDel.EMovableState.eAtk;
-            ChangState = StaticGlobalDel.EMovableState.eDeath;
-        }
-
-        SameStatusUpdate = true;
-    }
 
 
     public override void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Arrow")
-        {
-            CArrow lTempArrow = other.GetComponentInParent<CArrow>();
-
-            DataState lTempDataState = m_AllState[(int)CurState];
-           // ((CDeathStatePlayer)lTempDataState.AllThisState[lTempDataState.index]).DieRotate(lTempArrow);
-        }
-        else if (other.tag == "BridgeFloor")
-        {
-            CObjDestruction lTempObjDestruction = other.GetComponentInParent<CObjDestruction>();
-            lTempObjDestruction.DestroyMesh();
-
-            m_MyGameManager.AllDragHeroDie();
-        }
-
         base.OnTriggerEnter(other);
     }
 }

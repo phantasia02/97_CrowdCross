@@ -40,13 +40,7 @@ public class CGameManager : MonoBehaviour
 
     protected CPlayer m_Player = null;
     public CPlayer Player { get { return m_Player; } }
-
-    protected CEnemy m_Enemy = null;
-    public CEnemy Enemy { get { return m_Enemy; } }
-
-    protected List<CDragHero> m_AllDragHero = new List<CDragHero>();
-    public void AddAllDragHero(CDragHero AddDragHero) { m_AllDragHero.Add(AddDragHero); }
-    public void RemoveAllDragHero(CDragHero AddDragHero) { m_AllDragHero.Remove(AddDragHero); }
+    
 
     private EState m_eCurState = EState.eReady;
     public EState CurState { get { return m_eCurState; } }
@@ -55,10 +49,6 @@ public class CGameManager : MonoBehaviour
     protected int m_StateCount = 0;
     protected Vector3 m_OldInput;
     protected float m_HalfScreenWidth = 600.0f;
-
-    protected CDragHeroFloor m_MyDragHeroFloor = null;
-    public CDragHeroFloor MyDragHeroFloor { get { return m_MyDragHeroFloor; } }
-
 
 
     void Awake()
@@ -69,9 +59,6 @@ public class CGameManager : MonoBehaviour
         m_HalfScreenWidth = (StaticGlobalDel.g_fcbaseWidth / 2.0f) * (lTempNewHWRatio / HWRatioPototype);
 
         m_MyResultUI = gameObject.GetComponentInChildren<ResultUI>();
-        m_MyDragHeroFloor = gameObject.GetComponentInChildren<CDragHeroFloor>();
-
-       // this.GetComponentsInChildren<>();
 
     }
 
@@ -84,13 +71,11 @@ public class CGameManager : MonoBehaviour
             if (lTempCameraObj != null)
                 m_Camera = lTempCameraObj.GetComponent<Camera>();
 
-            if (m_Player == null)
-                m_Player = gameObject.GetComponentInChildren<CPlayer>();
+            //if (m_Player == null)
+            //    m_Player = gameObject.GetComponentInChildren<CPlayer>();
 
-            if (m_Enemy == null)
-                m_Enemy = gameObject.GetComponentInChildren<CEnemy>();
-
-            if (m_Camera != null && m_Player != null && m_Enemy != null)
+           // if (m_Camera != null && m_Player != null )
+            if (m_Camera != null )
             {
                 m_bInitOK = true;
             }
@@ -200,8 +185,7 @@ public class CGameManager : MonoBehaviour
                     if (lTempGameSceneWindow != null)
                         lTempGameSceneWindow.SetGoButton(CGameSceneWindow.EButtonState.eHide);
 
-                    Player.PlayStart();
-                    MyDragHeroFloor.ShowSECollider(false);
+  
                 }
                 break;
             case EState.eReadyEnd:
@@ -318,13 +302,6 @@ public class CGameManager : MonoBehaviour
         
     }
 
-
-    public void AllDragHeroDie()
-    {
-        for (int i = 0; i < m_AllDragHero.Count; i++)
-            m_AllDragHero[i].ChangState = StaticGlobalDel.EMovableState.eDeath;
-    }
-
     public void OnNext()
     {
         m_ChangeScenes.LoadGameScenes();
@@ -335,12 +312,6 @@ public class CGameManager : MonoBehaviour
         m_ChangeScenes.ResetScene();
     }
 
-
-    public void CheckDragHeroGroupJumpOK()
-    {
-        if (MyDragHeroFloor.CheckDragHeroGroupJumpOK())
-            SetState(EState.ePlay);
-    }
 
     public void GoPlayPerformance()
     {
