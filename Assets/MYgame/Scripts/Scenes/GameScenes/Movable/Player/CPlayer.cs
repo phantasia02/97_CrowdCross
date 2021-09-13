@@ -21,6 +21,8 @@ public class CPlayerMemoryShare : CMemoryShareBase
 
 public class CPlayer : CActor
 {
+    public override EMovableType MyMovableType() { return EMovableType.ePlayer; }
+
     protected float m_MaxMoveDirSize = 0;
 
     protected CPlayerMemoryShare m_MyPlayerMemoryShare = null;

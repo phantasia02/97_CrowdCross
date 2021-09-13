@@ -22,9 +22,10 @@ public class CMemoryShareBase
     public Collider[]                   m_AllChildCollider      = null;
     public CMovableStateData[]          m_Data                  = new CMovableStateData[(int)StaticGlobalDel.EMovableState.eMax];
     public CMovableBase.DataState[]     m_AllState              = null;
+    public CMovableBase.DataState       m_OldDataState          = new CMovableBase.DataState();
 };
 
-public class CMovableBase : CGameObjBas
+public abstract class CMovableBase : CGameObjBas
 {
 
     public const float CRadius = 20.0f;
@@ -38,12 +39,9 @@ public class CMovableBase : CGameObjBas
 
     public enum EMovableType
     {
-        eNull           = 0,
-        ePlayer         = 1,
-        CEnemy          = 2,
-        eDragHeroFloor  = 3,
-        eDragHero       = 4,
-        eArrow          = 5,
+        eNull               = 0,
+        ePlayer             = 1,
+        ePlayerRogueGroup   = 2,
         eMax
     };
 
@@ -105,10 +103,6 @@ public class CMovableBase : CGameObjBas
     // ==================== SerializeField ===========================================
     
  
-    [SerializeField] protected EMovableType m_MyMovableType = EMovableType.eNull;
-    public EMovableType MyMovableType() { return m_MyMovableType; }
-   // public EMovableType MyMovableType { get { return m_MyMovableType; } }
-
 
     
 
@@ -121,6 +115,7 @@ public class CMovableBase : CGameObjBas
     public float TotleSpeed { get { return m_MyMemoryShare.m_TotleSpeed; } }
     public float TotleSpeedRatio { get { return m_MyMemoryShare.m_TotleSpeed / StaticGlobalDel.g_DefMovableTotleSpeed; } }
 
+    abstract public EMovableType MyMovableType();
     protected bool m_AwakeOK = false;
     protected virtual bool AutoAwake() { return true; }
 
@@ -287,15 +282,50 @@ public class CMovableBase : CGameObjBas
             lTempDataState.AllThisState[lTempDataState.index].LateUpdate();
     }
 
+    protected void SetCurStateIndex(StaticGlobalDel.EMovableState pamState, int index)
+    {
+        DataState lTempDataState = m_AllState[(int)pamState];
+        if (lTempDataState == null)
+            return;
+
+        if (m_AllState[(int)pamState].AllThisState[index] == null)
+            return;
+
+
+        int lTempOldIndex = m_AllState[(int)pamState].index;
+        m_AllState[(int)pamState].index = index;
+
+        if (pamState == CurState)
+        {
+            if (CurState != StaticGlobalDel.EMovableState.eNull)
+            {
+                if (lTempDataState != null && lTempDataState.AllThisState[lTempOldIndex] != null)
+                    lTempDataState.AllThisState[lTempOldIndex].OutMovableState();
+            }
+
+
+            if (lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
+                lTempDataState.AllThisState[lTempDataState.index].InMovableState();
+
+            m_MyMemoryShare.m_OldDataState.AllThisState = m_AllState[(int)CurState].AllThisState;
+            m_MyMemoryShare.m_OldDataState.index = lTempOldIndex;
+
+            if (CurState != StaticGlobalDel.EMovableState.eNull && lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
+                lTempDataState.AllThisState[lTempDataState.index].updataMovableState();
+        }
+    }
+
 
     protected virtual void SetCurState(StaticGlobalDel.EMovableState pamState)
     {
-        if (pamState == m_CurState && !SameStatusUpdate)
+        if (pamState == CurState && !SameStatusUpdate)
             return;
 
         ChangState = StaticGlobalDel.EMovableState.eMax;
-        StaticGlobalDel.EMovableState lTempOldState = m_CurState;
+        StaticGlobalDel.EMovableState lTempOldState = CurState;
         m_CurState = pamState;
+        m_MyMemoryShare.m_OldDataState.AllThisState = m_AllState[(int)lTempOldState].AllThisState;
+        m_MyMemoryShare.m_OldDataState.index = m_AllState[(int)lTempOldState].index;
 
         DataState lTempDataState = null;
 
