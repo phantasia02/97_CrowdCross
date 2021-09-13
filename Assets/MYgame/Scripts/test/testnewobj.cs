@@ -60,6 +60,8 @@ public class testnewobj : MonoBehaviour
 
     private List<Vector3> GetPositionListAround(Vector3 startPosition, float distance, int positionCount)
     {
+        Vector3 ApplyRotationToVector(Vector3 vec, float angle){return Quaternion.Euler(0, angle, 0) * vec;}
+
         List<Vector3> positionList = new List<Vector3>();
         for (int i = 0; i < positionCount; i++)
         {
@@ -71,8 +73,4 @@ public class testnewobj : MonoBehaviour
         return positionList;
     }
 
-    private Vector3 ApplyRotationToVector(Vector3 vec, float angle)
-    {
-        return Quaternion.Euler(0, angle, 0) * vec;
-    }
 }

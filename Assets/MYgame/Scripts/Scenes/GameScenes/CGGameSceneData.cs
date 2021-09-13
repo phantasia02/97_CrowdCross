@@ -14,11 +14,7 @@ public class CGGameSceneData : CSingletonMonoBehaviour<CGGameSceneData>
 
     public enum EOtherObj
     {
-        eDragHero       = 0,
-        eStandPoint     = 1,
-        eJumpTransform  = 2,
-        eDummyTransform = 3,
-        eArrow          = 4,
+        ePlayerRogue        = 0,
         eMax,
     };
 

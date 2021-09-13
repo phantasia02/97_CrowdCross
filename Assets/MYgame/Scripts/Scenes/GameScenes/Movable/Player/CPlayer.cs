@@ -27,11 +27,11 @@ public class CPlayer : CActor
 
     protected CPlayerMemoryShare m_MyPlayerMemoryShare = null;
 
-    [SerializeField] CinemachineVirtualCamera m_PlayerNormalCamera = null;
-    public CinemachineVirtualCamera PlayerNormalFollowObj { get { return m_PlayerNormalCamera; } }
+    //[SerializeField] CinemachineVirtualCamera m_PlayerNormalCamera = null;
+    //public CinemachineVirtualCamera PlayerNormalFollowObj { get { return m_PlayerNormalCamera; } }
 
-    [SerializeField] CinemachineVirtualCamera m_PlayerWinLoseCamera = null;
-    public CinemachineVirtualCamera PlayerWinLoseCamera { get { return m_PlayerWinLoseCamera; } }
+    //[SerializeField] CinemachineVirtualCamera m_PlayerWinLoseCamera = null;
+    //public CinemachineVirtualCamera PlayerWinLoseCamera { get { return m_PlayerWinLoseCamera; } }
 
     [SerializeField] Collider       m_SwordeCollider    = null;
     [SerializeField] TrailRenderer  m_SwordeTrailRenderer = null;
@@ -61,8 +61,8 @@ public class CPlayer : CActor
         m_MyPlayerMemoryShare = new CPlayerMemoryShare();
         m_MyMemoryShare = m_MyPlayerMemoryShare;
 
-        m_MyPlayerMemoryShare.m_PlayerNormalCamera  = m_PlayerNormalCamera;
-        m_MyPlayerMemoryShare.m_PlayerWinLoseCamera = m_PlayerWinLoseCamera;
+        //m_MyPlayerMemoryShare.m_PlayerNormalCamera  = m_PlayerNormalCamera;
+        //m_MyPlayerMemoryShare.m_PlayerWinLoseCamera = m_PlayerWinLoseCamera;
         m_MyPlayerMemoryShare.m_MyPlayer            = this;
         m_MyPlayerMemoryShare.m_SwordeCollider      = m_SwordeCollider;
         m_MyPlayerMemoryShare.m_SwordeTrailRenderer = m_SwordeTrailRenderer;
