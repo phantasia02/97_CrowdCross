@@ -17,13 +17,18 @@ public class CMoveStatePlayerRogueGroup : CMoveStateBase
         base.InState();
 
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetAllPlayerRogueState(StaticGlobalDel.EMovableState.eMove);
+        m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.follow = true;
+        m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.enabled = true;
+
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.ResetMoveBuff();
     }
 
     protected override void updataState()
     {
         base.updataState();
 
-        m_MyPlayerRogueGroupMemoryShare.m_MyMovable.transform.Translate(0.0f, 0.0f, m_MyMemoryShare.m_TotleSpeed * Time.deltaTime);
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSpeed();
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
     }
 
     protected override void OutState()
@@ -33,5 +38,6 @@ public class CMoveStatePlayerRogueGroup : CMoveStateBase
 
     public override void MouseDown()
     {
+        m_MyPlayerRogueGroupMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eDrag;
     }
 }

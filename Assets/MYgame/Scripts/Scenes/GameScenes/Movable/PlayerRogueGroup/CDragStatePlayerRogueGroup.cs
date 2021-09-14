@@ -14,7 +14,8 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
     protected override void InState()
     {
         base.InState();
-        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetAllPlayerRogueState(StaticGlobalDel.EMovableState.eMove);
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetMoveBuff(CMovableBase.ESpeedBuff.eDrag, 0.0f, true);
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetAllPlayerRogueState(StaticGlobalDel.EMovableState.eWait);
     }
 
     protected override void updataState()
@@ -27,7 +28,13 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
         base.OutState();
     }
 
-    public override void MouseDown()
+    public override void MouseDrag()
     {
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.MouseDrag();
+    }
+
+    public override void MouseUp()
+    {
+        m_MyPlayerRogueGroupMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eMove;
     }
 }

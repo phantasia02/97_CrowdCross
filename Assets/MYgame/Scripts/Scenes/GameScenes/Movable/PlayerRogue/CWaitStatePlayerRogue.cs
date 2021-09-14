@@ -13,8 +13,8 @@ public class CWaitStatePlayerRogue : CWaitStateBase
 
     protected override void InState()
     {
-
         base.InState();
+        SetAnimationState(CAnimatorStateCtl.EState.eIdle, Random.Range(0.8f, 1.2f));
     }
 
     protected override void updataState()
