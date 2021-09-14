@@ -45,9 +45,12 @@ public class CPlayerRogueGroup : CMovableBase
     protected CPlayerRogue.CSetParentData m_BuffSetParentData = new CPlayerRogue.CSetParentData();
     protected bool m_PlayerRogueUpdatapos = true;
 
-    //protected override void AddInitState()
-    //{
-    //}
+    protected override void AddInitState()
+    {
+        m_AllState[(int)StaticGlobalDel.EMovableState.eWait].AllThisState.Add(new CWaitStatePlayerRogueGroup(this));
+        m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogueGroup(this));
+        m_AllState[(int)StaticGlobalDel.EMovableState.eDrag].AllThisState.Add(new CDragStatePlayerRogueGroup(this));
+    }
 
     protected override void CreateMemoryShare()
     {
@@ -85,9 +88,18 @@ public class CPlayerRogueGroup : CMovableBase
     protected override void Start()
     {
         base.Start();
-        SetCurState(StaticGlobalDel.EMovableState.eWait);
+        SetCurState(StaticGlobalDel.EMovableState.eMove);
         m_PlayerRogueUpdatapos = false;
     }
+
+    protected override void Update()
+    {
+        base.Update();
+
+       // if (m_MyGameManager.CurState == CGameManager.EState.ePlay || m_MyGameManager.CurState == CGameManager.EState.eReady)
+            InputUpdata();
+    }
+
 
     private List<Vector3> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
     {
@@ -114,7 +126,6 @@ public class CPlayerRogueGroup : CMovableBase
         return positionList;
     }
     
-
     public CPlayerRogue NewPlayerRogue()
     {
         CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
@@ -124,5 +135,13 @@ public class CPlayerRogueGroup : CMovableBase
         lTempPlayerRogue.SetParentData(ref m_BuffSetParentData);
 
         return lTempPlayerRogue;
+    }
+
+    public void SetAllPlayerRogueState(StaticGlobalDel.EMovableState setState)
+    {
+        CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
+
+        for (int i = 0; i < lTempAllPlayerRoguePool.CurAllObjCount; i++)
+            lTempAllPlayerRoguePool.AllCurObj[i].ChangState = setState;
     }
 }

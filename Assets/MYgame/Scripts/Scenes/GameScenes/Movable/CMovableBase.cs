@@ -14,8 +14,8 @@ public class CMemoryShareBase
     public Vector3                      m_OldPos;
     public Vector3                      m_CurmousePosition;
     public float                        m_TotleSpeed            = StaticGlobalDel.g_DefMovableTotleSpeed;
-    //public float                        m_TargetTotleSpeed      = StaticGlobalDel.g_DefMovableTotleSpeed;
-    //public float[]                      m_Buff                  = new float[(int)CMovableBase.ESpeedBuff.eMax];
+    public float                        m_TargetTotleSpeed      = StaticGlobalDel.g_DefMovableTotleSpeed;
+    public float[]                      m_Buff                  = new float[(int)CMovableBase.ESpeedBuff.eMax];
     public int                          m_NumericalImage        = 0;
     public CMovableBase                 m_MyMovable             = null;
     public Rigidbody                    m_MyRigidbody           = null;
@@ -36,6 +36,11 @@ public abstract class CMovableBase : CGameObjBas
         public int index = 0;
     }
 
+    public enum ESpeedBuff
+    {
+        eHit = 0,
+        eMax
+    };
 
     public enum EMovableType
     {
@@ -176,13 +181,12 @@ public abstract class CMovableBase : CGameObjBas
                 case StaticGlobalDel.EMovableState.eWait:
                     m_AllState[i].AllThisState.Add(new CWaitStateBase(this));
                     break;
-      
-                    //case StaticGlobalDel.EMovableState.eMove:
-                    //    m_AllState[i].AllThisState.Add(new CMoveStateBase(this));
-                    //    break;
-                    //case StaticGlobalDel.EMovableState.eJump:
-                    //    m_AllState[i].AllThisState.Add(new CJumpStateBase(this));
-                    //    break;
+                case StaticGlobalDel.EMovableState.eMove:
+                    m_AllState[i].AllThisState.Add(new CMoveStateBase(this));
+                    break;
+                case StaticGlobalDel.EMovableState.eDrag:
+                    m_AllState[i].AllThisState.Add(new CDragStateBase(this));
+                    break;
                     //case StaticGlobalDel.EMovableState.eHit:
                     //    m_AllState[i] = new CHitStateBase(this);
                     //    break;
@@ -440,6 +444,35 @@ public abstract class CMovableBase : CGameObjBas
         DataState lTempDataState = m_AllState[(int)CurState];
         if (m_CurState != StaticGlobalDel.EMovableState.eNull && lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
             lTempDataState.AllThisState[lTempDataState.index].MouseUp();
+    }
+
+    private void UpdateCurSpeed()
+    {
+        m_MyMemoryShare.m_TotleSpeed = m_MyMemoryShare.m_TargetTotleSpeed;
+    }
+
+    public void SetMoveBuff(ESpeedBuff type, float ratio, bool updateCurSpeed = false)
+    {
+        m_MyMemoryShare.m_Buff[(int)type] = ratio;
+        float lTempMoveRatio = 1.0f;
+
+        for (int i = 0; i < m_MyMemoryShare.m_Buff.Length; i++)
+            lTempMoveRatio *= m_MyMemoryShare.m_Buff[i];
+
+        m_MyMemoryShare.m_TargetTotleSpeed = StaticGlobalDel.g_DefMovableTotleSpeed * lTempMoveRatio;
+        //m_MyMemoryShare.m_TotleSpeed 
+        if (updateCurSpeed)
+            UpdateCurSpeed();
+    }
+
+    public void ResetMoveBuff(bool updateCurSpeed = false)
+    {
+        for (int i = 0; i < m_MyMemoryShare.m_Buff.Length; i++)
+            m_MyMemoryShare.m_Buff[i] = 1.0f;
+
+        m_MyMemoryShare.m_TargetTotleSpeed = StaticGlobalDel.g_DefMovableTotleSpeed;
+        if (updateCurSpeed)
+            UpdateCurSpeed();
     }
 
     public void OpenColliderFloor(bool lColliderFloor)

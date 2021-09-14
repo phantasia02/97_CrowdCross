@@ -33,11 +33,10 @@ public class CPlayerRogue : CActor
         m_MyPlayerRogueMemoryShare.m_TargetDummy = lTempObj.transform;
     }
 
-   
-
     protected override void AddInitState()
     {
-       
+        m_AllState[(int)StaticGlobalDel.EMovableState.eWait].AllThisState.Add(new CWaitStatePlayerRogue(this));
+        m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogue(this));
     }
 
     protected override void CreateMemoryShare()
@@ -56,7 +55,7 @@ public class CPlayerRogue : CActor
     protected override void Start()
     {
         base.Start();
-        SetCurState(StaticGlobalDel.EMovableState.eWait);
+       // SetCurState(StaticGlobalDel.EMovableState.eWait);
     }
 
     public void SetTargetPos(Vector3 pos, bool updatapos = false)

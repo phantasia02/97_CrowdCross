@@ -44,6 +44,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07004d994c2f14e4e8a92b9981478976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8382243684985146275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7656431868669785747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42ef7e2d77956ba4fb81cb626723e2fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ThisAnimator: {fileID: 0}
+  m_MyMovableBase: {fileID: 0}
+  m_AllIdleAnima:
+  - m_flagName: Idle_Generic
+    m_AnimationName: Idle_Generic
+    m_AnimationStateName: Idle_Generic
+    m_Speed: 1
+    m_AnimationClip: {fileID: 0}
+    m_AnimationTime: 0
+  m_AllRunAnima:
+  - m_flagName: Run_InPlace
+    m_AnimationName: Run_InPlace
+    m_AnimationStateName: Run_InPlace
+    m_Speed: 1
+    m_AnimationClip: {fileID: 0}
+    m_AnimationTime: 0
+  m_AllDeathAnima:
+  - m_flagName: 
+    m_AnimationName: 
+    m_AnimationStateName: 
+    m_Speed: 1
+    m_AnimationClip: {fileID: 0}
+    m_AnimationTime: 0
+  m_AllWinAnima:
+  - m_flagName: 
+    m_AnimationName: 
+    m_AnimationStateName: 
+    m_Speed: 1
+    m_AnimationClip: {fileID: 0}
+    m_AnimationTime: 0
+  m_AllHitAnima:
+  - m_flagName: 
+    m_AnimationName: 
+    m_AnimationStateName: 
+    m_Speed: 1
+    m_AnimationClip: {fileID: 0}
+    m_AnimationTime: 0
+  m_AllJumpAnima:
+  - m_flagName: 
+    m_AnimationName: 
+    m_AnimationStateName: 
+    m_Speed: 1
+    m_AnimationClip: {fileID: 0}
+    m_AnimationTime: 0
+  m_AllAtkAnima:
+  - m_flagName: 
+    m_AnimationName: 
+    m_AnimationStateName: 
+    m_Speed: 1
+    m_AnimationClip: {fileID: 0}
+    m_AnimationTime: 0
 --- !u!1 &8828398220387688630
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,8 +193,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6589414270263592721, guid: 6d6ac70e4ccfed84d9837d9be9bf2355, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d6ac70e4ccfed84d9837d9be9bf2355, type: 3}
+--- !u!1 &7656431868669785747 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6589414270254118079, guid: 6d6ac70e4ccfed84d9837d9be9bf2355, type: 3}
+  m_PrefabInstance: {fileID: 3545266829316850220}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7656431868669946609 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6589414270254278877, guid: 6d6ac70e4ccfed84d9837d9be9bf2355, type: 3}
