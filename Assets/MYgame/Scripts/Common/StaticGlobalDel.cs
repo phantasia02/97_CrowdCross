@@ -110,3 +110,72 @@ public class CLerpTargetPos
         }
     }
 }
+
+
+
+public class CObjPool<T>
+{
+
+    protected List<T>  m_AllCurObj     = new List<T>();
+    public List<T>  AllCurObj { get { return m_AllCurObj; } }
+    public int CurAllObjCount { get { return m_AllCurObj.Count; } }
+
+    protected Queue<T> m_AllObjPool    = new Queue<T>();
+
+    public delegate T NewObjDelegate();
+    protected NewObjDelegate m_NewObjFunc = null;
+    public NewObjDelegate NewObjFunc{set { m_NewObjFunc = value; }}
+
+    public delegate void RemoveObjDelegate(T Obj);
+    protected RemoveObjDelegate m_RemoveObjFunc = null;
+    public RemoveObjDelegate RemoveObjFunc { set { m_RemoveObjFunc = value; } }
+
+    public delegate void AddListObjDelegate(T Obj, int index);
+    protected AddListObjDelegate m_AddListObjFunc = null;
+    public AddListObjDelegate AddListObjFunc { set { m_AddListObjFunc = value; } }
+
+    public void InitDefPool(int InitCount)
+    {
+        for (int i = 0; i < InitCount; i++)
+        {
+            T lTempTObj = m_NewObjFunc();
+
+            if (m_RemoveObjFunc != null)
+                m_RemoveObjFunc(lTempTObj);
+
+            m_AllObjPool.Enqueue(lTempTObj);
+        }
+    }
+
+    public T AddObj()
+    {
+        T lTempTObj;
+        if (m_AllObjPool.Count == 0)
+            lTempTObj = m_NewObjFunc();
+        else
+            lTempTObj = m_AllObjPool.Dequeue();
+
+        if (m_AddListObjFunc != null)
+            m_AddListObjFunc(lTempTObj, CurAllObjCount);
+
+        m_AllCurObj.Add(lTempTObj);
+
+        return m_NewObjFunc();
+    }
+
+    public bool RemoveObj(T removeData)
+    {
+        bool lbTemp = m_AllCurObj.Remove(removeData);
+        if (!lbTemp)
+            return lbTemp;
+
+        if (m_RemoveObjFunc != null)
+            m_RemoveObjFunc(removeData);
+
+        m_AllObjPool.Enqueue(removeData);
+
+        return lbTemp;
+    }
+
+    
+}

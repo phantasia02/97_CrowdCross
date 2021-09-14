@@ -42,10 +42,9 @@ public abstract class CMovableBase : CGameObjBas
         eNull               = 0,
         ePlayer             = 1,
         ePlayerRogueGroup   = 2,
+        ePlayerRogue        = 3,
         eMax
     };
-
-   
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -174,30 +173,28 @@ public abstract class CMovableBase : CGameObjBas
 
             switch (lTempState)
             {
-                //case StaticGlobalDel.EMovableState.eWait:
-                //    m_AllState[i].AllThisState.Add(new CWaitStateBase(this));
-                //    break;
-                //case StaticGlobalDel.EMovableState.eDrag:
-                //    m_AllState[i].AllThisState.Add(new CDragStateBase(this));
-                //    break;
-                //case StaticGlobalDel.EMovableState.eMove:
-                //    m_AllState[i].AllThisState.Add(new CMoveStateBase(this));
-                //    break;
-                //case StaticGlobalDel.EMovableState.eJump:
-                //    m_AllState[i].AllThisState.Add(new CJumpStateBase(this));
-                //    break;
-                //case StaticGlobalDel.EMovableState.eHit:
-                //    m_AllState[i] = new CHitStateBase(this);
-                //    break;
-                //case StaticGlobalDel.EMovableState.eAtk:
-                //    m_AllState[i].AllThisState.Add(new CATKStateBase(this));
-                //    break;
-                //case StaticGlobalDel.EMovableState.eWin:
-                //    m_AllState[i].AllThisState.Add(new CWinStateBase(this));
-                //    break;
-                //case StaticGlobalDel.EMovableState.eDeath:
-                //    m_AllState[i].AllThisState.Add(new CDeathStateBase(this));
-                //    break;
+                case StaticGlobalDel.EMovableState.eWait:
+                    m_AllState[i].AllThisState.Add(new CWaitStateBase(this));
+                    break;
+      
+                    //case StaticGlobalDel.EMovableState.eMove:
+                    //    m_AllState[i].AllThisState.Add(new CMoveStateBase(this));
+                    //    break;
+                    //case StaticGlobalDel.EMovableState.eJump:
+                    //    m_AllState[i].AllThisState.Add(new CJumpStateBase(this));
+                    //    break;
+                    //case StaticGlobalDel.EMovableState.eHit:
+                    //    m_AllState[i] = new CHitStateBase(this);
+                    //    break;
+                    //case StaticGlobalDel.EMovableState.eAtk:
+                    //    m_AllState[i].AllThisState.Add(new CATKStateBase(this));
+                    //    break;
+                    //case StaticGlobalDel.EMovableState.eWin:
+                    //    m_AllState[i].AllThisState.Add(new CWinStateBase(this));
+                    //    break;
+                    //case StaticGlobalDel.EMovableState.eDeath:
+                    //    m_AllState[i].AllThisState.Add(new CDeathStateBase(this));
+                    //    break;
             }
         }
 

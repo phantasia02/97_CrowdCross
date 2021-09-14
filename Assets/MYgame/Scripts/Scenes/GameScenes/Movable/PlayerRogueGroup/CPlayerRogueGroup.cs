@@ -3,25 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+//public class CPlayerRogueAndTarget
+//{
+//    public CPlayerRogue m_PlayerRogue = null;
+//    public Transform    m_TargetDummy = null;
+//}
+
 public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
 {
-    public CPlayerRogueGroup    m_PlayerRogueGroup      = null;
-    public List<GameObject>     m_AllPlayerRogue        = new List<GameObject>();
-    public Queue                m_AllPlayerRoguePool    = new Queue();
+    public CPlayerRogueGroup                    m_PlayerRogueGroup          = null;
+    public CObjPool<CPlayerRogue>               m_AllPlayerRoguePool        = new CObjPool<CPlayerRogue>();
+    public Transform                            m_AllPlayerRogueTransform   = null;
+    public Transform                            m_AllTargetDummyTransform   = null;
 };
 
 public class CPlayerRogueGroup : CMovableBase
 {
+    const int CstInitQueueCount = 2;
+
     protected CPlayerRogueGroupMemoryShare m_PlayerRogueGroupMemoryShare = null;
 
     public override EMovableType MyMovableType() { return EMovableType.ePlayerRogueGroup; }
 
+    // ==================== SerializeField ===========================================
 
     [SerializeField] CinemachineVirtualCamera m_PlayerNormalCamera = null;
     public CinemachineVirtualCamera PlayerNormalFollowObj { get { return m_PlayerNormalCamera; } }
 
     [SerializeField] CinemachineVirtualCamera m_PlayerWinLoseCamera = null;
     public CinemachineVirtualCamera PlayerWinLoseCamera { get { return m_PlayerWinLoseCamera; } }
+
+    [SerializeField] Transform m_AllPlayerRogueTransform = null;
+    public Transform AllPlayerRogueTransform { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform; } }
+    [SerializeField] Transform m_AllTargetDummyTransform = null;
+    public Transform AllTargetDummyTransform { get { return m_PlayerRogueGroupMemoryShare.m_AllTargetDummyTransform; } }
+
+
+    [SerializeField] [Range(1, 300)] protected int m_InitCurListCount  = 1;
+    // ==================== SerializeField ===========================================
+
+    protected CPlayerRogue.CSetParentData m_BuffSetParentData = new CPlayerRogue.CSetParentData();
+
     //protected override void AddInitState()
     //{
     //}
@@ -29,30 +51,51 @@ public class CPlayerRogueGroup : CMovableBase
 
     protected override void CreateMemoryShare()
     {
+        m_BuffSetParentData.Group = this;
+
         m_PlayerRogueGroupMemoryShare = new CPlayerRogueGroupMemoryShare();
         m_MyMemoryShare = m_PlayerRogueGroupMemoryShare;
-        m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroup = this;
 
+        m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroup = this;
+        m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform = m_AllPlayerRogueTransform;
+        m_PlayerRogueGroupMemoryShare.m_AllTargetDummyTransform = m_AllTargetDummyTransform;
 
         SetBaseMemoryShare();
 
+        CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
         List<Vector3> targetPositionList = GetPositionListAround(this.transform.position, new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f }, new int[] { 8, 20, 30, 50, 70, 100 });
 
-
-        CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
-
-        for (var i = 0; i < 100; i++)
+        lTempAllPlayerRoguePool.NewObjFunc       = NewPlayerRogue;
+        lTempAllPlayerRoguePool.RemoveObjFunc    = (CPlayerRogue RemoveRogue) => { RemoveRogue.MyRemove(); };
+        lTempAllPlayerRoguePool.AddListObjFunc   = (CPlayerRogue AddRogue, int index) => 
         {
-            GameObject step = Instantiate(lTempCGGameSceneData.m_AllOtherObj[(int)CGGameSceneData.EOtherObj.ePlayerRogue], targetPositionList[i], this.transform.rotation, this.transform);
-            m_PlayerRogueGroupMemoryShare.m_AllPlayerRogue.Add(step);
+            AddRogue.MyAddList(index);
+            AddRogue.SetTargetPos(targetPositionList[index],true);
+        };
+
+        lTempAllPlayerRoguePool.InitDefPool(CstInitQueueCount);
+
+        for (int i = 0; i < m_InitCurListCount; i++)
+        {
+            lTempAllPlayerRoguePool.AddObj();
         }
+
+        //Debug.Log("11111111111111111111111");
+        //for (int i = 0; i < lTempAllPlayerRoguePool.CurAllObjCount; i++)
+        //{
+        //    Debug.Log("2222222222222");
+        //    lTempAllPlayerRoguePool.AllCurObj[i].SetTargetPos(targetPositionList[i], true);
+        //}
+        
     }
+
+    
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
-       // SetCurState(StaticGlobalDel.EMovableState.eWait);
+        SetCurState(StaticGlobalDel.EMovableState.eWait);
     }
 
     private List<Vector3> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
@@ -79,5 +122,17 @@ public class CPlayerRogueGroup : CMovableBase
             positionList.Add(position);
         }
         return positionList;
+    }
+    
+
+    public CPlayerRogue NewPlayerRogue()
+    {
+        CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
+
+        GameObject lTempObj = Instantiate(lTempCGGameSceneData.m_AllOtherObj[(int)CGGameSceneData.EOtherObj.ePlayerRogue], AllPlayerRogueTransform.position, AllPlayerRogueTransform.rotation, AllPlayerRogueTransform.transform);
+        CPlayerRogue lTempPlayerRogue = lTempObj.GetComponent<CPlayerRogue>();
+        lTempPlayerRogue.SetParentData(ref m_BuffSetParentData);
+
+        return lTempPlayerRogue;
     }
 }
