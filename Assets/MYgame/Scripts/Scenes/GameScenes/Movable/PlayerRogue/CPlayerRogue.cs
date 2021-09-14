@@ -75,6 +75,7 @@ public class CPlayerRogue : CActor
 
     public void MyRemove()
     {
+        CurGroupIndex = -1;
         this.gameObject.SetActive(false);
     }
 

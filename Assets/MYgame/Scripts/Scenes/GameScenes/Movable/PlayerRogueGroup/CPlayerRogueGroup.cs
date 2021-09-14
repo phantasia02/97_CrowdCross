@@ -19,7 +19,7 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
 
 public class CPlayerRogueGroup : CMovableBase
 {
-    const int CstInitQueueCount = 2;
+    const int CstInitQueueCount = 200;
 
     protected CPlayerRogueGroupMemoryShare m_PlayerRogueGroupMemoryShare = null;
 
@@ -43,11 +43,11 @@ public class CPlayerRogueGroup : CMovableBase
     // ==================== SerializeField ===========================================
 
     protected CPlayerRogue.CSetParentData m_BuffSetParentData = new CPlayerRogue.CSetParentData();
+    protected bool m_PlayerRogueUpdatapos = true;
 
     //protected override void AddInitState()
     //{
     //}
-
 
     protected override void CreateMemoryShare()
     {
@@ -63,30 +63,20 @@ public class CPlayerRogueGroup : CMovableBase
         SetBaseMemoryShare();
 
         CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
-        List<Vector3> targetPositionList = GetPositionListAround(this.transform.position, new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f }, new int[] { 8, 20, 30, 50, 70, 100 });
+        List<Vector3> targetPositionList = GetPositionListAround(this.transform.position, new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f}, new int[] { 8, 20, 30, 50, 70, 100 });
 
         lTempAllPlayerRoguePool.NewObjFunc       = NewPlayerRogue;
         lTempAllPlayerRoguePool.RemoveObjFunc    = (CPlayerRogue RemoveRogue) => { RemoveRogue.MyRemove(); };
         lTempAllPlayerRoguePool.AddListObjFunc   = (CPlayerRogue AddRogue, int index) => 
         {
             AddRogue.MyAddList(index);
-            AddRogue.SetTargetPos(targetPositionList[index],true);
+            AddRogue.SetTargetPos(targetPositionList[index], m_PlayerRogueUpdatapos);
         };
 
         lTempAllPlayerRoguePool.InitDefPool(CstInitQueueCount);
 
         for (int i = 0; i < m_InitCurListCount; i++)
-        {
             lTempAllPlayerRoguePool.AddObj();
-        }
-
-        //Debug.Log("11111111111111111111111");
-        //for (int i = 0; i < lTempAllPlayerRoguePool.CurAllObjCount; i++)
-        //{
-        //    Debug.Log("2222222222222");
-        //    lTempAllPlayerRoguePool.AllCurObj[i].SetTargetPos(targetPositionList[i], true);
-        //}
-        
     }
 
     
@@ -96,6 +86,7 @@ public class CPlayerRogueGroup : CMovableBase
     {
         base.Start();
         SetCurState(StaticGlobalDel.EMovableState.eWait);
+        m_PlayerRogueUpdatapos = false;
     }
 
     private List<Vector3> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
@@ -103,9 +94,8 @@ public class CPlayerRogueGroup : CMovableBase
         List<Vector3> positionList = new List<Vector3>();
         positionList.Add(startPosition);
         for (int i = 0; i < ringDistanceArray.Length; i++)
-        {
             positionList.AddRange(GetPositionListAround(startPosition, ringDistanceArray[i], ringPositionCountArray[i]));
-        }
+
         return positionList;
     }
 
