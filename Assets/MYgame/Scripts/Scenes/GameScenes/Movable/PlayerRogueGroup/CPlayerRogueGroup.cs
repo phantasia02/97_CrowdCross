@@ -20,10 +20,13 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
     public Transform                    m_AllTargetDummyTransform    = null;
     public SplineFollower               m_DummyCameraFollwer         = null;
     public SplineFollower               m_MySplineFollower           = null;
+    public Vector2                      m_TargetOffset               = Vector3.zero;
 };
 
 public class CPlayerRogueGroup : CMovableBase
 {
+    const float CfHalfWidth = 3.0f;
+    const float CfTotleWidth = CfHalfWidth * 2.0f;
     const int CstInitQueueCount = 200;
 
     protected CPlayerRogueGroupMemoryShare m_PlayerRogueGroupMemoryShare = null;
@@ -78,10 +81,10 @@ public class CPlayerRogueGroup : CMovableBase
         lTempAllPlayerRoguePool.NewObjFunc = NewPlayerRogue;
         lTempAllPlayerRoguePool.RemoveObjFunc = (CPlayerRogue RemoveRogue) => { RemoveRogue.MyRemove(); };
         lTempAllPlayerRoguePool.AddListObjFunc = (CPlayerRogue AddRogue, int index) =>
-      {
-          AddRogue.MyAddList(index);
-          AddRogue.SetTargetPos(targetPositionList[index], m_PlayerRogueUpdatapos);
-      };
+        {
+            AddRogue.MyAddList(index);
+            AddRogue.SetTargetPos(targetPositionList[index], m_PlayerRogueUpdatapos);
+        };
 
         lTempAllPlayerRoguePool.InitDefPool(CstInitQueueCount);
 
@@ -113,13 +116,28 @@ public class CPlayerRogueGroup : CMovableBase
     {
         if (m_MyMemoryShare.m_TotleSpeed != m_MyMemoryShare.m_TargetTotleSpeed)
         {
-            m_MyMemoryShare.m_TotleSpeed = Mathf.Lerp(m_MyMemoryShare.m_TotleSpeed, m_MyMemoryShare.m_TargetTotleSpeed, 3.0f * Time.deltaTime);
+            m_MyMemoryShare.m_TotleSpeed = Mathf.Lerp(m_MyMemoryShare.m_TotleSpeed, m_MyMemoryShare.m_TargetTotleSpeed, 10.0f * Time.deltaTime);
 
             if (Mathf.Abs(m_MyMemoryShare.m_TotleSpeed - m_MyMemoryShare.m_TargetTotleSpeed) < 0.001f)
                 m_MyMemoryShare.m_TotleSpeed = m_MyMemoryShare.m_TargetTotleSpeed;
 
             m_PlayerRogueGroupMemoryShare.m_MySplineFollower.followSpeed = m_MyMemoryShare.m_TotleSpeed;
         }
+    }
+
+    public void UpdateSplineFollowerOffset()
+    {
+        //if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) < 0.0001f)
+        //{
+        //    Vector2 lTempV2 = Vector2.MoveTowards(m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset, m_PlayerRogueGroupMemoryShare.m_TargetOffset, CfTotleWidth * Time.deltaTime);
+        //    Debug.Log($" 3333333333333333 lTempV2 = {lTempV2}");
+        //    if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) < 0.001f)
+        //        lTempV2 = m_PlayerRogueGroupMemoryShare.m_TargetOffset;
+
+
+        //    Debug.Log($" lTempV2 = {lTempV2}");
+        //    m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempV2;
+        //}
     }
 
     public override void InputUpdata()
@@ -160,20 +178,9 @@ public class CPlayerRogueGroup : CMovableBase
 
     public void MouseDrag()
     {
-        const float CfHalfWidth = 3.0f;
-        const float CfTotleWidth = CfHalfWidth * 2.0f;
+
         float lTempMoveX = Input.mousePosition.x - m_PlayerRogueGroupMemoryShare.m_OldMouseDownPos.x;
         //float lTempMoveRatio = TotleSpeedRatio;
-
-        //lTempMoveX = (lTempMoveX / Screen.width) * CfTotleWidth;
-
-        //Vector3 lTempOffset = this.transform.position;
-        //lTempOffset.x += lTempMoveX * lTempMoveRatio;
-
-        //lTempOffset.x = Mathf.Clamp(lTempOffset.x, -CfHalfWidth, CfHalfWidth);
-        
-        //this.transform.position = lTempOffset;
-
 
         lTempMoveX = (lTempMoveX / Screen.width) * CfTotleWidth;
         Vector2 lTempOffset = m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset;
@@ -181,6 +188,8 @@ public class CPlayerRogueGroup : CMovableBase
         lTempOffset.x += lTempMoveX;
         lTempOffset = Vector2.ClampMagnitude(lTempOffset, CfHalfWidth);
 
+       // m_PlayerRogueGroupMemoryShare.m_TargetOffset = lTempOffset;
+       // Debug.Log($"m_PlayerRogueGroupMemoryShare.m_TargetOffset = {m_PlayerRogueGroupMemoryShare.m_TargetOffset}");
         m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempOffset;
     }
 

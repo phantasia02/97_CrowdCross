@@ -14,13 +14,17 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
     protected override void InState()
     {
         base.InState();
-        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetMoveBuff(CMovableBase.ESpeedBuff.eDrag, 0.0f, true);
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetMoveBuff(CMovableBase.ESpeedBuff.eDrag, 0.0f);
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetAllPlayerRogueState(StaticGlobalDel.EMovableState.eWait);
     }
 
     protected override void updataState()
     {
         base.updataState();
+
+        //m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSplineFollowerOffset();
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSpeed();
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
     }
 
     protected override void OutState()
