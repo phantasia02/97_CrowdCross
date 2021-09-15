@@ -190,7 +190,7 @@ public class CObjPool<T>
 
         m_AllCurObj.Add(lTempTObj);
 
-        return m_NewObjFunc();
+        return lTempTObj;
     }
 
     public bool RemoveObj(T removeData)
