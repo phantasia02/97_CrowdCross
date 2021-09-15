@@ -4,6 +4,16 @@ using UnityEngine;
 
 public static class StaticGlobalDel 
 {
+    public enum EBoolState
+    {
+        eTrue           = 0,
+        eTruePlaying    = 1,
+        eFlase          = 2,
+        eFlasePlaying   = 3,
+        eMax
+    }
+
+
     public enum EMovableState
     {
         eNull           = 0,
@@ -20,19 +30,13 @@ public static class StaticGlobalDel
 
     public enum ELayerIndex
     {
-        eDragRange      = 8,
-        eDragHeroGroup  = 9,
-        eBridge         = 10,
-        eDragCanNotPass = 11,
+        ePlayerRogue = 6,
         eMax
     }
 
     public const string TagDoorGroup = "DoorGroup";
 
-    public const int    g_DragRangeMask         = 1 << (int)ELayerIndex.eDragRange;
-    public const int    g_DragHeroGroupMask     = 1 << (int)ELayerIndex.eDragHeroGroup;
-    public const int    g_BridgeMask            = 1 << (int)ELayerIndex.eBridge;
-    public const int    g_DragCanNotPassMask    = 1 << (int)ELayerIndex.eDragCanNotPass;
+    public const int g_PlayerRogueMask = 1 << (int)ELayerIndex.ePlayerRogue;
     
     public const float  g_fcbaseWidth                   = 1080.0f;
     public const float  g_fcbaseHeight                  = 2340.0f;

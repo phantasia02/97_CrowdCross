@@ -50,6 +50,9 @@ public class CPlayerRogueGroup : CMovableBase
     [SerializeField] [Range(1, 300)] protected int m_InitCurListCount = 1;
     // ==================== SerializeField ===========================================
 
+    public SplineFollower MySplineFollower { get { return m_PlayerRogueGroupMemoryShare.m_MySplineFollower; } }
+    public int CurPlayerRogueCount { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool.CurAllObjCount; } }
+
     protected CPlayerRogue.CSetParentData m_BuffSetParentData = new CPlayerRogue.CSetParentData();
     protected bool m_PlayerRogueUpdatapos = true;
 
@@ -76,7 +79,7 @@ public class CPlayerRogueGroup : CMovableBase
         SetBaseMemoryShare();
 
         CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
-        List<Vector3> targetPositionList = GetPositionListAround(this.transform.position, new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f }, new int[] { 8, 20, 30, 50, 70, 100 });
+        List<Vector3> targetPositionList = GetPositionListAround(m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform.localPosition, new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f }, new int[] { 8, 20, 30, 50, 70, 100 });
 
         lTempAllPlayerRoguePool.NewObjFunc = NewPlayerRogue;
         lTempAllPlayerRoguePool.RemoveObjFunc = (CPlayerRogue RemoveRogue) => { RemoveRogue.MyRemove(); };
@@ -88,13 +91,20 @@ public class CPlayerRogueGroup : CMovableBase
 
         lTempAllPlayerRoguePool.InitDefPool(CstInitQueueCount);
 
-        for (int i = 0; i < m_InitCurListCount; i++)
-            lTempAllPlayerRoguePool.AddObj();
-
+        AddCurPlayerRogueCount(m_InitCurListCount);
         ResetMoveBuff(true);
     }
 
+    public void AddCurPlayerRogueCount(int Count)
+    {
+        if (Count < 0)
+            return;
 
+        CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
+        for (int i = 0; i < Count; i++)
+            lTempAllPlayerRoguePool.AddObj();
+
+    }
 
     // Start is called before the first frame update
     protected override void Start()
@@ -268,5 +278,42 @@ public class CPlayerRogueGroup : CMovableBase
         m_MyMemoryShare.m_TargetTotleSpeed = StaticGlobalDel.g_DefMovableTotleSpeed;
         if (updateCurSpeed)
             UpdateCurSpeed();
+    }
+
+    public override void OnTriggerEnter(Collider other)
+    {
+        
+        if (other.tag == StaticGlobalDel.TagDoorGroup)
+        {
+            CDoorGroup lTempDoorGroup = other.GetComponentInParent<CDoorGroup>();
+            lTempDoorGroup.ShowCollider(false);
+
+            CDoorGroup.EAllPosDoorType lTempDoorDis;
+            if (MySplineFollower.motion.offset.x < 0.0f)
+                lTempDoorDis = CDoorGroup.EAllPosDoorType.eLPosDoor;
+            else
+                lTempDoorDis = CDoorGroup.EAllPosDoorType.eRPosDoor;
+
+            CDoor m_TempDoorObj = lTempDoorGroup.GetDoor(lTempDoorDis);
+
+            if (m_TempDoorObj.MyMathematicsSymbol == CDoor.EMathematicsSymbol.eAdd)
+            {
+                AddCurPlayerRogueCount(m_TempDoorObj.Number);
+            }
+            else if (m_TempDoorObj.MyMathematicsSymbol == CDoor.EMathematicsSymbol.eMultiply)
+            {
+                AddCurPlayerRogueCount((m_TempDoorObj.Number - 1) * CurPlayerRogueCount);
+            }
+            else if (m_TempDoorObj.MyMathematicsSymbol == CDoor.EMathematicsSymbol.eDivide)
+            {
+
+            }
+            else if (m_TempDoorObj.MyMathematicsSymbol == CDoor.EMathematicsSymbol.eSubtract)
+            {
+
+            }
+        }
+
+        base.OnTriggerEnter(other);
     }
 }

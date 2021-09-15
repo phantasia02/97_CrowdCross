@@ -5,10 +5,12 @@ using UnityEngine;
 
 public class CPlayerRogueMemoryShare : CMemoryShareBase
 {
-    public CPlayerRogue         m_MyPlayerRogue = null;
-    public CPlayerRogueGroup    m_MyGroup       = null;
-    public Transform            m_TargetDummy   = null;
-    public int                  m_GroupIndex    = -1;
+    public CPlayerRogue                     m_MyPlayerRogue = null;
+    public CPlayerRogueGroup                m_MyGroup       = null;
+    public Transform                        m_TargetDummy   = null;
+    public int                              m_GroupIndex    = -1;
+    public StaticGlobalDel.EBoolState       m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
+    public StaticGlobalDel.EMovableState    m_MoveTargetBuffCurState =  StaticGlobalDel.EMovableState.eMax;
 };
 
 public class CPlayerRogue : CActor
@@ -19,6 +21,28 @@ public class CPlayerRogue : CActor
     }
 
     public override EMovableType MyMovableType() { return EMovableType.ePlayerRogue; }
+
+    public override StaticGlobalDel.EMovableState ChangState
+    {
+        set
+        {
+            if ((int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase)
+            {
+                if (m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK == StaticGlobalDel.EBoolState.eFlase)
+                {
+                    m_ChangState = StaticGlobalDel.EMovableState.eMove;
+                    SameStatusUpdate = true;
+                    m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
+                }
+
+                m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = value;
+                return;
+            }
+
+            m_ChangState = value;
+        }
+        get { return m_ChangState; }
+    }
 
     public int CurGroupIndex { set { m_MyPlayerRogueMemoryShare.m_GroupIndex = value; } }
     protected CPlayerRogueMemoryShare m_MyPlayerRogueMemoryShare = null;
@@ -58,12 +82,18 @@ public class CPlayerRogue : CActor
        // SetCurState(StaticGlobalDel.EMovableState.eWait);
     }
 
-    public void SetTargetPos(Vector3 pos, bool updatapos = false)
+    public void SetTargetPos(Vector3 Localpos, bool updatapos = false)
     {
-        m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.position = pos;
+        m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = Localpos;
 
         if (updatapos)
-            this.transform.position = m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.position;
+            this.transform.localPosition = m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
+        else
+        {
+            this.transform.localPosition = Vector3.zero;
+            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
+            ChangState = StaticGlobalDel.EMovableState.eMove;
+        }
     }
 
     public void MyAddList(int listindex)
@@ -75,8 +105,17 @@ public class CPlayerRogue : CActor
     public void MyRemove()
     {
         CurGroupIndex = -1;
+        SetCurState(StaticGlobalDel.EMovableState.eDeath);
         this.gameObject.SetActive(false);
     }
 
+    public override void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == StaticGlobalDel.TagDoorGroup)
+        {
+            m_MyPlayerRogueMemoryShare.m_MyGroup.OnTriggerEnter(other);
+        }
 
+        base.OnTriggerEnter(other);
+    }
 }

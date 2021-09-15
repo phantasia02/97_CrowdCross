@@ -20,30 +20,33 @@ public class CDoor : CGameObjBas
     public override EObjType ObjType() { return EObjType.eDoor; }
     // ==================== SerializeField ===========================================
     [SerializeField] protected EMathematicsSymbol m_MyMathematicsSymbol = EMathematicsSymbol.eAdd;
+    public EMathematicsSymbol MyMathematicsSymbol { get { return m_MyMathematicsSymbol; } }
     [SerializeField] protected Text m_ShowText = null;
     [SerializeField] protected int m_Number = 1;
+    public int Number { get { return m_Number; } }
     // ==================== SerializeField ===========================================
 
     readonly string[] CntMathematicsSymbolStr = { "+", "-", "x", "กา" };
 
     protected CDoorGroup m_MyDoorGroup = null;
 
-    private void Awake()
+    protected override void Awake()
     {
         UpdateShowText();
+        base.Awake();
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    //protected override void Start()
+    //{
+    //    base.Start();
+    //}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //// Update is called once per frame
+    //protected override void Update()
+    //{
+    //    base.Update();
+    //}
 
     public void UpdateShowText()
     {

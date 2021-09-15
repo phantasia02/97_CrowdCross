@@ -84,7 +84,7 @@ public abstract class CMovableBase : CGameObjBas
     public StaticGlobalDel.EMovableState OldState { get { return m_OldState; } }
 
     protected StaticGlobalDel.EMovableState m_ChangState = StaticGlobalDel.EMovableState.eMax;
-    public StaticGlobalDel.EMovableState ChangState
+    public virtual StaticGlobalDel.EMovableState ChangState
     {
         set { m_ChangState = value; }
         get { return m_ChangState; }
@@ -187,18 +187,18 @@ public abstract class CMovableBase : CGameObjBas
                 case StaticGlobalDel.EMovableState.eDrag:
                     m_AllState[i].AllThisState.Add(new CDragStateBase(this));
                     break;
-                    //case StaticGlobalDel.EMovableState.eHit:
-                    //    m_AllState[i] = new CHitStateBase(this);
-                    //    break;
-                    //case StaticGlobalDel.EMovableState.eAtk:
-                    //    m_AllState[i].AllThisState.Add(new CATKStateBase(this));
-                    //    break;
-                    //case StaticGlobalDel.EMovableState.eWin:
-                    //    m_AllState[i].AllThisState.Add(new CWinStateBase(this));
-                    //    break;
-                    //case StaticGlobalDel.EMovableState.eDeath:
-                    //    m_AllState[i].AllThisState.Add(new CDeathStateBase(this));
-                    //    break;
+                //case StaticGlobalDel.EMovableState.eHit:
+                //    m_AllState[i] = new CHitStateBase(this);
+                //    break;
+                //case StaticGlobalDel.EMovableState.eAtk:
+                //    m_AllState[i].AllThisState.Add(new CATKStateBase(this));
+                //    break;
+                //case StaticGlobalDel.EMovableState.eWin:
+                //    m_AllState[i].AllThisState.Add(new CWinStateBase(this));
+                //    break;
+                case StaticGlobalDel.EMovableState.eDeath:
+                    m_AllState[i].AllThisState.Add(new CDeathStateBase(this));
+                    break;
             }
         }
 
@@ -245,13 +245,13 @@ public abstract class CMovableBase : CGameObjBas
             lTempDataState.AllThisState[lTempDataState.index].updataMovableState();
         }
 
+        ChangStateFunc();
+
         if (lTempNextFramChangState == NextFramChangState && NextFramChangState != StaticGlobalDel.EMovableState.eMax)
         {
             ChangState = m_NextFramChangState;
             NextFramChangState = StaticGlobalDel.EMovableState.eMax;
         }
-
-        ChangStateFunc();
 
         m_MyMemoryShare.m_OldPos = transform.position;
     }
@@ -304,7 +304,6 @@ public abstract class CMovableBase : CGameObjBas
                     lTempDataState.AllThisState[lTempOldIndex].OutMovableState();
             }
 
-
             if (lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
                 lTempDataState.AllThisState[lTempDataState.index].InMovableState();
 
@@ -346,20 +345,6 @@ public abstract class CMovableBase : CGameObjBas
 
         if (m_CurState != StaticGlobalDel.EMovableState.eNull && lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
             lTempDataState.AllThisState[lTempDataState.index].updataMovableState();
-    }
-
-    public virtual void CheckOver()
-    {
-        //if (ChangState == StaticGlobalDel.EMovableState.eWait ||
-        //    ChangState == StaticGlobalDel.EMovableState.eMove ||
-        //    ChangState == StaticGlobalDel.EMovableState.eCollision ||
-        //    CurState == StaticGlobalDel.EMovableState.eWait ||
-        //    CurState == StaticGlobalDel.EMovableState.eMove ||
-        //    CurState == StaticGlobalDel.EMovableState.eCollision)
-        //{
-        //    if (m_MyGameManager.GetFloorBouncingBedBoxCount(this.FloorNumber) == 0)
-        //        ChangState = StaticGlobalDel.EMovableState.eOver;
-        //}
     }
 
     public void DestroyThis()

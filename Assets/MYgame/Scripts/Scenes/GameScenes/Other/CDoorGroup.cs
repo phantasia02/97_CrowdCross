@@ -21,23 +21,24 @@ public class CDoorGroup : CGameObjBas
     protected Collider m_Myprotected = null;
     protected Renderer[] m_AllRenderer = null;
 
-    private void Awake()
+    protected override void Awake()
     {
         m_Myprotected = this.GetComponentInChildren<Collider>();
         m_AllRenderer = this.GetComponentsInChildren<Renderer>();
+        base.Awake();
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
+    //void Start()
+    //{
         
-    }
+    //}
 
-    // Update is called once per frame
-    void Update()
-    {
+    //// Update is called once per frame
+    //void Update()
+    //{
         
-    }
+    //}
 
     public void ShowCollider(bool setshow)
     {
