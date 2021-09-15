@@ -27,33 +27,21 @@ public static class StaticGlobalDel
         eMax
     }
 
-    // tag DragHeroGroup
-    // tag CanNotPass
-    // tag DragHeroBridge
-    // tag PlayerArms
-    // tag Arrow
-    // tag BridgeFloor
-    // tag EventSystem
+    public const string TagDoorGroup = "DoorGroup";
 
     public const int    g_DragRangeMask         = 1 << (int)ELayerIndex.eDragRange;
     public const int    g_DragHeroGroupMask     = 1 << (int)ELayerIndex.eDragHeroGroup;
     public const int    g_BridgeMask            = 1 << (int)ELayerIndex.eBridge;
     public const int    g_DragCanNotPassMask    = 1 << (int)ELayerIndex.eDragCanNotPass;
     
-    public const float  g_fcbaseWidth                   = 1242.0f;
-    public const float  g_fcbaseHeight                  = 2688.0f;
+    public const float  g_fcbaseWidth                   = 1080.0f;
+    public const float  g_fcbaseHeight                  = 2340.0f;
     public const float  g_fcbaseOrthographicSize        = 18.75f;
     public const float  g_fcbaseResolutionWHRatio       = g_fcbaseWidth / g_fcbaseHeight;
     public const float  g_fcbaseResolutionHWRatio       = g_fcbaseHeight / g_fcbaseWidth;
     public const float  g_TUA                           = Mathf.PI * 2.0f;
     // ============= Speed ====================
     public const float g_DefMovableTotleSpeed = 20.0f;
-    // ============= Hp ====================
-    public const int g_DefHp = 10;
-    public const int g_MaxHp = 20;
-    public const int g_RefFXGoodHp = 10;
-    public const int g_RefFXBadHp  = 10;
-    public const float g_DefHpRatio = 0.5f;
 
     public static GameObject NewFxAddParentShow(this Transform ParentTransform, CGGameSceneData.EAllFXType Fxtype)
     {
@@ -62,6 +50,50 @@ public static class StaticGlobalDel
         lTempFx.transform.position = ParentTransform.position;
 
         return lTempFx;
+    }
+
+    public static void SetMaterialRenderingMode(this Material material, RenderingMode renderingMode)
+    {
+        switch (renderingMode)
+        {
+            case RenderingMode.Opaque:
+                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                material.SetInt("_ZWrite", 1);
+                material.DisableKeyword("_ALPHATEST_ON");
+                material.DisableKeyword("_ALPHABLEND_ON");
+                material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                material.renderQueue = -1;
+                break;
+            case RenderingMode.Cutout:
+                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                material.SetInt("_ZWrite", 1);
+                material.EnableKeyword("_ALPHATEST_ON");
+                material.DisableKeyword("_ALPHABLEND_ON");
+                material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                material.renderQueue = 2450;
+                break;
+            case RenderingMode.Fade:
+                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                material.SetInt("_ZWrite", 0);
+                material.DisableKeyword("_ALPHATEST_ON");
+                material.EnableKeyword("_ALPHABLEND_ON");
+                //  material.("_ALPHABLEND_ON");
+                material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                material.renderQueue = 3000;
+                break;
+            case RenderingMode.Transparent:
+                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                material.SetInt("_ZWrite", 0);
+                material.DisableKeyword("_ALPHATEST_ON");
+                material.DisableKeyword("_ALPHABLEND_ON");
+                material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+                material.renderQueue = 3000;
+                break;
+        }
     }
 }
 
@@ -110,8 +142,6 @@ public class CLerpTargetPos
         }
     }
 }
-
-
 
 public class CObjPool<T>
 {
