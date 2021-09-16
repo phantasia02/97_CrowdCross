@@ -82,12 +82,16 @@ public class CPlayerRogue : CActor
        // SetCurState(StaticGlobalDel.EMovableState.eWait);
     }
 
+
     public void SetTargetPos(Vector3 Localpos, bool updatapos = false)
     {
         m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = Localpos;
 
         if (updatapos)
+        {
             this.transform.localPosition = m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
+            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eTrue;
+        }
         else
         {
             this.transform.localPosition = Vector3.zero;

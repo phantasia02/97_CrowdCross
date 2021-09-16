@@ -110,7 +110,7 @@ public class CPlayerRogueGroup : CMovableBase
     protected override void Start()
     {
         base.Start();
-        SetCurState(StaticGlobalDel.EMovableState.eMove);
+        SetCurState(StaticGlobalDel.EMovableState.eWait);
         m_PlayerRogueUpdatapos = false;
     }
 

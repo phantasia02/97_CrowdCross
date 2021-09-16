@@ -13,10 +13,11 @@ public class CWaitStatePlayerRogueGroup : CWaitStateBase
 
     protected override void InState()
     {
-
-        //m_MyPlayerRogueGroupMemoryShare.m_AllPlayerRoguePool.AllCurObj[]
-
         base.InState();
+
+       // m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetMoveBuff(CMovableBase.ESpeedBuff.eDrag, 0.0f);
+        m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.follow = false;
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetAllPlayerRogueState(StaticGlobalDel.EMovableState.eWait);
     }
 
     protected override void updataState()
@@ -27,5 +28,10 @@ public class CWaitStatePlayerRogueGroup : CWaitStateBase
     protected override void OutState()
     {
         base.OutState();
+    }
+
+    public override void MouseDown()
+    {
+        m_MyPlayerRogueGroupMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eDrag;
     }
 }

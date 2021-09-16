@@ -14,8 +14,12 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
     protected override void InState()
     {
         base.InState();
-        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetMoveBuff(CMovableBase.ESpeedBuff.eDrag, 0.0f);
-        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetAllPlayerRogueState(StaticGlobalDel.EMovableState.eWait);
+
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetAllPlayerRogueState(StaticGlobalDel.EMovableState.eMove);
+        m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.follow = true;
+        m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.enabled = true;
+
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.ResetMoveBuff();
     }
 
     protected override void updataState()
@@ -39,6 +43,6 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
 
     public override void MouseUp()
     {
-        m_MyPlayerRogueGroupMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eMove;
+        m_MyPlayerRogueGroupMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eWait;
     }
 }
