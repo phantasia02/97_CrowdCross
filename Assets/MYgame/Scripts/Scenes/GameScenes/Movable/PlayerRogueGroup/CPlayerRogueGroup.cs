@@ -250,34 +250,10 @@ public class CPlayerRogueGroup : CMovableBase
 
     public void updateFollwer() { m_PlayerRogueGroupMemoryShare.m_DummyCameraFollwer.SetPercent(m_PlayerRogueGroupMemoryShare.m_MySplineFollower.modifiedResult.percent); }
 
-    private void UpdateCurSpeed()
+    public override void UpdateCurSpeed()
     {
-        m_MyMemoryShare.m_TotleSpeed = m_MyMemoryShare.m_TargetTotleSpeed;
+        base.UpdateCurSpeed();
         m_PlayerRogueGroupMemoryShare.m_MySplineFollower.followSpeed = m_MyMemoryShare.m_TargetTotleSpeed;
-    }
-
-    public void SetMoveBuff(ESpeedBuff type, float ratio, bool updateCurSpeed = false)
-    {
-        m_MyMemoryShare.m_Buff[(int)type] = ratio;
-        float lTempMoveRatio = 1.0f;
-
-        for (int i = 0; i < m_MyMemoryShare.m_Buff.Length; i++)
-            lTempMoveRatio *= m_MyMemoryShare.m_Buff[i];
-
-        m_MyMemoryShare.m_TargetTotleSpeed = StaticGlobalDel.g_DefMovableTotleSpeed * lTempMoveRatio;
-        //m_MyMemoryShare.m_TotleSpeed 
-        if (updateCurSpeed)
-            UpdateCurSpeed();
-    }
-
-    public void ResetMoveBuff(bool updateCurSpeed = false)
-    {
-        for (int i = 0; i < m_MyMemoryShare.m_Buff.Length; i++)
-            m_MyMemoryShare.m_Buff[i] = 1.0f;
-
-        m_MyMemoryShare.m_TargetTotleSpeed = StaticGlobalDel.g_DefMovableTotleSpeed;
-        if (updateCurSpeed)
-            UpdateCurSpeed();
     }
 
     public override void OnTriggerEnter(Collider other)

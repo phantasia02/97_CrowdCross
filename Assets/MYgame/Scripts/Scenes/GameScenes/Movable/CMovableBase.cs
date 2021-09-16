@@ -48,6 +48,7 @@ public abstract class CMovableBase : CGameObjBas
         ePlayer             = 1,
         ePlayerRogueGroup   = 2,
         ePlayerRogue        = 3,
+        eNormalCar          = 4,
         eMax
     };
 
@@ -123,6 +124,8 @@ public abstract class CMovableBase : CGameObjBas
     protected bool m_AwakeOK = false;
     protected virtual bool AutoAwake() { return true; }
 
+    public  virtual float DefSpeed { get { return StaticGlobalDel.g_DefMovableTotleSpeed; } }
+
     protected override void Awake()
     {
         base.Awake();
@@ -140,6 +143,9 @@ public abstract class CMovableBase : CGameObjBas
         AddInitState();
 
         AwakeOK();
+
+        MyMemoryShare.m_TotleSpeed = DefSpeed;
+        MyMemoryShare.m_TargetTotleSpeed = DefSpeed;
 
         m_AwakeOK = true;
     }
@@ -429,6 +435,35 @@ public abstract class CMovableBase : CGameObjBas
         DataState lTempDataState = m_AllState[(int)CurState];
         if (m_CurState != StaticGlobalDel.EMovableState.eNull && lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
             lTempDataState.AllThisState[lTempDataState.index].MouseUp();
+    }
+
+    public virtual void UpdateCurSpeed()
+    {
+        m_MyMemoryShare.m_TotleSpeed = m_MyMemoryShare.m_TargetTotleSpeed;
+    }
+
+    public void SetMoveBuff(ESpeedBuff type, float ratio, bool updateCurSpeed = false)
+    {
+        m_MyMemoryShare.m_Buff[(int)type] = ratio;
+        float lTempMoveRatio = 1.0f;
+
+        for (int i = 0; i < m_MyMemoryShare.m_Buff.Length; i++)
+            lTempMoveRatio *= m_MyMemoryShare.m_Buff[i];
+
+        m_MyMemoryShare.m_TargetTotleSpeed = DefSpeed  * lTempMoveRatio;
+        //m_MyMemoryShare.m_TotleSpeed 
+        if (updateCurSpeed)
+            UpdateCurSpeed();
+    }
+
+    public void ResetMoveBuff(bool updateCurSpeed = false)
+    {
+        for (int i = 0; i < m_MyMemoryShare.m_Buff.Length; i++)
+            m_MyMemoryShare.m_Buff[i] = 1.0f;
+
+        m_MyMemoryShare.m_TargetTotleSpeed = DefSpeed;
+        if (updateCurSpeed)
+            UpdateCurSpeed();
     }
 
 
