@@ -12,9 +12,14 @@ public class CCarCreatePos : CGameObjBas
 
     public override EObjType ObjType() { return EObjType.eCarCreatePos; }
 
+    [SerializeField] protected float m_MaxCreateCarDis = 50.0f;
+    [SerializeField] protected float m_MinCreateCarDis = 5.0f;
+    protected float m_NextAddCarDisSqr = float.MaxValue;
+
     protected override void Awake()
     {
         base.Awake();
+        
     }
 
     // Start is called before the first frame update
@@ -27,6 +32,32 @@ public class CCarCreatePos : CGameObjBas
     protected override void Update()
     {
         base.Update();
+
+        if (m_MyAllCar.Count > 0)
+        {
+            CCarBase lTempCarBase = m_MyAllCar[m_MyAllCar.Count - 1];
+
+            Vector3 lTempV3 = lTempCarBase.transform.position - this.transform.position;
+            lTempV3.y = 0.0f;
+
+            if (Vector3.SqrMagnitude(lTempV3) >= m_NextAddCarDisSqr)
+            {
+                AddCarChild(this.transform.position);
+                SetNextAddCarDisSqr();
+            }
+        }
+    }
+
+    public void SetNextAddCarDisSqr()
+    {
+        if (m_MyAllCar.Count > 0)
+        {
+            CCarBase lTempCarBase = m_MyAllCar[m_MyAllCar.Count - 1];
+            float lTempDisSqr = lTempCarBase.CarLong + Random.Range(m_MinCreateCarDis, m_MaxCreateCarDis);
+            m_NextAddCarDisSqr = lTempDisSqr * lTempDisSqr;
+        }
+        else
+            m_NextAddCarDisSqr = float.MaxValue;
     }
 
     public void AddCar(CCarBase car)
@@ -44,6 +75,14 @@ public class CCarCreatePos : CGameObjBas
         m_MyAllCarCreatePos.AllCarBasePool.RemoveObj(car);
     }
 
+    public CCarBase AddCarChild(Vector3 lpos)
+    {
+        CCarBase lTempCarBase = m_MyAllCarCreatePos.AllCarBasePool.AddObj();
+        AddCar(lTempCarBase);
+        lTempCarBase.transform.position = lpos;
+        return lTempCarBase;
+    }
+
     private void OnEnable()
     {
         m_MyAllCarCreatePos = this.gameObject.GetComponentInParent<CAllCarCreatePos>();
@@ -57,26 +96,20 @@ public class CCarCreatePos : CGameObjBas
         lTempv3Dir.y = 0.0f;
         lTempv3Dir.Normalize();
 
-        CCarBase lTempCarBase = null;
-
-        void AddCarFunc(Vector3 lpos)
-        {
-            lTempCarBase = m_MyAllCarCreatePos.AllCarBasePool.AddObj();
-            AddCar(lTempCarBase);
-            lTempCarBase.transform.position = lpos;
-        }
-
-        AddCarFunc(lTempv3pos);
+        CCarBase lTempCarBase = AddCarChild(lTempv3pos);
 
         for (int i = 0; i < 10; i++)
         {
-            lTempv3pos = Vector3.MoveTowards(lTempCarBase.transform.position, this.transform.position, lTempCarBase.CarLong + Random.Range(2.0f, 5.0f));
+            lTempv3pos = Vector3.MoveTowards(lTempCarBase.transform.position, this.transform.position, lTempCarBase.CarLong + Random.Range(m_MinCreateCarDis, m_MaxCreateCarDis));
             lTempv3pos.y = 0.0f;
+
             if (Vector3.SqrMagnitude(lTempv3pos - this.transform.position) < 1.0f)
                 break;
 
-            AddCarFunc(lTempv3pos);
+            lTempCarBase = AddCarChild(lTempv3pos);
         }
+
+        SetNextAddCarDisSqr();
     }
 
     private void OnDisable()
@@ -84,6 +117,9 @@ public class CCarCreatePos : CGameObjBas
         m_MyAllCarCreatePos.RemoveAllCarCreatePos(this);
 
         for (int i = m_MyAllCar.Count - 1; i >= 0; i--)
-            m_MyAllCarCreatePos.AllCarBasePool.RemoveObj(m_MyAllCar[i]); 
+            m_MyAllCarCreatePos.AllCarBasePool.RemoveObj(m_MyAllCar[i]);
+
+
+        m_MyAllCar.Clear();
     }
 }
