@@ -34,7 +34,8 @@ public static class StaticGlobalDel
         eMax
     }
 
-    public const string TagDoorGroup = "DoorGroup";
+    public const string TagDoorGroup    = "DoorGroup";
+    public const string TagCarEnd       = "CarEnd";
 
     public const int g_PlayerRogueMask = 1 << (int)ELayerIndex.ePlayerRogue;
     

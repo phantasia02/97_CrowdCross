@@ -9,6 +9,8 @@ public abstract class CGameObjBas : MonoBehaviour
         eMovable            = 0,
         eDoor               = 1,
         eDoorGroup          = 2,
+        eCarCreatePos       = 3,
+        eAllCarCreatePos    = 4,
         eMax
     }
 

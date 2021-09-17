@@ -19,6 +19,13 @@ public class CGGameSceneData : CSingletonMonoBehaviour<CGGameSceneData>
         eMax,
     };
 
+    public enum ECarType
+    {
+        eNormalCar = 0,
+        eMax,
+    };
+
     [SerializeField] public GameObject[]    m_AllFX                 = null;
     [SerializeField] public GameObject[]    m_AllOtherObj           = null;
+    [SerializeField] public GameObject[]    m_AllCar                = null;
 }
