@@ -56,6 +56,8 @@ public abstract class CCarBase : CMovableBase
         m_MyMemoryShare = m_MyCarBaseMemoryShare;
         m_MyCarBaseMemoryShare.m_CarBase = this;
 
+        m_MyCarBaseMemoryShare.m_MyAllCarCreatePos = this.GetComponentInParent<CAllCarCreatePos>();
+
         SetBaseMemoryShare();
     }
 
@@ -85,8 +87,10 @@ public abstract class CCarBase : CMovableBase
 
     public override void OnTriggerEnter(Collider other)
     {
-        //if (other.tag == )
+        if (other.tag == StaticGlobalDel.TagCarEnd)
+            RemovCarPool();
 
-        base.OnTriggerEnter(other);
+
+       // base.OnTriggerEnter(other);
     }
 }
