@@ -155,7 +155,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!1 &7656431868669785729
 GameObject:
@@ -598,9 +598,9 @@ MonoBehaviour:
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
   m_AllDeathAnima:
-  - m_flagName: 
-    m_AnimationName: 
-    m_AnimationStateName: 
+  - m_flagName: mixamo_com
+    m_AnimationName: mixamo_com
+    m_AnimationStateName: mixamo_com
     m_Speed: 1
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0

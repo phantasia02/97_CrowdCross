@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CWaitStatePlayerRogue : CWaitStateBase
+public class CDeathStatePlayerRogue : CDeathStateBase
 {
     CPlayerRogueMemoryShare m_MyPlayerRogueMemoryShare = null;
 
-    public CWaitStatePlayerRogue(CMovableBase pamMovableBase) : base(pamMovableBase)
+    public CDeathStatePlayerRogue(CMovableBase pamMovableBase) : base(pamMovableBase)
     {
         m_MyPlayerRogueMemoryShare = (CPlayerRogueMemoryShare)m_MyMemoryShare;
     }
@@ -14,23 +14,21 @@ public class CWaitStatePlayerRogue : CWaitStateBase
     protected override void InState()
     {
         base.InState();
-        SetAnimationState(CAnimatorStateCtl.EState.eIdle, Random.Range(0.8f, 1.2f));
+        SetAnimationState(CAnimatorStateCtl.EState.eDeath);
     }
 
     protected override void updataState()
     {
         base.updataState();
+
+        if (MomentinTime(3.0f))
+        {
+            m_MyPlayerRogueMemoryShare.m_MyGroup.AllPlayerRoguePool.RemoveObj(m_MyPlayerRogueMemoryShare.m_MyPlayerRogue);
+        }
     }
 
     protected override void OutState()
     {
         base.OutState();
-    }
-
-    public override void OnCollisionEnter(Collision other)
-    {
-        m_MyPlayerRogueMemoryShare.m_MyCarCollisionPlayerRogue.CollisionEnter(other);
-
-        base.OnCollisionEnter(other);
     }
 }

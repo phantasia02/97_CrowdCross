@@ -31,13 +31,16 @@ public static class StaticGlobalDel
     public enum ELayerIndex
     {
         ePlayerRogue = 6,
+        eCarCollider = 7,
         eMax
     }
 
     public const string TagDoorGroup    = "DoorGroup";
     public const string TagCarEnd       = "CarEnd";
+    public const string TagCarCollider  = "CarCollider";
 
     public const int g_PlayerRogueMask = 1 << (int)ELayerIndex.ePlayerRogue;
+    public const int g_CarColliderMask = 1 << (int)ELayerIndex.eCarCollider;
     
     public const float  g_fcbaseWidth                   = 1080.0f;
     public const float  g_fcbaseHeight                  = 2340.0f;

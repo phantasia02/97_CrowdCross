@@ -11,6 +11,7 @@ public class CPlayerRogueMemoryShare : CMemoryShareBase
     public int                              m_GroupIndex    = -1;
     public StaticGlobalDel.EBoolState       m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
     public StaticGlobalDel.EMovableState    m_MoveTargetBuffCurState =  StaticGlobalDel.EMovableState.eMax;
+    public CCarCollisionPlayerRogue         m_MyCarCollisionPlayerRogue =  null;
 };
 
 public class CPlayerRogue : CActor
@@ -61,6 +62,7 @@ public class CPlayerRogue : CActor
     {
         m_AllState[(int)StaticGlobalDel.EMovableState.eWait].AllThisState.Add(new CWaitStatePlayerRogue(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogue(this));
+        m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStatePlayerRogue(this));
     }
 
     protected override void CreateMemoryShare()
@@ -69,7 +71,7 @@ public class CPlayerRogue : CActor
         m_MyMemoryShare = m_MyPlayerRogueMemoryShare;
         m_MyPlayerRogueMemoryShare.m_MyPlayerRogue = this;
 
-
+        m_MyPlayerRogueMemoryShare.m_MyCarCollisionPlayerRogue = new CCarCollisionPlayerRogue(m_MyPlayerRogueMemoryShare);
        // m_MyPlayerRogueMemoryShare.m_TargetDummy = this;
 
         SetBaseMemoryShare();
@@ -113,13 +115,24 @@ public class CPlayerRogue : CActor
         this.gameObject.SetActive(false);
     }
 
-    public override void OnTriggerEnter(Collider other)
+    //public override void OnTriggerEnter(Collider other)
+    //{
+
+
+    //    base.OnTriggerEnter(other);
+    //}
+
+    public override void OnCollisionEnter(Collision other)
     {
-        if (other.tag == StaticGlobalDel.TagDoorGroup)
+        if (other.gameObject.layer == (int)StaticGlobalDel.ELayerIndex.eCarCollider)
         {
-            m_MyPlayerRogueMemoryShare.m_MyGroup.OnTriggerEnter(other);
+            m_MyPlayerRogueMemoryShare.m_MyRigidbody.AddForceAtPosition(other.contacts[0].normal * Random.Range(20.0f, 30.0f), other.contacts[0].point, ForceMode.VelocityChange);
+            //other.contacts[0].normal
+            // other.contacts[0].point
+            // m_MyPlayerRogueMemoryShare.m_MyGroup.OnTriggerEnter(other);
         }
 
-        base.OnTriggerEnter(other);
+        base.OnCollisionEnter(other);
     }
+
 }

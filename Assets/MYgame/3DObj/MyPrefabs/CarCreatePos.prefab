@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EndCollider: {fileID: 7641075894784957531}
+  m_MaxCreateCarDis: 50
+  m_MinCreateCarDis: 5
 --- !u!1 &6695532502675372485
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,7 +75,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6695532502675372485}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 2.7, z: 60}
+  m_LocalPosition: {x: -0, y: 2.7, z: 120}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 3330968313957025139}
