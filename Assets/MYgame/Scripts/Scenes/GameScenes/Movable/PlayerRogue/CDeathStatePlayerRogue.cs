@@ -14,6 +14,7 @@ public class CDeathStatePlayerRogue : CDeathStateBase
     protected override void InState()
     {
         base.InState();
+        m_MyPlayerRogueMemoryShare.m_MyGroup.RemoveAllPlayerRogue(m_MyPlayerRogueMemoryShare.m_MyPlayerRogue);
         SetAnimationState(CAnimatorStateCtl.EState.eDeath);
     }
 
@@ -21,10 +22,8 @@ public class CDeathStatePlayerRogue : CDeathStateBase
     {
         base.updataState();
 
-        if (MomentinTime(3.0f))
-        {
+        if (MomentinTime(2.0f))
             m_MyPlayerRogueMemoryShare.m_MyGroup.AllPlayerRoguePool.RemoveObj(m_MyPlayerRogueMemoryShare.m_MyPlayerRogue);
-        }
     }
 
     protected override void OutState()

@@ -256,6 +256,7 @@ public abstract class CMovableBase : CGameObjBas
         if (lTempNextFramChangState == NextFramChangState && NextFramChangState != StaticGlobalDel.EMovableState.eMax)
         {
             ChangState = m_NextFramChangState;
+            Debug.Log("Update NextFramChangState11111111111111");
             NextFramChangState = StaticGlobalDel.EMovableState.eMax;
         }
 
@@ -321,13 +322,12 @@ public abstract class CMovableBase : CGameObjBas
         }
     }
 
-
     protected virtual void SetCurState(StaticGlobalDel.EMovableState pamState)
     {
         if (pamState == CurState && !SameStatusUpdate)
             return;
 
-        ChangState = StaticGlobalDel.EMovableState.eMax;
+        m_ChangState = StaticGlobalDel.EMovableState.eMax;
         StaticGlobalDel.EMovableState lTempOldState = CurState;
         m_CurState = pamState;
         m_MyMemoryShare.m_OldDataState.AllThisState = m_AllState[(int)lTempOldState].AllThisState;
@@ -343,14 +343,20 @@ public abstract class CMovableBase : CGameObjBas
         }
 
         lTempDataState = m_AllState[(int)m_CurState];
-        if (lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
-            lTempDataState.AllThisState[lTempDataState.index].InMovableState();
-        
+        if (m_CurState != StaticGlobalDel.EMovableState.eNull)
+        {
+            if (lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
+                lTempDataState.AllThisState[lTempDataState.index].InMovableState();
+        }
+
         m_OldState = lTempOldState;
         SameStatusUpdate = false;
 
-        if (m_CurState != StaticGlobalDel.EMovableState.eNull && lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
-            lTempDataState.AllThisState[lTempDataState.index].updataMovableState();
+        if (m_CurState != StaticGlobalDel.EMovableState.eNull)
+        {
+            if (lTempDataState != null && lTempDataState.AllThisState[lTempDataState.index] != null)
+                lTempDataState.AllThisState[lTempDataState.index].updataMovableState();
+        }
     }
 
     public void DestroyThis()

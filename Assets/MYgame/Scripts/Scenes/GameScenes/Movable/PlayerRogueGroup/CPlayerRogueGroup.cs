@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Cinemachine;
 using Dreamteck.Splines;
 
@@ -12,15 +13,21 @@ using Dreamteck.Splines;
 
 public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
 {
-    public bool                         m_bDown                      = false;
-    public Vector3                      m_OldMouseDownPos            = Vector3.zero;
-    public CPlayerRogueGroup            m_PlayerRogueGroup           = null;
-    public CObjPool<CPlayerRogue>       m_AllPlayerRoguePool         = new CObjPool<CPlayerRogue>();
-    public Transform                    m_AllPlayerRogueTransform    = null;
-    public Transform                    m_AllTargetDummyTransform    = null;
-    public SplineFollower               m_DummyCameraFollwer         = null;
-    public SplineFollower               m_MySplineFollower           = null;
-    public Vector2                      m_TargetOffset               = Vector3.zero;
+    public bool                         m_bDown                     = false;
+    public Vector3                      m_OldMouseDownPos           = Vector3.zero;
+    public CPlayerRogueGroup            m_PlayerRogueGroup          = null;
+    public CObjPool<CPlayerRogue>       m_AllPlayerRoguePool        = new CObjPool<CPlayerRogue>();
+    public List<CPlayerRogue>           m_AllPlayerRogueObj         = new List<CPlayerRogue>();
+    public Transform                    m_AllPlayerRogueTransform   = null;
+    public Transform                    m_AllTargetDummyTransform   = null;
+    public SplineFollower               m_DummyCameraFollwer        = null;
+    public SplineFollower               m_MySplineFollower          = null;
+    public Vector2                      m_TargetOffset              = Vector3.zero;
+    public StaticGlobalDel.EBoolState   m_CarCollision              = StaticGlobalDel.EBoolState.eFlase;
+    public List<Vector3>                m_TargetPositionList        = null;
+    public Text                         m_ShowCountText             = null;
+    public Canvas                       m_MyCanvas                  = null;
+
 };
 
 public class CPlayerRogueGroup : CMovableBase
@@ -51,11 +58,17 @@ public class CPlayerRogueGroup : CMovableBase
     // ==================== SerializeField ===========================================
 
     public SplineFollower MySplineFollower { get { return m_PlayerRogueGroupMemoryShare.m_MySplineFollower; } }
-    public int CurPlayerRogueCount { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool.CurAllObjCount; } }
+    public int CurPlayerRogueCount { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count; } }
     public CObjPool<CPlayerRogue> AllPlayerRoguePool { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool; } }
 
     protected CPlayerRogue.CSetParentData m_BuffSetParentData = new CPlayerRogue.CSetParentData();
     protected bool m_PlayerRogueUpdatapos = true;
+
+    public StaticGlobalDel.EBoolState CarCollision
+    {
+        set { m_PlayerRogueGroupMemoryShare.m_CarCollision = value; }
+        get { return m_PlayerRogueGroupMemoryShare.m_CarCollision; }
+    }
 
     protected override void AddInitState()
     {
@@ -72,39 +85,31 @@ public class CPlayerRogueGroup : CMovableBase
         m_MyMemoryShare = m_PlayerRogueGroupMemoryShare;
 
         m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroup = this;
-        m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform = m_AllPlayerRogueTransform;
-        m_PlayerRogueGroupMemoryShare.m_AllTargetDummyTransform = m_AllTargetDummyTransform;
-        m_PlayerRogueGroupMemoryShare.m_MySplineFollower = this.gameObject.GetComponent<SplineFollower>();
-        m_PlayerRogueGroupMemoryShare.m_DummyCameraFollwer = m_DummyCameraFollwer;
+        m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform     = m_AllPlayerRogueTransform;
+        m_PlayerRogueGroupMemoryShare.m_AllTargetDummyTransform     = m_AllTargetDummyTransform;
+        m_PlayerRogueGroupMemoryShare.m_MySplineFollower            = this.gameObject.GetComponent<SplineFollower>();
+        m_PlayerRogueGroupMemoryShare.m_DummyCameraFollwer          = m_DummyCameraFollwer;
+        m_PlayerRogueGroupMemoryShare.m_ShowCountText               = this.gameObject.GetComponentInChildren<Text>();
+        m_PlayerRogueGroupMemoryShare.m_MyCanvas                    = this.gameObject.GetComponentInChildren<Canvas>();
 
         SetBaseMemoryShare();
 
         CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
-        List<Vector3> targetPositionList = GetPositionListAround(m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform.localPosition, new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f }, new int[] { 8, 20, 30, 50, 70, 100 });
+        m_PlayerRogueGroupMemoryShare.m_TargetPositionList = GetPositionListAround(m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform.localPosition, new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f }, new int[] { 8, 20, 30, 50, 70, 100 });
 
         lTempAllPlayerRoguePool.NewObjFunc = NewPlayerRogue;
-        lTempAllPlayerRoguePool.RemoveObjFunc = (CPlayerRogue RemoveRogue) => { RemoveRogue.MyRemove(); };
-        lTempAllPlayerRoguePool.AddListObjFunc = (CPlayerRogue AddRogue, int index) =>
-        {
-            AddRogue.MyAddList(index);
-            AddRogue.SetTargetPos(targetPositionList[index], m_PlayerRogueUpdatapos);
-        };
+        lTempAllPlayerRoguePool.RemoveObjFunc = RemovePlayerRogue;
+
+        //lTempAllPlayerRoguePool.AddListObjFunc = (CPlayerRogue AddRogue, int index) =>
+        //{
+        //    //AddRogue.MyAddList(index);
+        //    //AddRogue.SetTargetPos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[index], m_PlayerRogueUpdatapos);
+        //};
 
         lTempAllPlayerRoguePool.InitDefPool(CstInitQueueCount);
 
         AddCurPlayerRogueCount(m_InitCurListCount);
         ResetMoveBuff(true);
-    }
-
-    public void AddCurPlayerRogueCount(int Count)
-    {
-        if (Count < 0)
-            return;
-
-        CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
-        for (int i = 0; i < Count; i++)
-            lTempAllPlayerRoguePool.AddObj();
-
     }
 
     // Start is called before the first frame update
@@ -241,12 +246,62 @@ public class CPlayerRogueGroup : CMovableBase
         return lTempPlayerRogue;
     }
 
+    public void CountText(){m_PlayerRogueGroupMemoryShare.m_ShowCountText.text = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count.ToString();}
+
+    public bool RemoveAllPlayerRogue(CPlayerRogue RemovePlayerRogue)
+    {
+        List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
+        bool lTempbool = lTempAllPlayerRogue.Remove(RemovePlayerRogue);
+
+
+        CountText();
+        return lTempbool;
+    }
+
+    public void AddCurPlayerRogueCount(int Count)
+    {
+        if (Count < 0)
+            return;
+
+        CPlayerRogue lTempPlayerRogue = null;
+        int lTempAllPlayerRogueIndex = 0;
+        CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
+        for (int i = 0; i < Count; i++)
+        {
+            lTempPlayerRogue = lTempAllPlayerRoguePool.AddObj();
+
+            lTempAllPlayerRogueIndex = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count;
+            m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Add(lTempPlayerRogue);
+            lTempPlayerRogue.MyAddList(lTempAllPlayerRogueIndex);
+            lTempPlayerRogue.SetTargetPos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[lTempAllPlayerRogueIndex], m_PlayerRogueUpdatapos);
+        }
+
+        CountText();
+    }
+
+    public void RemovePlayerRogue(CPlayerRogue RemoveRogue)
+    {
+        RemoveRogue.MyRemove();
+
+        for (int i = 0; i < AllPlayerRoguePool.CurAllObjCount; i++)
+        {
+            if (AllPlayerRoguePool.AllCurObj[i].CurState == StaticGlobalDel.EMovableState.eDeath)
+                return;
+        }
+
+        List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
+
+        for (int i = 0; i < lTempAllPlayerRogue.Count; i++)
+            lTempAllPlayerRogue[i].SetTargetupdatePos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[i]);
+
+        CountText();
+    }
+
     public void SetAllPlayerRogueState(StaticGlobalDel.EMovableState setState)
     {
-        CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
-
-        for (int i = 0; i < lTempAllPlayerRoguePool.CurAllObjCount; i++)
-            lTempAllPlayerRoguePool.AllCurObj[i].ChangState = setState;
+        List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
+        for (int i = 0; i < lTempAllPlayerRogue.Count; i++)
+            lTempAllPlayerRogue[i].ChangState = setState;
     }
 
     public void updateFollwer() { m_PlayerRogueGroupMemoryShare.m_DummyCameraFollwer.SetPercent(m_PlayerRogueGroupMemoryShare.m_MySplineFollower.modifiedResult.percent); }

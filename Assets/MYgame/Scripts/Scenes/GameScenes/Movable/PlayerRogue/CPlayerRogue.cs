@@ -27,7 +27,8 @@ public class CPlayerRogue : CActor
     {
         set
         {
-            if ((int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase)
+
+            if ((int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase && value != StaticGlobalDel.EMovableState.eDeath)
             {
                 if (m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK == StaticGlobalDel.EBoolState.eFlase)
                 {
@@ -36,9 +37,12 @@ public class CPlayerRogue : CActor
                     m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
                 }
 
+
                 m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = value;
+
                 return;
             }
+            
 
             m_ChangState = value;
         }
@@ -102,6 +106,25 @@ public class CPlayerRogue : CActor
         }
     }
 
+    public void SetTargetupdatePos(Vector3 Localpos)
+    {
+        m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = Localpos;
+        Vector3 lTempV3 = this.transform.localPosition - m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
+        float SqrDis = lTempV3.sqrMagnitude;
+
+        if (lTempV3.sqrMagnitude > 0.1f)
+        {
+            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
+            ChangState = CurState;
+            //m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = StaticGlobalDel.EMovableState.eWait;
+        }
+        else
+        {
+            this.transform.localPosition = m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
+            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eTrue;
+        }
+    }
+
     public void MyAddList(int listindex)
     {
         CurGroupIndex = listindex;
@@ -111,7 +134,7 @@ public class CPlayerRogue : CActor
     public void MyRemove()
     {
         CurGroupIndex = -1;
-        SetCurState(StaticGlobalDel.EMovableState.eDeath);
+        SetCurState(StaticGlobalDel.EMovableState.eNull);
         this.gameObject.SetActive(false);
     }
 
@@ -122,17 +145,17 @@ public class CPlayerRogue : CActor
     //    base.OnTriggerEnter(other);
     //}
 
-    public override void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.layer == (int)StaticGlobalDel.ELayerIndex.eCarCollider)
-        {
-            m_MyPlayerRogueMemoryShare.m_MyRigidbody.AddForceAtPosition(other.contacts[0].normal * Random.Range(20.0f, 30.0f), other.contacts[0].point, ForceMode.VelocityChange);
-            //other.contacts[0].normal
-            // other.contacts[0].point
-            // m_MyPlayerRogueMemoryShare.m_MyGroup.OnTriggerEnter(other);
-        }
+    //public override void OnCollisionEnter(Collision other)
+    //{
+    //    //if (other.gameObject.layer == (int)StaticGlobalDel.ELayerIndex.eCarCollider)
+    //    //{
+    //    //    m_MyPlayerRogueMemoryShare.m_MyRigidbody.AddForceAtPosition(other.contacts[0].normal * Random.Range(20.0f, 30.0f), other.contacts[0].point, ForceMode.VelocityChange);
+    //    //    //other.contacts[0].normal
+    //    //    // other.contacts[0].point
+    //    //    // m_MyPlayerRogueMemoryShare.m_MyGroup.OnTriggerEnter(other);
+    //    //}
 
-        base.OnCollisionEnter(other);
-    }
+    //    base.OnCollisionEnter(other);
+    //}
 
 }

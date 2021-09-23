@@ -16,6 +16,7 @@ public class CCarCollisionPlayerRogue
         if (other.gameObject.layer == (int)StaticGlobalDel.ELayerIndex.eCarCollider)
         {
             m_MyPlayerRogueMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eDeath;
+
             Vector3 lTempV3 = other.contacts[0].normal + (Vector3.up * 10.0f);
             Vector3 lTemppointV3 = other.contacts[0].point + (Vector3.down * 5.0f);
             lTemppointV3.Normalize();
