@@ -27,17 +27,18 @@ public class CPlayerRogue : CActor
     {
         set
         {
-            if ((int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase && value != StaticGlobalDel.EMovableState.eDeath)
+            if (m_MyPlayerRogueMemoryShare.m_GroupIndex == -1)
+                return;
+
+            if ((int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase)
             {
-                if (m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK == StaticGlobalDel.EBoolState.eFlase)
-                {
-                    m_ChangState = StaticGlobalDel.EMovableState.eMove;
-                    SameStatusUpdate = true;
-                    m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
-                }
-
+                //if (m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK == StaticGlobalDel.EBoolState.eFlase)
+                //{
+                //    m_ChangState = StaticGlobalDel.EMovableState.eMove;
+                //    SameStatusUpdate = true;
+                //    m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
+                //}
                 m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = value;
-
                 return;
             }
             
@@ -88,6 +89,9 @@ public class CPlayerRogue : CActor
 
     public void SetTargetPos(Vector3 Localpos, bool updatapos = false)
     {
+        if (m_MyPlayerRogueMemoryShare.m_GroupIndex == -1)
+            return;
+
         m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = Localpos;
 
         if (updatapos)
@@ -99,21 +103,34 @@ public class CPlayerRogue : CActor
         else
         {
             this.transform.localPosition = Vector3.zero;
-            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
-            ChangState = StaticGlobalDel.EMovableState.eMove;
+            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
+            SameStatusUpdate = true;
+            SetCurState(StaticGlobalDel.EMovableState.eMove);
         }
     }
 
+    public override void SetCurState(StaticGlobalDel.EMovableState pamState)
+    {
+        base.SetCurState(pamState);
+    }
+   
     public void SetTargetupdatePos(Vector3 Localpos)
     {
+        if (m_MyPlayerRogueMemoryShare.m_GroupIndex == -1)
+            return;
+
         m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = Localpos;
         Vector3 lTempV3 = this.transform.localPosition - m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
         float SqrDis = lTempV3.sqrMagnitude;
 
         if (lTempV3.sqrMagnitude > 0.1f)
         {
-            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
-            ChangState = CurState;
+            StaticGlobalDel.EBoolState lOldeBoolState = m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK;
+            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
+            SameStatusUpdate = true;
+            SetCurState(StaticGlobalDel.EMovableState.eMove);
+
+            ChangState = lOldeBoolState == StaticGlobalDel.EBoolState.eFlasePlaying ? m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState : CurState;
             //m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = StaticGlobalDel.EMovableState.eWait;
         }
         else
@@ -143,25 +160,4 @@ public class CPlayerRogue : CActor
 
         m_MyPlayerRogueMemoryShare.m_MyRigidbody.useGravity = !show;
     }
-
-    //public override void OnTriggerEnter(Collider other)
-    //{
-
-
-    //    base.OnTriggerEnter(other);
-    //}
-
-    //public override void OnCollisionEnter(Collision other)
-    //{
-    //    //if (other.gameObject.layer == (int)StaticGlobalDel.ELayerIndex.eCarCollider)
-    //    //{
-    //    //    m_MyPlayerRogueMemoryShare.m_MyRigidbody.AddForceAtPosition(other.contacts[0].normal * Random.Range(20.0f, 30.0f), other.contacts[0].point, ForceMode.VelocityChange);
-    //    //    //other.contacts[0].normal
-    //    //    // other.contacts[0].point
-    //    //    // m_MyPlayerRogueMemoryShare.m_MyGroup.OnTriggerEnter(other);
-    //    //}
-
-    //    base.OnCollisionEnter(other);
-    //}
-
 }

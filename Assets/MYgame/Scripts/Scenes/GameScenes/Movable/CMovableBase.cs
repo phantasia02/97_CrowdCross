@@ -322,7 +322,7 @@ public abstract class CMovableBase : CGameObjBas
         }
     }
 
-    protected virtual void SetCurState(StaticGlobalDel.EMovableState pamState)
+    public virtual void SetCurState(StaticGlobalDel.EMovableState pamState)
     {
         if (pamState == CurState && !SameStatusUpdate)
             return;

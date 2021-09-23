@@ -24,7 +24,6 @@ public class CMoveStatePlayerRogue : CMoveStateBase
         //    Sequence lTempSequence = DOTween.Sequence();
         //    lTempSequence.Append(m_MyPlayerRogueMemoryShare.m_MyMovable.transform.DOLocalMove
         //        (m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition, 0.4f).SetEase(Ease.Linear));
-
         //    lTempSequence.AppendCallback(() => 
         //    {
         //       // Debug.Log($"m_MyPlayerRogueMemoryShare.m_MyMovable.ChangState = {m_MyPlayerRogueMemoryShare.m_MyMovable.ChangState}");
@@ -53,7 +52,17 @@ public class CMoveStatePlayerRogue : CMoveStateBase
         {
             m_MyPlayerRogueMemoryShare.m_MyMovable.transform.localPosition = m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
             m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eTrue;
+
+            //if (m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState != StaticGlobalDel.EMovableState.eMax && m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState != StaticGlobalDel.EMovableState.eNull)
+        
+            //StaticGlobalDel.EMovableState lTempstate = StaticGlobalDel.EMovableState.eWait;
+            //if (m_MyPlayerRogueMemoryShare.m_MyGroup.CurState == StaticGlobalDel.EMovableState.eMove)
+            //    lTempstate = StaticGlobalDel.EMovableState.eMove;
+            //else if (m_MyPlayerRogueMemoryShare.m_MyGroup.CurState == StaticGlobalDel.EMovableState.eWait)
+            //    lTempstate = StaticGlobalDel.EMovableState.eWait;
+
             m_MyPlayerRogueMemoryShare.m_MyMovable.ChangState = m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState;
+
             m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = StaticGlobalDel.EMovableState.eMax;
         }
     }

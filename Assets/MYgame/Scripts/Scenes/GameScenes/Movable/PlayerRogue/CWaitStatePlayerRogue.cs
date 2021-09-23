@@ -27,6 +27,14 @@ public class CWaitStatePlayerRogue : CWaitStateBase
         base.OutState();
     }
 
+    public override void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == StaticGlobalDel.TagDoorGroup)
+        {
+            m_MyPlayerRogueMemoryShare.m_MyGroup.OnTriggerEnter(other);
+        }
+    }
+
     public override void OnCollisionEnter(Collision other)
     {
         m_MyPlayerRogueMemoryShare.m_MyCarCollisionPlayerRogue.CollisionEnter(other);

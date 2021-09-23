@@ -29,7 +29,7 @@ public class CReadyGameWindow : CSingletonMonoBehaviour<CReadyGameWindow>
     {
         m_ShowObj.SetActive(true);
 
-        m_ReadyBack.SetActive(true);
+       // m_ReadyBack.SetActive(true);
 
         
         CSaveManager lTempCSaveManager = CSaveManager.SharedInstance;

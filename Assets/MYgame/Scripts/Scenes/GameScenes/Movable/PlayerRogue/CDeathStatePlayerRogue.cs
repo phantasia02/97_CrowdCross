@@ -23,7 +23,7 @@ public class CDeathStatePlayerRogue : CDeathStateBase
     {
         base.updataState();
 
-        if (MomentinTime(1.0f))
+        if (MomentinTime(0.1f))
         {
             m_MyPlayerRogueMemoryShare.m_MyRigidbody.Sleep();
             m_MyPlayerRogueMemoryShare.m_MyGroup.AllPlayerRoguePool.RemoveObj(m_MyPlayerRogueMemoryShare.m_MyPlayerRogue);

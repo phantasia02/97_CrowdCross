@@ -68,10 +68,5 @@ public class CGameSceneWindow : CSingletonMonoBehaviour<CGameSceneWindow>
         {
             m_GoButton.gameObject.SetActive(false);
         }
-        else if (settype == EButtonState.eNormal)
-        {
-            m_GoButton.gameObject.SetActive(true);
-            m_GoButton.interactable = true;
-        }
     }
 }

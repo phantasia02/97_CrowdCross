@@ -231,7 +231,7 @@ public class CPlayerRogueGroup : CMovableBase
     {
         CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
 
-        GameObject lTempObj = Instantiate(lTempCGGameSceneData.m_AllOtherObj[(int)CGGameSceneData.EOtherObj.ePlayerRogue], AllPlayerRogueTransform.position, AllPlayerRogueTransform.rotation, AllPlayerRogueTransform.transform);
+        GameObject lTempObj = Instantiate(lTempCGGameSceneData.m_AllOtherObj[(int)CGGameSceneData.EOtherObj.ePlayerRogue], AllPlayerRogueTransform.position, AllPlayerRogueTransform.rotation, m_PlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent);
         CPlayerRogue lTempPlayerRogue = lTempObj.GetComponent<CPlayerRogue>();
         lTempPlayerRogue.SetParentData(ref m_BuffSetParentData);
 
@@ -261,7 +261,6 @@ public class CPlayerRogueGroup : CMovableBase
         for (int i = 0; i < Count; i++)
         {
             lTempPlayerRogue = lTempAllPlayerRoguePool.AddObj();
-
 
             lTempPlayerRogue.transform.rotation = this.transform.rotation;
             lTempPlayerRogue.ShowMyCollision(true);
