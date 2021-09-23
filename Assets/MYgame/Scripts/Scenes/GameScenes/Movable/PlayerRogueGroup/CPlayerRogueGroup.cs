@@ -92,16 +92,11 @@ public class CPlayerRogueGroup : CMovableBase
         SetBaseMemoryShare();
 
         CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
-        m_PlayerRogueGroupMemoryShare.m_TargetPositionList = GetPositionListAround(m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform.localPosition, new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f }, new int[] { 8, 20, 30, 50, 70, 100 });
+        m_PlayerRogueGroupMemoryShare.m_TargetPositionList = GetPositionListAround(m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform.localPosition,
+            new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f }, new int[] { 8, 20, 30, 50, 70, 100, 130, 160});
 
         lTempAllPlayerRoguePool.NewObjFunc = NewPlayerRogue;
         lTempAllPlayerRoguePool.RemoveObjFunc = RemovePlayerRogue;
-
-        //lTempAllPlayerRoguePool.AddListObjFunc = (CPlayerRogue AddRogue, int index) =>
-        //{
-        //    //AddRogue.MyAddList(index);
-        //    //AddRogue.SetTargetPos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[index], m_PlayerRogueUpdatapos);
-        //};
 
         lTempAllPlayerRoguePool.InitDefPool(CstInitQueueCount);
 
@@ -267,6 +262,9 @@ public class CPlayerRogueGroup : CMovableBase
         {
             lTempPlayerRogue = lTempAllPlayerRoguePool.AddObj();
 
+
+            lTempPlayerRogue.transform.rotation = this.transform.rotation;
+            lTempPlayerRogue.ShowMyCollision(true);
             lTempPlayerRogue.transform.parent = AllPlayerRogueTransform;
             lTempAllPlayerRogueIndex = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count;
             m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Add(lTempPlayerRogue);

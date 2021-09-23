@@ -64,7 +64,7 @@ public abstract class CMovableBase : CGameObjBas
 
 
     public override EObjType ObjType() { return EObjType.eMovable; }
-    //  public Rigidbody MyRigidbody { get { return m_MyRigidbody; } }
+    public Rigidbody MyRigidbody { get { return m_MyMemoryShare.m_MyRigidbody; } }
 
 
     protected GameObject m_ObjCollider = null;

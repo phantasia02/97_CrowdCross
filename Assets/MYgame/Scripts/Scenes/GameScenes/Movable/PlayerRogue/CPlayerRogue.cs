@@ -27,7 +27,6 @@ public class CPlayerRogue : CActor
     {
         set
         {
-
             if ((int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase && value != StaticGlobalDel.EMovableState.eDeath)
             {
                 if (m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK == StaticGlobalDel.EBoolState.eFlase)
@@ -37,13 +36,11 @@ public class CPlayerRogue : CActor
                     m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
                 }
 
-
                 m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = value;
 
                 return;
             }
             
-
             m_ChangState = value;
         }
         get { return m_ChangState; }
@@ -97,6 +94,7 @@ public class CPlayerRogue : CActor
         {
             this.transform.localPosition = m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
             m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eTrue;
+            ChangState = StaticGlobalDel.EMovableState.eWait;
         }
         else
         {
@@ -136,6 +134,14 @@ public class CPlayerRogue : CActor
         CurGroupIndex = -1;
         SetCurState(StaticGlobalDel.EMovableState.eNull);
         this.gameObject.SetActive(false);
+    }
+
+    public void ShowMyCollision(bool show)
+    {
+        for (int i = 0; i < m_MyPlayerRogueMemoryShare.m_AllChildCollider.Length; i++)
+            m_MyPlayerRogueMemoryShare.m_AllChildCollider[i].gameObject.SetActive(show);
+
+        m_MyPlayerRogueMemoryShare.m_MyRigidbody.useGravity = !show;
     }
 
     //public override void OnTriggerEnter(Collider other)
