@@ -5,11 +5,6 @@ using UnityEngine.UI;
 using Cinemachine;
 using Dreamteck.Splines;
 
-//public class CPlayerRogueAndTarget
-//{
-//    public CPlayerRogue m_PlayerRogue = null;
-//    public Transform    m_TargetDummy = null;
-//}
 
 public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
 {
@@ -27,7 +22,7 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
     public List<Vector3>                m_TargetPositionList        = null;
     public Text                         m_ShowCountText             = null;
     public Canvas                       m_MyCanvas                  = null;
-
+    public Transform                    m_PlayerRoguePoolParent     = null;
 };
 
 public class CPlayerRogueGroup : CMovableBase
@@ -53,6 +48,7 @@ public class CPlayerRogueGroup : CMovableBase
     [SerializeField] Transform m_AllTargetDummyTransform = null;
     public Transform AllTargetDummyTransform { get { return m_PlayerRogueGroupMemoryShare.m_AllTargetDummyTransform; } }
 
+    [SerializeField] Transform m_PlayerRoguePoolParent = null;
     [SerializeField] SplineFollower m_DummyCameraFollwer = null;
     [SerializeField] [Range(1, 300)] protected int m_InitCurListCount = 1;
     // ==================== SerializeField ===========================================
@@ -91,6 +87,7 @@ public class CPlayerRogueGroup : CMovableBase
         m_PlayerRogueGroupMemoryShare.m_DummyCameraFollwer          = m_DummyCameraFollwer;
         m_PlayerRogueGroupMemoryShare.m_ShowCountText               = this.gameObject.GetComponentInChildren<Text>();
         m_PlayerRogueGroupMemoryShare.m_MyCanvas                    = this.gameObject.GetComponentInChildren<Canvas>();
+        m_PlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent       = m_PlayerRoguePoolParent;
 
         SetBaseMemoryShare();
 
@@ -252,7 +249,7 @@ public class CPlayerRogueGroup : CMovableBase
     {
         List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
         bool lTempbool = lTempAllPlayerRogue.Remove(RemovePlayerRogue);
-
+        RemovePlayerRogue.transform.parent = m_PlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent;
 
         CountText();
         return lTempbool;
@@ -270,6 +267,7 @@ public class CPlayerRogueGroup : CMovableBase
         {
             lTempPlayerRogue = lTempAllPlayerRoguePool.AddObj();
 
+            lTempPlayerRogue.transform.parent = AllPlayerRogueTransform;
             lTempAllPlayerRogueIndex = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count;
             m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Add(lTempPlayerRogue);
             lTempPlayerRogue.MyAddList(lTempAllPlayerRogueIndex);
@@ -282,7 +280,7 @@ public class CPlayerRogueGroup : CMovableBase
     public void RemovePlayerRogue(CPlayerRogue RemoveRogue)
     {
         RemoveRogue.MyRemove();
-
+        
         for (int i = 0; i < AllPlayerRoguePool.CurAllObjCount; i++)
         {
             if (AllPlayerRoguePool.AllCurObj[i].CurState == StaticGlobalDel.EMovableState.eDeath)
