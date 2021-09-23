@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
 using Dreamteck.Splines;
-
+using System.Linq;
 
 public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
 {
@@ -286,6 +286,8 @@ public class CPlayerRogueGroup : CMovableBase
         }
 
         List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
+        var rnd = new System.Random();
+        lTempAllPlayerRogue.OrderBy(item => rnd.Next());
 
         for (int i = 0; i < lTempAllPlayerRogue.Count; i++)
             lTempAllPlayerRogue[i].SetTargetupdatePos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[i]);
