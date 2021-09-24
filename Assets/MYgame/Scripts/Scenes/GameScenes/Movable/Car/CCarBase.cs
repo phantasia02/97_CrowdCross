@@ -16,37 +16,32 @@ public class CCarBaseMemoryShare : CMemoryShareBase
 
 public abstract class CCarBase : CMovableBase
 {
-    [SerializeField] protected float m_DefSpeed = StaticGlobalDel.g_DefMovableTotleSpeed;
+
+    public enum ECarModIndex
+    {
+        eNormalCar  = 0,
+        eSpeedCar   = 1,
+        eMax
+    }
+
+
+    protected float m_DefSpeed = StaticGlobalDel.g_DefMovableTotleSpeed;
     public override float DefSpeed { get { return m_DefSpeed; } }
 
-    [SerializeField] protected float m_CarLong = 1.0f;
+    [SerializeField] protected CCarMod[] m_AllCarMod = null;
+
+    protected float m_CarLong = 1.0f;
     public float CarLong { get { return m_CarLong; } }
 
     protected CCarBaseMemoryShare m_MyCarBaseMemoryShare = null;
 
     public CCarCreatePos MyCarCreatePos { get { return m_MyCarBaseMemoryShare.m_MyCarCreatePos; } }
 
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
-    {
-        Vector3 a = transform.position;
-        Vector3 b = transform.position + (-transform.forward * m_CarLong);
-
-        Handles.DrawAAPolyLine(a, b);
-
-        // 畫固定大小的球  不會因為 攝影機遠近 影響的球
-        void DrawSphere(Vector3 p)
-        {
-            Gizmos.DrawSphere(p, HandleUtility.GetHandleSize(p));
-        }
-
-        DrawSphere(a);
-        DrawSphere(b);
-    }
-#endif
+    
 
     protected override void AddInitState()
     {
+        
         m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStateNormalCar(this));
     }
 
@@ -67,6 +62,17 @@ public abstract class CCarBase : CMovableBase
         m_MyCarBaseMemoryShare.m_MyCarCreatePos = this.GetComponentInParent<CCarCreatePos>();
         m_MyCarBaseMemoryShare.m_CarCreatePosindex = index;
         ChangState = StaticGlobalDel.EMovableState.eMove;
+    }
+
+    public void SetCarMod(ECarModIndex Eindex)
+    {
+        int index = (int)Eindex;
+        for (int i = 0; i < m_AllCarMod.Length; i++)
+            m_AllCarMod[i].gameObject.SetActive(false);
+
+        m_AllCarMod[index].gameObject.SetActive(true);
+        m_DefSpeed = m_AllCarMod[index].DefSpeed;
+        ResetMoveBuff(true);
     }
 
     public void MyRemove()

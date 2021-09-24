@@ -93,7 +93,7 @@ public class CPlayerRogueGroup : CMovableBase
 
         CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
         m_PlayerRogueGroupMemoryShare.m_TargetPositionList = GetPositionListAround(m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform.localPosition,
-            new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f }, new int[] { 8, 20, 30, 50, 70, 100, 130, 160});
+            new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f }, new int[] { 8, 20, 30, 50, 70, 100, 130, 160, 200});
 
         lTempAllPlayerRoguePool.NewObjFunc = NewPlayerRogue;
         lTempAllPlayerRoguePool.RemoveObjFunc = RemovePlayerRogue;

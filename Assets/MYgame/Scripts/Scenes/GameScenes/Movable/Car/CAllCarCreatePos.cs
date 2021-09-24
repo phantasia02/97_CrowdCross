@@ -49,8 +49,6 @@ public class CAllCarCreatePos : CGameObjBas
         return lTempCarBase;
     }
 
-
-
     public CCarBase GetCarBase()
     {
         return AllCarBasePool.AddObj();

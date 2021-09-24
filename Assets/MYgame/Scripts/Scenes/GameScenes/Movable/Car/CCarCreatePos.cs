@@ -14,6 +14,8 @@ public class CCarCreatePos : CGameObjBas
 
     [SerializeField] protected float m_MaxCreateCarDis = 50.0f;
     [SerializeField] protected float m_MinCreateCarDis = 5.0f;
+    [SerializeField] protected CCarBase.ECarModIndex m_CarMod = CCarBase.ECarModIndex.eNormalCar;
+
     protected float m_NextAddCarDisSqr = float.MaxValue;
 
     protected override void Awake()
@@ -60,15 +62,15 @@ public class CCarCreatePos : CGameObjBas
             m_NextAddCarDisSqr = float.MaxValue;
     }
 
-    public void AddCar(CCarBase car)
-    {
-        int Addindex = m_MyAllCar.Count;
-        m_MyAllCar.Add(car);
-        car.transform.parent = this.transform;
-        car.transform.localPosition = Vector3.zero;
-        car.transform.rotation = this.transform.rotation;
-        car.AddToList(Addindex);
-    }
+    //public void AddCar(CCarBase car)
+    //{
+    //    int Addindex = m_MyAllCar.Count;
+    //    m_MyAllCar.Add(car);
+    //    car.transform.parent = this.transform;
+    //    car.transform.localPosition = Vector3.zero;
+    //    car.transform.rotation = this.transform.rotation;
+    //    car.AddToList(Addindex);
+    //}
 
     public void RemoveCar(CCarBase car)
     {
@@ -78,7 +80,17 @@ public class CCarCreatePos : CGameObjBas
     public CCarBase AddCarChild(Vector3 lpos)
     {
         CCarBase lTempCarBase = m_MyAllCarCreatePos.AllCarBasePool.AddObj();
-        AddCar(lTempCarBase);
+        //AddCar(lTempCarBase);
+
+        int Addindex = m_MyAllCar.Count;
+        m_MyAllCar.Add(lTempCarBase);
+        lTempCarBase.transform.parent = this.transform;
+        lTempCarBase.transform.localPosition = Vector3.zero;
+        lTempCarBase.transform.rotation = this.transform.rotation;
+
+        lTempCarBase.SetCarMod(m_CarMod);
+        lTempCarBase.AddToList(Addindex);
+
         lTempCarBase.transform.position = lpos;
         return lTempCarBase;
     }
