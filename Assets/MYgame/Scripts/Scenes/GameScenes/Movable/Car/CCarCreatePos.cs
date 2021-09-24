@@ -114,11 +114,16 @@ public class CCarCreatePos : CGameObjBas
 
     private void OnDisable()
     {
+        if (isApplicationQuitting)
+            return;
+
         m_MyAllCarCreatePos.RemoveAllCarCreatePos(this);
 
-        for (int i = m_MyAllCar.Count - 1; i >= 0; i--)
-            m_MyAllCarCreatePos.AllCarBasePool.RemoveObj(m_MyAllCar[i]);
-
+        if (m_MyAllCarCreatePos.enabled)
+        {
+            for (int i = m_MyAllCar.Count - 1; i >= 0; i--)
+                m_MyAllCarCreatePos.AllCarBasePool.RemoveObj(m_MyAllCar[i]);
+        }
 
         m_MyAllCar.Clear();
     }

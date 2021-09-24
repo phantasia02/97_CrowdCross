@@ -17,6 +17,7 @@ public abstract class CGameObjBas : MonoBehaviour
     abstract public EObjType ObjType();
     protected Transform m_OriginalParent = null;
     protected CGameManager m_MyGameManager = null;
+    protected bool isApplicationQuitting = false;
 
     protected virtual void Awake()
     {
@@ -40,4 +41,6 @@ public abstract class CGameObjBas : MonoBehaviour
     {
         
     }
+
+    void OnApplicationQuit(){isApplicationQuitting = true;}
 }
