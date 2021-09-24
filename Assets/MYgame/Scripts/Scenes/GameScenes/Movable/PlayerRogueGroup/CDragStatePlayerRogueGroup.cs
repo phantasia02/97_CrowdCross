@@ -20,6 +20,7 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
         m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.enabled = true;
 
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.ResetMoveBuff();
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSpeed();
     }
 
     protected override void updataState()

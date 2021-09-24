@@ -32,12 +32,12 @@ public class CPlayerRogue : CActor
 
             if ((int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase)
             {
-                //if (m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK == StaticGlobalDel.EBoolState.eFlase)
-                //{
-                //    m_ChangState = StaticGlobalDel.EMovableState.eMove;
-                //    SameStatusUpdate = true;
-                //    m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
-                //}
+                if (m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK == StaticGlobalDel.EBoolState.eFlase)
+                {
+                    m_ChangState = StaticGlobalDel.EMovableState.eMove;
+                    SameStatusUpdate = true;
+                    m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
+                }
                 m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = value;
                 return;
             }
@@ -103,15 +103,10 @@ public class CPlayerRogue : CActor
         else
         {
             this.transform.localPosition = Vector3.zero;
-            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
+            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
             SameStatusUpdate = true;
-            SetCurState(StaticGlobalDel.EMovableState.eMove);
+            ChangState = StaticGlobalDel.EMovableState.eMove;
         }
-    }
-
-    public override void SetCurState(StaticGlobalDel.EMovableState pamState)
-    {
-        base.SetCurState(pamState);
     }
    
     public void SetTargetupdatePos(Vector3 Localpos)
@@ -126,11 +121,10 @@ public class CPlayerRogue : CActor
         if (lTempV3.sqrMagnitude > 0.1f)
         {
             StaticGlobalDel.EBoolState lOldeBoolState = m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK;
-            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlasePlaying;
+            m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
             SameStatusUpdate = true;
-            SetCurState(StaticGlobalDel.EMovableState.eMove);
-
-            ChangState = lOldeBoolState == StaticGlobalDel.EBoolState.eFlasePlaying ? m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState : CurState;
+           // SetCurState(StaticGlobalDel.EMovableState.eMove);
+            ChangState = lOldeBoolState == StaticGlobalDel.EBoolState.eFlasePlaying ? StaticGlobalDel.EMovableState.eMove : CurState;
             //m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = StaticGlobalDel.EMovableState.eWait;
         }
         else

@@ -898,7 +898,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 587655652}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: -0.1924501, y: 20.000004, z: 71.339745}
+  m_LocalPosition: {x: 0, y: 20.000004, z: 71.339745}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1284,16 +1284,16 @@ MonoBehaviour:
   m_LookaheadIgnoreY: 0
   m_XDamping: 0
   m_YDamping: 0
-  m_ZDamping: 0
+  m_ZDamping: 0.1
   m_TargetMovementOnly: 1
-  m_ScreenX: 0.5361111
+  m_ScreenX: 0.5
   m_ScreenY: 0.5
   m_CameraDistance: 10
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
-  m_SoftZoneWidth: 0.01851852
+  m_SoftZoneWidth: 0
   m_SoftZoneHeight: 0
   m_BiasX: 0
   m_BiasY: 0
@@ -3057,7 +3057,7 @@ MonoBehaviour:
   m_AllTargetDummyTransform: {fileID: 643389920}
   m_PlayerRoguePoolParent: {fileID: 1655794753}
   m_DummyCameraFollwer: {fileID: 1448296079}
-  m_InitCurListCount: 21
+  m_InitCurListCount: 68
 --- !u!4 &1024904694
 Transform:
   m_ObjectHideFlags: 0
@@ -9994,7 +9994,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1956709289}
   m_LocalRotation: {x: 0.2588191, y: -0, z: -0, w: 0.9659258}
-  m_LocalPosition: {x: -0.1924501, y: 20.000004, z: 71.339745}
+  m_LocalPosition: {x: 0, y: 20.000004, z: 71.339745}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 827017411}
