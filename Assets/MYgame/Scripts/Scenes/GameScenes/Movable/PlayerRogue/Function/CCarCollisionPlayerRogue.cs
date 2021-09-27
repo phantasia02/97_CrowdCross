@@ -15,6 +15,7 @@ public class CCarCollisionPlayerRogue
     {
         if (other.gameObject.layer == (int)StaticGlobalDel.ELayerIndex.eCarCollider)
         {
+            m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState = StaticGlobalDel.EMovableState.eDeath;
             m_MyPlayerRogueMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eDeath;
             m_MyPlayerRogueMemoryShare.m_GroupIndex = -1;

@@ -118,9 +118,17 @@ public class CPlayerRogue : CActor
         if (m_MyPlayerRogueMemoryShare.m_GroupIndex == -1)
             return;
 
+        Vector3 lTempV3 = Vector3.zero;
+
+        lTempV3 = CurTargetDummy.localPosition - LocalposData.m_TargetPosition;
+        lTempV3.y = 0.0f;
+
+        if (lTempV3.sqrMagnitude < 0.1f)
+            return;
+
         m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = LocalposData.m_TargetPosition;
         m_MyPlayerRogueMemoryShare.m_CurRingDis = LocalposData.m_RingDis;
-        Vector3 lTempV3 = this.transform.localPosition - m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
+        lTempV3 = this.transform.localPosition - m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
         float SqrDis = lTempV3.sqrMagnitude;
 
         if (lTempV3.sqrMagnitude > 0.1f)
@@ -141,6 +149,7 @@ public class CPlayerRogue : CActor
 
     public void MyAddList(int listindex)
     {
+        m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeAll;
         m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState = StaticGlobalDel.EMovableState.eMax;
         CurGroupIndex = listindex;
         this.gameObject.SetActive(true);

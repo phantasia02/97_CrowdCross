@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Cinemachine;
 using Dreamteck.Splines;
 using System.Linq;
+using DG.Tweening;
 
 public class CTargetPositionData
 {
@@ -30,6 +31,7 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
     public Canvas                       m_MyCanvas                  = null;
     public Transform                    m_PlayerRoguePoolParent     = null;
     public Transform                    m_PlayerRogueGroupTrigger   = null;
+    public Transform                    m_CountCanvasTarget         = null;
     public int                          m_CarInCount                = 0;
 };
 
@@ -56,9 +58,10 @@ public class CPlayerRogueGroup : CMovableBase
     [SerializeField] Transform m_AllTargetDummyTransform = null;
     public Transform AllTargetDummyTransform { get { return m_PlayerRogueGroupMemoryShare.m_AllTargetDummyTransform; } }
 
-    [SerializeField] Transform m_PlayerRoguePoolParent = null;
-    [SerializeField] Transform m_PlayerRogueGroupTrigger = null;
-    [SerializeField] SplineFollower m_DummyCameraFollwer = null;
+    [SerializeField] Transform m_PlayerRoguePoolParent      = null;
+    [SerializeField] Transform m_PlayerRogueGroupTrigger    = null;
+    [SerializeField] Transform m_CountTargetDummy           = null;
+    [SerializeField] SplineFollower m_DummyCameraFollwer    = null;
     [SerializeField] [Range(1, 300)] protected int m_InitCurListCount = 1;
     // ==================== SerializeField ===========================================
 
@@ -98,6 +101,7 @@ public class CPlayerRogueGroup : CMovableBase
         m_PlayerRogueGroupMemoryShare.m_MyCanvas                    = this.gameObject.GetComponentInChildren<Canvas>();
         m_PlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent       = m_PlayerRoguePoolParent;
         m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroupTrigger     = m_PlayerRogueGroupTrigger;
+        m_PlayerRogueGroupMemoryShare.m_CountCanvasTarget           = m_CountTargetDummy;
 
         SetBaseMemoryShare();
 
@@ -129,6 +133,11 @@ public class CPlayerRogueGroup : CMovableBase
         // if (m_MyGameManager.CurState == CGameManager.EState.ePlay || m_MyGameManager.CurState == CGameManager.EState.eReady)
         InputUpdata();
     }
+
+    //public void UpdateCanvasTarget()
+    //{
+
+    //}
 
     public void UpdateSpeed()
     {
@@ -277,8 +286,16 @@ public class CPlayerRogueGroup : CMovableBase
 
         Vector3 lTempV3 = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count - 1].CurTargetDummy.localPosition;
         lTempV3.y = 0.0f;
-        float lTempRingDis = lTempV3.magnitude + 2.0f;
+        float lTempMagnitude = lTempV3.magnitude;
+        float lTempRingDis = lTempMagnitude  + 2.0f;
         m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroupTrigger.localScale = new Vector3(lTempRingDis, 2.0f, lTempRingDis);
+
+        m_PlayerRogueGroupMemoryShare.m_CountCanvasTarget.localPosition = new Vector3(0.0f, 2.0f, lTempRingDis);
+
+        if (m_PlayerRogueUpdatapos)
+            m_PlayerRogueGroupMemoryShare.m_MyCanvas.transform.localPosition = new Vector3(0.0f, 3.0f, lTempMagnitude);
+        else
+            m_PlayerRogueGroupMemoryShare.m_MyCanvas.transform.DOLocalMoveZ(lTempMagnitude, 0.3f).SetEase(Ease.Linear);
     }
 
     public void AddCurPlayerRogueCount(int Count)
@@ -294,6 +311,7 @@ public class CPlayerRogueGroup : CMovableBase
             lTempPlayerRogue = lTempAllPlayerRoguePool.AddObj();
 
             lTempPlayerRogue.transform.rotation = this.transform.rotation;
+            lTempPlayerRogue.transform.localPosition = Vector3.zero;
             lTempPlayerRogue.ShowMyCollision(true);
             lTempPlayerRogue.transform.parent = AllPlayerRogueTransform;
             lTempAllPlayerRogueIndex = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count;
@@ -301,6 +319,17 @@ public class CPlayerRogueGroup : CMovableBase
             lTempPlayerRogue.MyAddList(lTempAllPlayerRogueIndex);
             lTempPlayerRogue.SetTargetPos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[lTempAllPlayerRogueIndex], m_PlayerRogueUpdatapos);
         }
+
+        Vector3 lTempv3 = Vector3.zero;
+        //List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
+        for (int i = 0; i < m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count; i++)
+        {
+            lTempv3 = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].transform.position - m_PlayerRogueGroupMemoryShare.m_TargetPositionList[i].m_TargetPosition;
+            lTempv3.y = 0.0f;
+            if (lTempv3.sqrMagnitude >= 0.1f)
+                m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].SetTargetupdatePos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[i]);
+        }
+
         ResetTriggerSize();
         CountText();
     }
@@ -317,11 +346,11 @@ public class CPlayerRogueGroup : CMovableBase
         var rnd = new System.Random();
         lTempAllPlayerRogue.OrderBy(item => rnd.Next());
 
+        Vector3 lTempV3 = Vector3.zero;
         for (int i = 0; i < lTempAllPlayerRogue.Count; i++)
             lTempAllPlayerRogue[i].SetTargetupdatePos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[i]);
 
 
-        
         CountText();
     }
 
