@@ -6,6 +6,12 @@ using Cinemachine;
 using Dreamteck.Splines;
 using System.Linq;
 
+public class CTargetPositionData
+{
+    public Vector3 m_TargetPosition;
+    public float m_RingDis = 1.0f;
+}
+
 public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
 {
     public bool                         m_bDown                     = false;
@@ -19,17 +25,19 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
     public SplineFollower               m_MySplineFollower          = null;
     public Vector2                      m_TargetOffset              = Vector3.zero;
     public StaticGlobalDel.EBoolState   m_CarCollision              = StaticGlobalDel.EBoolState.eFlase;
-    public List<Vector3>                m_TargetPositionList        = null;
+    public List<CTargetPositionData>    m_TargetPositionList        = null;
     public Text                         m_ShowCountText             = null;
     public Canvas                       m_MyCanvas                  = null;
     public Transform                    m_PlayerRoguePoolParent     = null;
+    public Transform                    m_PlayerRogueGroupTrigger   = null;
+    public int                          m_CarInCount                = 0;
 };
 
 public class CPlayerRogueGroup : CMovableBase
 {
     const float CfHalfWidth = 3.0f;
     const float CfTotleWidth = CfHalfWidth * 2.0f;
-    const int CstInitQueueCount = 200;
+    const int CstInitQueueCount = 700;
 
     protected CPlayerRogueGroupMemoryShare m_PlayerRogueGroupMemoryShare = null;
 
@@ -49,6 +57,7 @@ public class CPlayerRogueGroup : CMovableBase
     public Transform AllTargetDummyTransform { get { return m_PlayerRogueGroupMemoryShare.m_AllTargetDummyTransform; } }
 
     [SerializeField] Transform m_PlayerRoguePoolParent = null;
+    [SerializeField] Transform m_PlayerRogueGroupTrigger = null;
     [SerializeField] SplineFollower m_DummyCameraFollwer = null;
     [SerializeField] [Range(1, 300)] protected int m_InitCurListCount = 1;
     // ==================== SerializeField ===========================================
@@ -88,6 +97,7 @@ public class CPlayerRogueGroup : CMovableBase
         m_PlayerRogueGroupMemoryShare.m_ShowCountText               = this.gameObject.GetComponentInChildren<Text>();
         m_PlayerRogueGroupMemoryShare.m_MyCanvas                    = this.gameObject.GetComponentInChildren<Canvas>();
         m_PlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent       = m_PlayerRoguePoolParent;
+        m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroupTrigger     = m_PlayerRogueGroupTrigger;
 
         SetBaseMemoryShare();
 
@@ -203,27 +213,33 @@ public class CPlayerRogueGroup : CMovableBase
     }
 
 
-    private List<Vector3> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
+    private List<CTargetPositionData> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
     {
-        List<Vector3> positionList = new List<Vector3>();
-        positionList.Add(startPosition);
+        List<CTargetPositionData> positionList = new List<CTargetPositionData>();
+        CTargetPositionData lTempTargetPositionData = new CTargetPositionData();
+        lTempTargetPositionData.m_TargetPosition = startPosition;
+        lTempTargetPositionData.m_RingDis = 0.0f;
+        positionList.Add(lTempTargetPositionData);
         for (int i = 0; i < ringDistanceArray.Length; i++)
             positionList.AddRange(GetPositionListAround(startPosition, ringDistanceArray[i], ringPositionCountArray[i]));
 
         return positionList;
     }
 
-    private List<Vector3> GetPositionListAround(Vector3 startPosition, float distance, int positionCount)
+    private List<CTargetPositionData> GetPositionListAround(Vector3 startPosition, float distance, int positionCount)
     {
         Vector3 ApplyRotationToVector(Vector3 vec, float angle) { return Quaternion.Euler(0, angle, 0) * vec; }
-
-        List<Vector3> positionList = new List<Vector3>();
+        CTargetPositionData lTempTargetPositionData = null;
+        List<CTargetPositionData> positionList = new List<CTargetPositionData>();
         for (int i = 0; i < positionCount; i++)
         {
             float angle = i * (360f / positionCount);
             Vector3 dir = ApplyRotationToVector(new Vector3(1, 0, 0), angle);
             Vector3 position = startPosition + dir * (distance + Random.Range(-0.5f, 0.5f));
-            positionList.Add(position);
+            lTempTargetPositionData = new CTargetPositionData();
+            lTempTargetPositionData.m_TargetPosition = position;
+            lTempTargetPositionData.m_RingDis = distance;
+            positionList.Add(lTempTargetPositionData);
         }
         return positionList;
     }
@@ -251,6 +267,20 @@ public class CPlayerRogueGroup : CMovableBase
         return lTempbool;
     }
 
+    public void ResetTriggerSize()
+    {
+        if (m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count == 0)
+        {
+            m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroupTrigger.localScale = new Vector3(0.0f, 2.0f, 0.0f);
+            return;
+        }
+
+        Vector3 lTempV3 = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count - 1].CurTargetDummy.localPosition;
+        lTempV3.y = 0.0f;
+        float lTempRingDis = lTempV3.magnitude + 2.0f;
+        m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroupTrigger.localScale = new Vector3(lTempRingDis, 2.0f, lTempRingDis);
+    }
+
     public void AddCurPlayerRogueCount(int Count)
     {
         if (Count < 0)
@@ -271,19 +301,17 @@ public class CPlayerRogueGroup : CMovableBase
             lTempPlayerRogue.MyAddList(lTempAllPlayerRogueIndex);
             lTempPlayerRogue.SetTargetPos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[lTempAllPlayerRogueIndex], m_PlayerRogueUpdatapos);
         }
-
+        ResetTriggerSize();
         CountText();
     }
 
-    public void RemovePlayerRogue(CPlayerRogue RemoveRogue)
+    public void Rearrangement()
     {
-        RemoveRogue.MyRemove();
-        
-        for (int i = 0; i < AllPlayerRoguePool.CurAllObjCount; i++)
-        {
-            if (AllPlayerRoguePool.AllCurObj[i].CurState == StaticGlobalDel.EMovableState.eDeath)
-                return;
-        }
+        //for (int i = 0; i < AllPlayerRoguePool.CurAllObjCount; i++)
+        //{
+        //    if (AllPlayerRoguePool.AllCurObj[i].CurState == StaticGlobalDel.EMovableState.eDeath)
+        //        return;
+        //}
 
         List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
         var rnd = new System.Random();
@@ -292,7 +320,15 @@ public class CPlayerRogueGroup : CMovableBase
         for (int i = 0; i < lTempAllPlayerRogue.Count; i++)
             lTempAllPlayerRogue[i].SetTargetupdatePos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[i]);
 
+
+        
         CountText();
+    }
+
+    public void RemovePlayerRogue(CPlayerRogue RemoveRogue)
+    {
+        RemoveRogue.MyRemove();
+
     }
 
     public void SetAllPlayerRogueState(StaticGlobalDel.EMovableState setState)
@@ -312,7 +348,6 @@ public class CPlayerRogueGroup : CMovableBase
 
     public override void OnTriggerEnter(Collider other)
     {
-        
         if (other.tag == StaticGlobalDel.TagDoorGroup)
         {
             CDoorGroup lTempDoorGroup = other.GetComponentInParent<CDoorGroup>();
@@ -343,7 +378,28 @@ public class CPlayerRogueGroup : CMovableBase
 
             }
         }
+        else if (other.tag == StaticGlobalDel.TagCarCollider)
+        {
+            m_PlayerRogueGroupMemoryShare.m_CarInCount++;
+          
+        }
 
         base.OnTriggerEnter(other);
+    }
+
+    public override void OnTriggerExit(Collider other)
+    {
+        if (other.tag == StaticGlobalDel.TagCarCollider)
+        {
+            int lTempCarInCount = m_PlayerRogueGroupMemoryShare.m_CarInCount;
+            m_PlayerRogueGroupMemoryShare.m_CarInCount--;
+            if (lTempCarInCount == 1 && m_PlayerRogueGroupMemoryShare.m_CarInCount == 0)
+            {
+                Rearrangement();
+                ResetTriggerSize();
+            }
+        }
+
+        base.OnTriggerExit(other);
     }
 }

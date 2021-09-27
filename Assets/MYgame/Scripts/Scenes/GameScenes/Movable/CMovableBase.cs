@@ -276,7 +276,6 @@ public abstract class CMovableBase : CGameObjBas
         if (lTempNextFramChangState == NextFramChangState && NextFramChangState != StaticGlobalDel.EMovableState.eMax)
         {
             m_ChangState = m_NextFramChangState;
-            Debug.Log("Update NextFramChangState11111111111111");
             NextFramChangState = StaticGlobalDel.EMovableState.eMax;
         }
 

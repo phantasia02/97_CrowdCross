@@ -8,6 +8,7 @@ public class CPlayerRogueMemoryShare : CMemoryShareBase
     public CPlayerRogue                     m_MyPlayerRogue = null;
     public CPlayerRogueGroup                m_MyGroup       = null;
     public Transform                        m_TargetDummy   = null;
+    public float                            m_CurRingDis = 0.0f;
     public int                              m_GroupIndex    = -1;
     public StaticGlobalDel.EBoolState       m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
     public StaticGlobalDel.EMovableState    m_MoveTargetBuffCurState =  StaticGlobalDel.EMovableState.eMax;
@@ -48,6 +49,8 @@ public class CPlayerRogue : CActor
     }
 
     public int CurGroupIndex { set { m_MyPlayerRogueMemoryShare.m_GroupIndex = value; } }
+    public float CurRingDis { get { return m_MyPlayerRogueMemoryShare.m_CurRingDis; } }
+    public Transform CurTargetDummy { get { return m_MyPlayerRogueMemoryShare.m_TargetDummy; } }
     protected CPlayerRogueMemoryShare m_MyPlayerRogueMemoryShare = null;
 
     public void SetParentData(ref CSetParentData data)
@@ -87,12 +90,13 @@ public class CPlayerRogue : CActor
     }
 
 
-    public void SetTargetPos(Vector3 Localpos, bool updatapos = false)
+    public void SetTargetPos(CTargetPositionData LocalposData, bool updatapos = false)
     {
         if (m_MyPlayerRogueMemoryShare.m_GroupIndex == -1)
             return;
 
-        m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = Localpos;
+        m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = LocalposData.m_TargetPosition;
+        m_MyPlayerRogueMemoryShare.m_CurRingDis = LocalposData.m_RingDis;
 
         if (updatapos)
         {
@@ -109,12 +113,13 @@ public class CPlayerRogue : CActor
         }
     }
    
-    public void SetTargetupdatePos(Vector3 Localpos)
+    public void SetTargetupdatePos(CTargetPositionData LocalposData)
     {
         if (m_MyPlayerRogueMemoryShare.m_GroupIndex == -1)
             return;
 
-        m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = Localpos;
+        m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition = LocalposData.m_TargetPosition;
+        m_MyPlayerRogueMemoryShare.m_CurRingDis = LocalposData.m_RingDis;
         Vector3 lTempV3 = this.transform.localPosition - m_MyPlayerRogueMemoryShare.m_TargetDummy.transform.localPosition;
         float SqrDis = lTempV3.sqrMagnitude;
 
