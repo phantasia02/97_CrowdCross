@@ -27,7 +27,7 @@ public class CPlayerRogue : CActor
     {
         set
         {
-            if (m_MyPlayerRogueMemoryShare.m_GroupIndex == -1)
+            if (LockChangState != StaticGlobalDel.EMovableState.eMax && m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState != value)
                 return;
 
             if ((int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase)
@@ -41,8 +41,8 @@ public class CPlayerRogue : CActor
                 m_MyPlayerRogueMemoryShare.m_MoveTargetBuffCurState = value;
                 return;
             }
-            
-            m_ChangState = value;
+
+            base.ChangState = value;
         }
         get { return m_ChangState; }
     }
@@ -136,6 +136,7 @@ public class CPlayerRogue : CActor
 
     public void MyAddList(int listindex)
     {
+        m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState = StaticGlobalDel.EMovableState.eMax;
         CurGroupIndex = listindex;
         this.gameObject.SetActive(true);
     }

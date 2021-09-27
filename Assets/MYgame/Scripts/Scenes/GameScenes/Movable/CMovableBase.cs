@@ -87,16 +87,36 @@ public abstract class CMovableBase : CGameObjBas
     protected StaticGlobalDel.EMovableState m_ChangState = StaticGlobalDel.EMovableState.eMax;
     public virtual StaticGlobalDel.EMovableState ChangState
     {
-        set { m_ChangState = value; }
+        set
+        {
+            if (LockChangState != StaticGlobalDel.EMovableState.eMax && LockChangState != value)
+                return;
+
+            m_ChangState = value;
+        }
         get { return m_ChangState; }
     }
 
     protected StaticGlobalDel.EMovableState m_NextFramChangState = StaticGlobalDel.EMovableState.eMax;
     public StaticGlobalDel.EMovableState NextFramChangState
     {
-        set { m_NextFramChangState = value; }
+        set
+        {
+            if (LockChangState != StaticGlobalDel.EMovableState.eMax && LockChangState != value)
+                return;
+
+            m_NextFramChangState = value;
+        }
         get { return m_NextFramChangState; }
     }
+
+    protected StaticGlobalDel.EMovableState m_LockChangState = StaticGlobalDel.EMovableState.eMax;
+    public StaticGlobalDel.EMovableState LockChangState
+    {
+        set { m_LockChangState = value; }
+        get { return m_LockChangState; }
+    }
+
 
     protected bool m_SameStatusUpdate = false;
     public bool SameStatusUpdate
@@ -255,7 +275,7 @@ public abstract class CMovableBase : CGameObjBas
 
         if (lTempNextFramChangState == NextFramChangState && NextFramChangState != StaticGlobalDel.EMovableState.eMax)
         {
-            ChangState = m_NextFramChangState;
+            m_ChangState = m_NextFramChangState;
             Debug.Log("Update NextFramChangState11111111111111");
             NextFramChangState = StaticGlobalDel.EMovableState.eMax;
         }
