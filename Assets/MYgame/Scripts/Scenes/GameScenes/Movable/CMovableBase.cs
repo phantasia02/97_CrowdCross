@@ -49,6 +49,8 @@ public abstract class CMovableBase : CGameObjBas
         ePlayerRogueGroup   = 2,
         ePlayerRogue        = 3,
         eNormalCar          = 4,
+        eEnemy              = 5,
+        eEnemyGroup         = 6,
         eMax
     };
 
