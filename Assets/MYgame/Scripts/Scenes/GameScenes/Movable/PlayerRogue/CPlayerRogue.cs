@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class CPlayerRogueMemoryShare : CMemoryShareBase
 {
-    public CPlayerRogue                     m_MyPlayerRogue = null;
-    public CPlayerRogueGroup                m_MyGroup       = null;
-    public Transform                        m_TargetDummy   = null;
-    public float                            m_CurRingDis = 0.0f;
-    public int                              m_GroupIndex    = -1;
-    public StaticGlobalDel.EBoolState       m_MoveTargetDummyOK = StaticGlobalDel.EBoolState.eFlase;
-    public StaticGlobalDel.EMovableState    m_MoveTargetBuffCurState =  StaticGlobalDel.EMovableState.eMax;
-    public CCarCollisionPlayerRogue         m_MyCarCollisionPlayerRogue =  null;
+    public CPlayerRogue                     m_MyPlayerRogue             = null;
+    public CPlayerRogueGroup                m_MyGroup                   = null;
+    public Transform                        m_TargetDummy               = null;
+    public float                            m_CurRingDis                = 0.0f;
+    public int                              m_GroupIndex                = -1;
+    public StaticGlobalDel.EBoolState       m_MoveTargetDummyOK         = StaticGlobalDel.EBoolState.eFlase;
+    public StaticGlobalDel.EMovableState    m_MoveTargetBuffCurState    = StaticGlobalDel.EMovableState.eMax;
+    public CCarCollisionPlayerRogue         m_MyCarCollisionPlayerRogue = null;
+    public Transform                        m_HandTransform             = null;
+    public GameObject                       m_MyArms                    = null;
 };
 
 public class CPlayerRogue : CActor
@@ -21,6 +23,8 @@ public class CPlayerRogue : CActor
     {
         public CPlayerRogueGroup Group = null;
     }
+
+
 
     public override EMovableType MyMovableType() { return EMovableType.ePlayerRogue; }
 
@@ -48,6 +52,12 @@ public class CPlayerRogue : CActor
         }
         get { return m_ChangState; }
     }
+
+    // ==================== SerializeField ===========================================
+
+
+    [SerializeField] protected Transform m_HandTransform = null;
+    // ==================== SerializeField ===========================================
 
     public int CurGroupIndex { set { m_MyPlayerRogueMemoryShare.m_GroupIndex = value; } }
     public float CurRingDis { get { return m_MyPlayerRogueMemoryShare.m_CurRingDis; } }
@@ -78,6 +88,7 @@ public class CPlayerRogue : CActor
         m_MyPlayerRogueMemoryShare.m_MyPlayerRogue = this;
 
         m_MyPlayerRogueMemoryShare.m_MyCarCollisionPlayerRogue = new CCarCollisionPlayerRogue(m_MyPlayerRogueMemoryShare);
+        m_MyPlayerRogueMemoryShare.m_HandTransform = m_HandTransform;
        // m_MyPlayerRogueMemoryShare.m_TargetDummy = this;
 
         SetBaseMemoryShare();
@@ -150,10 +161,20 @@ public class CPlayerRogue : CActor
 
     public void ShowAdd(bool Show)
     {
+        CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
         if (Show)
         {
             m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeAll;
             m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState = StaticGlobalDel.EMovableState.eMax;
+
+            m_MyPlayerRogueMemoryShare.m_MyArms = lTempCGGameSceneData.GetArms(CGGameSceneData.EArmsType.eMace) ;
+            m_MyPlayerRogueMemoryShare.m_MyArms.transform.parent = m_MyPlayerRogueMemoryShare.m_HandTransform;
+            m_MyPlayerRogueMemoryShare.m_MyArms.transform.localPosition = Vector3.zero;
+            m_MyPlayerRogueMemoryShare.m_MyArms.transform.rotation = m_MyPlayerRogueMemoryShare.m_HandTransform.rotation;
+
+            Rigidbody lTempRigidbody = m_MyPlayerRogueMemoryShare.m_MyArms.GetComponent<Rigidbody>();
+            lTempRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            lTempRigidbody.useGravity = false;
         }
         else
         {
@@ -171,9 +192,13 @@ public class CPlayerRogue : CActor
 
     public void MyRemove()
     {
+        CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
+        lTempCGGameSceneData.RemoveArmsType(CGGameSceneData.EArmsType.eMace, m_MyPlayerRogueMemoryShare.m_MyArms);
+        m_MyPlayerRogueMemoryShare.m_MyArms = null;
+
         CurGroupIndex = -1;
         ShowAdd(false);
-       // ShowMyCollision(false);
+        // ShowMyCollision(false);
         //SetCurState(StaticGlobalDel.EMovableState.eNull);
         //this.gameObject.SetActive(false);
     }

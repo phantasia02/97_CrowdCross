@@ -286,7 +286,7 @@ public class CPlayerRogueGroup : CMovableBase
         GameObject lTempObj = Instantiate(lTempCGGameSceneData.m_AllOtherObj[(int)CGGameSceneData.EOtherObj.ePlayerRogue], AllPlayerRogueTransform.position, AllPlayerRogueTransform.rotation, m_PlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent);
         CPlayerRogue lTempPlayerRogue = lTempObj.GetComponent<CPlayerRogue>();
         lTempPlayerRogue.SetParentData(ref m_BuffSetParentData);
-
+        //lTempPlayerRogue.SetHandArms(CGGameSceneData.EArmsType.eMace);
         return lTempPlayerRogue;
     }
 
@@ -364,12 +364,6 @@ public class CPlayerRogueGroup : CMovableBase
 
     public void Rearrangement()
     {
-        //for (int i = 0; i < AllPlayerRoguePool.CurAllObjCount; i++)
-        //{
-        //    if (AllPlayerRoguePool.AllCurObj[i].CurState == StaticGlobalDel.EMovableState.eDeath)
-        //        return;
-        //}
-
         List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
         var rnd = new System.Random();
         lTempAllPlayerRogue.OrderBy(item => rnd.Next());
@@ -448,7 +442,7 @@ public class CPlayerRogueGroup : CMovableBase
         {
             int lTempCarInCount = m_PlayerRogueGroupMemoryShare.m_CarInCount;
             m_PlayerRogueGroupMemoryShare.m_CarInCount--;
-            Debug.Log($"lTempCarInCount = {lTempCarInCount}  ----- m_PlayerRogueGroupMemoryShare.m_CarInCount = {m_PlayerRogueGroupMemoryShare.m_CarInCount}");
+            //Debug.Log($"lTempCarInCount = {lTempCarInCount}  ----- m_PlayerRogueGroupMemoryShare.m_CarInCount = {m_PlayerRogueGroupMemoryShare.m_CarInCount}");
             if (lTempCarInCount == 1 && m_PlayerRogueGroupMemoryShare.m_CarInCount == 0)
             {
                 SetBoolRearrangement(true);

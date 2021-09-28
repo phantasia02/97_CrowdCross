@@ -47,3 +47,7 @@ MonoBehaviour:
   m_AllOtherObj:
   - {fileID: 5429504188171595625, guid: 8759e3ef7de659a40b9f029b0ea58eb1, type: 3}
   - {fileID: 3911750434374235556, guid: a5a5b54b02e578d4190b27e6f7aafc24, type: 3}
+  m_AllCar:
+  - {fileID: 4694199163551532323, guid: 1114fbd4cc7c9b8478e661c533760ec6, type: 3}
+  m_AllArms:
+  - {fileID: 7991756421491797953, guid: d6ddeb5895013b343a31e7467ab52f0f, type: 3}

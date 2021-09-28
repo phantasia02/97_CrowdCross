@@ -24,8 +24,14 @@ public class CCarCollisionPlayerRogue
             Vector3 lTempV3 = other.contacts[0].normal + (Vector3.up * 10.0f);
             Vector3 lTemppointV3 = other.contacts[0].point + (Vector3.down * 5.0f);
             lTemppointV3.Normalize();
-           // lTempV3.Normalize();
+            // lTempV3.Normalize();
             m_MyPlayerRogueMemoryShare.m_MyRigidbody.AddForceAtPosition(lTempV3 * Random.Range(50.0f, 100.0f), lTemppointV3);
+
+            m_MyPlayerRogueMemoryShare.m_MyArms.transform.parent = null;
+            Rigidbody lTempRigidbody = m_MyPlayerRogueMemoryShare.m_MyArms.GetComponent<Rigidbody>();
+            lTempRigidbody.useGravity = true;
+            lTempRigidbody.constraints = RigidbodyConstraints.None;
+            lTempRigidbody.AddForceAtPosition(lTempV3 * Random.Range(50.0f, 100.0f), Random.insideUnitSphere);
         }
 
         //other.contacts[0].normal
