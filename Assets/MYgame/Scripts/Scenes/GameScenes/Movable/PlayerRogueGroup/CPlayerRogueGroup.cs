@@ -1,9 +1,9 @@
 using System.Collections;
+using Dreamteck.Splines;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
-using Dreamteck.Splines;
 using System.Linq;
 using DG.Tweening;
 
@@ -33,6 +33,7 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
     public Transform                    m_PlayerRogueGroupTrigger   = null;
     public Transform                    m_CountCanvasTarget         = null;
     public int                          m_CarInCount                = 0;
+    public bool                         m_bRearrangement            = false;
 };
 
 public class CPlayerRogueGroup : CMovableBase
@@ -71,11 +72,28 @@ public class CPlayerRogueGroup : CMovableBase
 
     protected CPlayerRogue.CSetParentData m_BuffSetParentData = new CPlayerRogue.CSetParentData();
     protected bool m_PlayerRogueUpdatapos = true;
+    protected float m_CurRearrangementPassTime = 0.0f;
+    protected float m_MaxRearrangementTime = 0.5f;
+
 
     public StaticGlobalDel.EBoolState CarCollision
     {
         set { m_PlayerRogueGroupMemoryShare.m_CarCollision = value; }
         get { return m_PlayerRogueGroupMemoryShare.m_CarCollision; }
+    }
+
+
+    public void SetBoolRearrangement(bool BoolRearrangement, float MaXTime = 0.1f)
+    {
+        if (m_PlayerRogueGroupMemoryShare.m_bRearrangement == BoolRearrangement && MaXTime >= m_MaxRearrangementTime)
+            return;
+
+        m_PlayerRogueGroupMemoryShare.m_bRearrangement = BoolRearrangement;
+        if (m_PlayerRogueGroupMemoryShare.m_bRearrangement)
+        {
+            m_CurRearrangementPassTime = 0.0f;
+            m_MaxRearrangementTime = MaXTime;
+        }
     }
 
     protected override void AddInitState()
@@ -134,10 +152,18 @@ public class CPlayerRogueGroup : CMovableBase
         InputUpdata();
     }
 
-    //public void UpdateCanvasTarget()
-    //{
-
-    //}
+    public void UpdateRearrangementTime()
+    {
+        if (m_PlayerRogueGroupMemoryShare.m_bRearrangement)
+        {
+            m_CurRearrangementPassTime += Time.deltaTime;
+            if (m_CurRearrangementPassTime >= m_MaxRearrangementTime)
+            {
+                Rearrangement();
+                ResetTriggerSize();
+            }
+        }
+    }
 
     public void UpdateSpeed()
     {
@@ -272,6 +298,7 @@ public class CPlayerRogueGroup : CMovableBase
         bool lTempbool = lTempAllPlayerRogue.Remove(RemovePlayerRogue);
         RemovePlayerRogue.transform.parent = m_PlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent;
 
+
         CountText();
         return lTempbool;
     }
@@ -290,7 +317,7 @@ public class CPlayerRogueGroup : CMovableBase
         float lTempRingDis = lTempMagnitude  + 2.0f;
         m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroupTrigger.localScale = new Vector3(lTempRingDis, 2.0f, lTempRingDis);
 
-        m_PlayerRogueGroupMemoryShare.m_CountCanvasTarget.localPosition = new Vector3(0.0f, 2.0f, lTempRingDis);
+      //  m_PlayerRogueGroupMemoryShare.m_CountCanvasTarget.localPosition = new Vector3(0.0f, 2.0f, lTempRingDis);
 
         if (m_PlayerRogueUpdatapos)
             m_PlayerRogueGroupMemoryShare.m_MyCanvas.transform.localPosition = new Vector3(0.0f, 3.0f, lTempMagnitude);
@@ -312,7 +339,8 @@ public class CPlayerRogueGroup : CMovableBase
 
             lTempPlayerRogue.transform.rotation = this.transform.rotation;
             lTempPlayerRogue.transform.localPosition = Vector3.zero;
-            lTempPlayerRogue.ShowMyCollision(true);
+            
+            lTempPlayerRogue.ShowAdd(true);
             lTempPlayerRogue.transform.parent = AllPlayerRogueTransform;
             lTempAllPlayerRogueIndex = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count;
             m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Add(lTempPlayerRogue);
@@ -350,14 +378,14 @@ public class CPlayerRogueGroup : CMovableBase
         for (int i = 0; i < lTempAllPlayerRogue.Count; i++)
             lTempAllPlayerRogue[i].SetTargetupdatePos(m_PlayerRogueGroupMemoryShare.m_TargetPositionList[i]);
 
-
+        m_PlayerRogueGroupMemoryShare.m_bRearrangement = false;
         CountText();
     }
 
     public void RemovePlayerRogue(CPlayerRogue RemoveRogue)
     {
+        RemoveRogue.transform.localPosition = Vector3.zero;
         RemoveRogue.MyRemove();
-
     }
 
     public void SetAllPlayerRogueState(StaticGlobalDel.EMovableState setState)
@@ -408,10 +436,8 @@ public class CPlayerRogueGroup : CMovableBase
             }
         }
         else if (other.tag == StaticGlobalDel.TagCarCollider)
-        {
             m_PlayerRogueGroupMemoryShare.m_CarInCount++;
-          
-        }
+
 
         base.OnTriggerEnter(other);
     }
@@ -422,10 +448,10 @@ public class CPlayerRogueGroup : CMovableBase
         {
             int lTempCarInCount = m_PlayerRogueGroupMemoryShare.m_CarInCount;
             m_PlayerRogueGroupMemoryShare.m_CarInCount--;
+            Debug.Log($"lTempCarInCount = {lTempCarInCount}  ----- m_PlayerRogueGroupMemoryShare.m_CarInCount = {m_PlayerRogueGroupMemoryShare.m_CarInCount}");
             if (lTempCarInCount == 1 && m_PlayerRogueGroupMemoryShare.m_CarInCount == 0)
             {
-                Rearrangement();
-                ResetTriggerSize();
+                SetBoolRearrangement(true);
             }
         }
 

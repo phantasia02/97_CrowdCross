@@ -28,6 +28,7 @@ public class CWaitStatePlayerRogueGroup : CWaitStateBase
 
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSpeed();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateRearrangementTime();
     }
 
     protected override void OutState()

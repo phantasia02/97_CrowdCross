@@ -31,7 +31,8 @@ public class CPlayerRogue : CActor
             if (LockChangState != StaticGlobalDel.EMovableState.eMax && m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState != value)
                 return;
 
-            if ((int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase)
+
+            if (LockChangState != StaticGlobalDel.EMovableState.eMax && (int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase)
             {
                 if (m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK == StaticGlobalDel.EBoolState.eFlase)
                 {
@@ -147,19 +148,34 @@ public class CPlayerRogue : CActor
         }
     }
 
+    public void ShowAdd(bool Show)
+    {
+        if (Show)
+        {
+            m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState = StaticGlobalDel.EMovableState.eMax;
+        }
+        else
+        {
+            SetCurState(StaticGlobalDel.EMovableState.eNull);
+        }
+
+        AnimatorStateCtl.m_ThisAnimator.enabled = Show;
+    }
+
     public void MyAddList(int listindex)
     {
-        m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeAll;
-        m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState = StaticGlobalDel.EMovableState.eMax;
         CurGroupIndex = listindex;
-        this.gameObject.SetActive(true);
+       // this.gameObject.SetActive(true);
     }
 
     public void MyRemove()
     {
         CurGroupIndex = -1;
-        SetCurState(StaticGlobalDel.EMovableState.eNull);
-        this.gameObject.SetActive(false);
+        ShowAdd(false);
+       // ShowMyCollision(false);
+        //SetCurState(StaticGlobalDel.EMovableState.eNull);
+        //this.gameObject.SetActive(false);
     }
 
     public void ShowMyCollision(bool show)
