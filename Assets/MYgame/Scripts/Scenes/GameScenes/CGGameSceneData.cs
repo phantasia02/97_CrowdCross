@@ -16,6 +16,7 @@ public class CGGameSceneData : CSingletonMonoBehaviour<CGGameSceneData>
     {
         ePlayerRogue        = 0,
         eDummyObj           = 1,
+        eEnemy              = 2,
         eMax,
     };
 

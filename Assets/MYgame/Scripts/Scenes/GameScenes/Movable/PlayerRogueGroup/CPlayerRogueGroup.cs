@@ -365,8 +365,8 @@ public class CPlayerRogueGroup : CMovableBase
     public void Rearrangement()
     {
         List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
-        var rnd = new System.Random();
-        lTempAllPlayerRogue.OrderBy(item => rnd.Next());
+        //var rnd = new System.Random();
+        //lTempAllPlayerRogue.OrderBy(item => rnd.Next());
 
         Vector3 lTempV3 = Vector3.zero;
         for (int i = 0; i < lTempAllPlayerRogue.Count; i++)

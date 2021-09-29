@@ -11,6 +11,7 @@ public abstract class CGameObjBas : MonoBehaviour
         eDoorGroup          = 2,
         eCarCreatePos       = 3,
         eAllCarCreatePos    = 4,
+        eEnemyGroup         = 5,
         eMax
     }
 

@@ -36,7 +36,7 @@ public class CPlayerRogue : CActor
                 return;
 
 
-            if (LockChangState != StaticGlobalDel.EMovableState.eMax && (int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase)
+            if (LockChangState == StaticGlobalDel.EMovableState.eMax && (int)m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK >= (int)StaticGlobalDel.EBoolState.eFlase)
             {
                 if (m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK == StaticGlobalDel.EBoolState.eFlase)
                 {
@@ -195,6 +195,7 @@ public class CPlayerRogue : CActor
         CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
         lTempCGGameSceneData.RemoveArmsType(CGGameSceneData.EArmsType.eMace, m_MyPlayerRogueMemoryShare.m_MyArms);
         m_MyPlayerRogueMemoryShare.m_MyArms = null;
+        m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints =  RigidbodyConstraints.FreezeAll;
 
         CurGroupIndex = -1;
         ShowAdd(false);
