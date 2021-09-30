@@ -30,8 +30,9 @@ public static class StaticGlobalDel
 
     public enum ELayerIndex
     {
-        ePlayerRogue = 6,
-        eCarCollider = 7,
+        ePlayerRogue    = 6,
+        eCarCollider    = 7,
+        eEndActor       = 8,
         eMax
     }
 
@@ -39,9 +40,13 @@ public static class StaticGlobalDel
     public const string TagCarEnd           = "CarEnd";
     public const string TagCarCollider      = "TagCarCollider";
     public const string TagPlayerRogueGroup = "PlayerRogueGroupTag";
+    public const string TagEndResult        = "EndResult";
+    public const string TagPlayerRogue      = "TagPlayerRogue";
+    public const string TagEnemy            = "TagEnemy";
 
-    public const int g_PlayerRogueMask = 1 << (int)ELayerIndex.ePlayerRogue;
-    public const int g_CarColliderMask = 1 << (int)ELayerIndex.eCarCollider;
+    public const int g_PlayerRogueMask  = 1 << (int)ELayerIndex.ePlayerRogue;
+    public const int g_CarColliderMask  = 1 << (int)ELayerIndex.eCarCollider;
+    public const int g_EndActorMask     = 1 << (int)ELayerIndex.eEndActor;
     
     public const float  g_fcbaseWidth                   = 1080.0f;
     public const float  g_fcbaseHeight                  = 2340.0f;

@@ -221,9 +221,9 @@ public abstract class CMovableBase : CGameObjBas
                 //case StaticGlobalDel.EMovableState.eAtk:
                 //    m_AllState[i].AllThisState.Add(new CATKStateBase(this));
                 //    break;
-                //case StaticGlobalDel.EMovableState.eWin:
-                //    m_AllState[i].AllThisState.Add(new CWinStateBase(this));
-                //    break;
+                case StaticGlobalDel.EMovableState.eWin:
+                    m_AllState[i].AllThisState.Add(new CWinStateBase(this));
+                    break;
                 case StaticGlobalDel.EMovableState.eDeath:
                     m_AllState[i].AllThisState.Add(new CDeathStateBase(this));
                     break;
@@ -249,12 +249,12 @@ public abstract class CMovableBase : CGameObjBas
         base.Init();
     }
 
-    public void SetStateIndex(StaticGlobalDel.EMovableState state, int index)
-    {
-        DataState lTempDataState = m_AllState[(int)state];
-        if (state != StaticGlobalDel.EMovableState.eNull && lTempDataState != null && lTempDataState.AllThisState[index] != null)
-            lTempDataState.index = index;
-    }
+    //public void SetStateIndex(StaticGlobalDel.EMovableState state, int index)
+    //{
+    //    DataState lTempDataState = m_AllState[(int)state];
+    //    if (state != StaticGlobalDel.EMovableState.eNull && lTempDataState != null && lTempDataState.AllThisState[index] != null)
+    //        lTempDataState.index = index;
+    //}
 
     // Update is called once per frame
     protected override void Update()
@@ -311,7 +311,7 @@ public abstract class CMovableBase : CGameObjBas
             lTempDataState.AllThisState[lTempDataState.index].LateUpdate();
     }
 
-    protected void SetCurStateIndex(StaticGlobalDel.EMovableState pamState, int index)
+    public void SetStateIndex(StaticGlobalDel.EMovableState pamState, int index)
     {
         DataState lTempDataState = m_AllState[(int)pamState];
         if (lTempDataState == null)

@@ -8,6 +8,9 @@ TagManager:
   - CarEnd
   - TagCarCollider
   - PlayerRogueGroupTag
+  - EndResult
+  - TagPlayerRogue
+  - TagEnemy
   layers:
   - Default
   - TransparentFX
@@ -17,7 +20,7 @@ TagManager:
   - UI
   - PlayerRogue
   - CarCollider
-  - 
+  - EndActor
   - 
   - 
   - 

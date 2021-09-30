@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 7922840944937871394}
   m_Layer: 6
   m_Name: PlayerRogue
-  m_TagString: Untagged
+  m_TagString: TagPlayerRogue
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -141,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07004d994c2f14e4e8a92b9981478976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ActorData: {fileID: 11400000, guid: db43289e1967bc042aeaf178cecc9988, type: 2}
   m_HandTransform: {fileID: 7656431868669946579}
 --- !u!54 &7922840944937871394
 Rigidbody:

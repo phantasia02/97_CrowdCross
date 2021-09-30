@@ -9,6 +9,7 @@ public class CEnemyGroup : CGameObjBas
     protected int m_EnemyCount = 50;
     protected float m_RingDis = 30.0f;
     protected List<CEnemy> m_AllEnemy = new List<CEnemy>();
+    
 
     protected override void Awake()
     {
@@ -20,6 +21,7 @@ public class CEnemyGroup : CGameObjBas
         float lTempXRandom_Pos = lTempRadiusX_Radius / 4.0f;
         Vector3 lTempV3 = this.transform.position;
         Vector3 EnemyPos = Vector3.zero;
+        CEnemy lTempEnemy = null;
 
         for (int i = 0; i < m_EnemyCount; i++)
         {
@@ -33,18 +35,33 @@ public class CEnemyGroup : CGameObjBas
             lpototypeObj.transform.parent   = this.transform;
             lpototypeObj.transform.rotation = this.transform.rotation;
             lpototypeObj.transform.position = EnemyPos;
+
+            lTempEnemy = lpototypeObj.GetComponent<CEnemy>();
+            m_AllEnemy.Add(lTempEnemy);
         }
     }
+
+
+    public CEnemy GetIndexToEnemy(int index)
+    {
+        if (index < 0)
+            return null;
+
+        index = index % m_AllEnemy.Count;
+        return m_AllEnemy[index];
+    }
+
+  
 
     //// Start is called before the first frame update
     //void Start()
     //{
-        
+
     //}
 
     //// Update is called once per frame
     //void Update()
     //{
-        
+
     //}
 }

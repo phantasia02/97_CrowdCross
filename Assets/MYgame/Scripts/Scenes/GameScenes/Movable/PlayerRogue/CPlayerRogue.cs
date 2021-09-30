@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class CPlayerRogueMemoryShare : CMemoryShareBase
+public class CPlayerRogueMemoryShare : CActorMemoryShare
 {
     public CPlayerRogue                     m_MyPlayerRogue             = null;
     public CPlayerRogueGroup                m_MyGroup                   = null;
@@ -15,6 +15,7 @@ public class CPlayerRogueMemoryShare : CMemoryShareBase
     public CCarCollisionPlayerRogue         m_MyCarCollisionPlayerRogue = null;
     public Transform                        m_HandTransform             = null;
     public GameObject                       m_MyArms                    = null;
+   // public CEnemy                           m_TargetEnemy               = null;
 };
 
 public class CPlayerRogue : CActor
@@ -23,8 +24,6 @@ public class CPlayerRogue : CActor
     {
         public CPlayerRogueGroup Group = null;
     }
-
-
 
     public override EMovableType MyMovableType() { return EMovableType.ePlayerRogue; }
 
@@ -62,6 +61,7 @@ public class CPlayerRogue : CActor
     public int CurGroupIndex { set { m_MyPlayerRogueMemoryShare.m_GroupIndex = value; } }
     public float CurRingDis { get { return m_MyPlayerRogueMemoryShare.m_CurRingDis; } }
     public Transform CurTargetDummy { get { return m_MyPlayerRogueMemoryShare.m_TargetDummy; } }
+    public StaticGlobalDel.EBoolState MoveTargetDummyOK { set { m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK =  StaticGlobalDel.EBoolState.eTrue; } }
     protected CPlayerRogueMemoryShare m_MyPlayerRogueMemoryShare = null;
 
     public void SetParentData(ref CSetParentData data)
@@ -77,14 +77,17 @@ public class CPlayerRogue : CActor
     protected override void AddInitState()
     {
         m_AllState[(int)StaticGlobalDel.EMovableState.eWait].AllThisState.Add(new CWaitStatePlayerRogue(this));
-        m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogue(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStatePlayerRogue(this));
+
+
+        m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogue(this));         // eMove index 0
+        m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CTargetMoveStateActor(this));         // eMove index 1
     }
 
     protected override void CreateMemoryShare()
     {
         m_MyPlayerRogueMemoryShare = new CPlayerRogueMemoryShare();
-        m_MyMemoryShare = m_MyPlayerRogueMemoryShare;
+        m_MyMemoryShare = m_MyActorMemoryShare = m_MyPlayerRogueMemoryShare;
         m_MyPlayerRogueMemoryShare.m_MyPlayerRogue = this;
 
         m_MyPlayerRogueMemoryShare.m_MyCarCollisionPlayerRogue = new CCarCollisionPlayerRogue(m_MyPlayerRogueMemoryShare);
@@ -187,7 +190,7 @@ public class CPlayerRogue : CActor
     public void MyAddList(int listindex)
     {
         CurGroupIndex = listindex;
-       // this.gameObject.SetActive(true);
+        this.gameObject.SetActive(true);
     }
 
     public void MyRemove()
@@ -201,7 +204,7 @@ public class CPlayerRogue : CActor
         ShowAdd(false);
         // ShowMyCollision(false);
         //SetCurState(StaticGlobalDel.EMovableState.eNull);
-        //this.gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
     }
 
     public void ShowMyCollision(bool show)
@@ -211,4 +214,6 @@ public class CPlayerRogue : CActor
 
         m_MyPlayerRogueMemoryShare.m_MyRigidbody.useGravity = !show;
     }
+
+
 }

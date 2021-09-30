@@ -7,7 +7,6 @@ public class CMoveStatePlayerRogue : CMoveStateBase
 {
     CPlayerRogueMemoryShare m_MyPlayerRogueMemoryShare = null;
 
-
     public CMoveStatePlayerRogue(CMovableBase pamMovableBase) : base(pamMovableBase)
     {
         m_MyPlayerRogueMemoryShare = (CPlayerRogueMemoryShare)m_MyMemoryShare;

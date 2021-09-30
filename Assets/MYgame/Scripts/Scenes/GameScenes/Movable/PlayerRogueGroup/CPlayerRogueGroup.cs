@@ -101,6 +101,7 @@ public class CPlayerRogueGroup : CMovableBase
         m_AllState[(int)StaticGlobalDel.EMovableState.eWait].AllThisState.Add(new CWaitStatePlayerRogueGroup(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogueGroup(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eDrag].AllThisState.Add(new CDragStatePlayerRogueGroup(this));
+        m_AllState[(int)StaticGlobalDel.EMovableState.eWin].AllThisState.Add(new CResultStatePlayerRogueGroup(this));
     }
 
     protected override void CreateMemoryShare()
@@ -431,6 +432,14 @@ public class CPlayerRogueGroup : CMovableBase
         }
         else if (other.tag == StaticGlobalDel.TagCarCollider)
             m_PlayerRogueGroupMemoryShare.m_CarInCount++;
+        else if (other.tag == StaticGlobalDel.TagEndResult)
+        {
+            other.gameObject.SetActive(false);
+
+            SetStateIndex(StaticGlobalDel.EMovableState.eWin, 0);
+            LockChangState = StaticGlobalDel.EMovableState.eWin;
+            ChangState = StaticGlobalDel.EMovableState.eWin;
+        }
 
 
         base.OnTriggerEnter(other);
@@ -450,5 +459,25 @@ public class CPlayerRogueGroup : CMovableBase
         }
 
         base.OnTriggerExit(other);
+    }
+
+    public void UpdateTarget()
+    {
+        CPlayerRogue[] AllPlayerRogue   = m_MyGameManager.GetComponentsInChildren<CPlayerRogue>();
+        CEnemy[] AllEnemy               = m_MyGameManager.GetComponentsInChildren<CEnemy>();
+
+        int lTempMaxCount = Mathf.Min(AllPlayerRogue.Length, AllEnemy.Length);
+
+        for (int i = 0; i < lTempMaxCount; i++)
+        {
+            AllPlayerRogue[i].SetTarget(AllEnemy[i]);
+            AllEnemy[i].SetTarget(AllPlayerRogue[i]);
+
+            AllPlayerRogue[i].MoveTargetDummyOK = StaticGlobalDel.EBoolState.eTrue;
+            AllPlayerRogue[i].SetStateIndex(StaticGlobalDel.EMovableState.eMove, 1);
+
+            AllPlayerRogue[i].ChangState = StaticGlobalDel.EMovableState.eMove;
+            AllEnemy[i].ChangState = StaticGlobalDel.EMovableState.eMove;
+        }
     }
 }

@@ -40,7 +40,12 @@ public class CGameManager : MonoBehaviour
 
     protected CPlayer m_Player = null;
     public CPlayer Player { get { return m_Player; } }
-    
+
+    protected CEnemyGroup m_EnemyGroup = null;
+    public CEnemyGroup EnemyGroup { get { return m_EnemyGroup; } }
+
+    [SerializeField] Transform m_ResulPos = null;
+    public Transform ResulPos { get { return m_ResulPos; } }
 
     private EState m_eCurState = EState.eReady;
     public EState CurState { get { return m_eCurState; } }
@@ -59,7 +64,7 @@ public class CGameManager : MonoBehaviour
         m_HalfScreenWidth = (StaticGlobalDel.g_fcbaseWidth / 2.0f) * (lTempNewHWRatio / HWRatioPototype);
 
         m_MyResultUI = gameObject.GetComponentInChildren<ResultUI>();
-
+        m_EnemyGroup = gameObject.GetComponentInChildren<CEnemyGroup>(true);
     }
 
     // Start is called before the first frame update
