@@ -27,6 +27,8 @@ public class CResultStatePlayerRogueGroup : CWinStateBase
         lTempSequence.Append(m_MyPlayerRogueGroupMemoryShare.m_MyMovable.transform.DOMove(lTempResulPos.position, 2.0f).SetEase(Ease.Linear));
         lTempSequence.AppendCallback(() =>
         {
+
+
             m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateTarget();
         });
     }

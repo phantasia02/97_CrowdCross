@@ -6,7 +6,7 @@ public class CEnemyGroup : CGameObjBas
 {
     public override EObjType ObjType() { return EObjType.eEnemyGroup; }
 
-    protected int m_EnemyCount = 50;
+    [SerializeField] protected int m_EnemyCount = 1;
     protected float m_RingDis = 30.0f;
     protected List<CEnemy> m_AllEnemy = new List<CEnemy>();
     

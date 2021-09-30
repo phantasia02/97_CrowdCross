@@ -463,21 +463,40 @@ public class CPlayerRogueGroup : CMovableBase
 
     public void UpdateTarget()
     {
-        CPlayerRogue[] AllPlayerRogue   = m_MyGameManager.GetComponentsInChildren<CPlayerRogue>();
-        CEnemy[] AllEnemy               = m_MyGameManager.GetComponentsInChildren<CEnemy>();
+        int i = 0;
+
+        for (i = 0; i < m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count; i++)
+        {
+            m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].MoveTargetDummyOK = StaticGlobalDel.EBoolState.eTrue;
+            m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].SetStateIndex(StaticGlobalDel.EMovableState.eMove, 1);
+            m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].SetStateIndex(StaticGlobalDel.EMovableState.eDeath, 1);
+        }
+
+        CActor[] AllPlayerRogue   = m_MyGameManager.GetComponentsInChildren<CPlayerRogue>();
+        CActor[] AllEnemy         = m_MyGameManager.GetComponentsInChildren<CEnemy>();
 
         int lTempMaxCount = Mathf.Min(AllPlayerRogue.Length, AllEnemy.Length);
 
-        for (int i = 0; i < lTempMaxCount; i++)
+        
+        for (i = 0; i < lTempMaxCount; i++)
         {
             AllPlayerRogue[i].SetTarget(AllEnemy[i]);
             AllEnemy[i].SetTarget(AllPlayerRogue[i]);
 
-            AllPlayerRogue[i].MoveTargetDummyOK = StaticGlobalDel.EBoolState.eTrue;
-            AllPlayerRogue[i].SetStateIndex(StaticGlobalDel.EMovableState.eMove, 1);
-
             AllPlayerRogue[i].ChangState = StaticGlobalDel.EMovableState.eMove;
             AllEnemy[i].ChangState = StaticGlobalDel.EMovableState.eMove;
+        }
+
+        if (AllPlayerRogue.Length == AllEnemy.Length)
+            return;
+
+        CActor[] lTempMuchActor = AllPlayerRogue.Length > AllEnemy.Length ? AllPlayerRogue : AllEnemy;
+        CActor[] lTempMinActor = AllPlayerRogue.Length < AllEnemy.Length ? AllPlayerRogue : AllEnemy;
+
+        for (; i < lTempMuchActor.Length; i++)
+        {
+            lTempMuchActor[i].SetTarget(lTempMinActor[i% lTempMinActor.Length]);
+            lTempMuchActor[i].ChangState = StaticGlobalDel.EMovableState.eMove;
         }
     }
 }

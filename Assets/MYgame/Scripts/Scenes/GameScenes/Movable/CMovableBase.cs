@@ -264,7 +264,7 @@ public abstract class CMovableBase : CGameObjBas
 
         base.Update();
 
-        StaticGlobalDel.EMovableState lTempNextFramChangState = m_NextFramChangState;
+        //StaticGlobalDel.EMovableState lTempNextFramChangState = m_NextFramChangState;
 
         DataState lTempDataState = m_AllState[(int)m_CurState];
 
@@ -275,7 +275,7 @@ public abstract class CMovableBase : CGameObjBas
 
         ChangStateFunc();
 
-        if (lTempNextFramChangState == NextFramChangState && NextFramChangState != StaticGlobalDel.EMovableState.eMax)
+        if (NextFramChangState != StaticGlobalDel.EMovableState.eMax)
         {
             m_ChangState = m_NextFramChangState;
             NextFramChangState = StaticGlobalDel.EMovableState.eMax;

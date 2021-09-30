@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CAtkStateBase : MonoBehaviour
+public class CAtkStateBase : CMovableStatePototype
 {
-    // Start is called before the first frame update
-    void Start()
+    public override StaticGlobalDel.EMovableState StateType() { return StaticGlobalDel.EMovableState.eAtk; }
+
+    public CAtkStateBase(CMovableBase pamMovableBase) : base(pamMovableBase)
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void InState()
     {
-        
+    }
+
+    protected override void updataState()
+    {
+    }
+
+    protected override void OutState()
+    {
     }
 }

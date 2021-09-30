@@ -78,6 +78,7 @@ public class CPlayerRogue : CActor
     {
         m_AllState[(int)StaticGlobalDel.EMovableState.eWait].AllThisState.Add(new CWaitStatePlayerRogue(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStatePlayerRogue(this));
+        m_AllState[(int)StaticGlobalDel.EMovableState.eAtk].AllThisState.Add(new CAtkStateActor(this));
 
 
         m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogue(this));         // eMove index 0
@@ -88,7 +89,7 @@ public class CPlayerRogue : CActor
     {
         m_MyPlayerRogueMemoryShare = new CPlayerRogueMemoryShare();
         m_MyMemoryShare = m_MyActorMemoryShare = m_MyPlayerRogueMemoryShare;
-        m_MyPlayerRogueMemoryShare.m_MyPlayerRogue = this;
+        m_MyActorMemoryShare.m_MyActor = m_MyPlayerRogueMemoryShare.m_MyPlayerRogue = this;
 
         m_MyPlayerRogueMemoryShare.m_MyCarCollisionPlayerRogue = new CCarCollisionPlayerRogue(m_MyPlayerRogueMemoryShare);
         m_MyPlayerRogueMemoryShare.m_HandTransform = m_HandTransform;

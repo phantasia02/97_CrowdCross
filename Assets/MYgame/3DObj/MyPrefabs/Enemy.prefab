@@ -152,12 +152,12 @@ Rigidbody:
   m_GameObject: {fileID: 6230095468995215155}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 1
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!1 &7469223215528308972
 GameObject:
@@ -892,9 +892,9 @@ MonoBehaviour:
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
   m_AllDeathAnima:
-  - m_flagName: mixamo_com
-    m_AnimationName: mixamo_com
-    m_AnimationStateName: mixamo_com
+  - m_flagName: Death_Slashed
+    m_AnimationName: Death_Slashed
+    m_AnimationStateName: Death_Slashed
     m_Speed: 1
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
@@ -920,9 +920,9 @@ MonoBehaviour:
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
   m_AllAtkAnima:
-  - m_flagName: 
-    m_AnimationName: 
-    m_AnimationStateName: 
+  - m_flagName: Punch_RightHand
+    m_AnimationName: Punch_RightHand
+    m_AnimationStateName: Punch_RightHand
     m_Speed: 1
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0

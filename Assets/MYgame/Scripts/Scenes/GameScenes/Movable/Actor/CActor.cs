@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class CActorMemoryShare : CMemoryShareBase
 {
-    public ActorType m_ActorTypeData = null;
-    public CActor m_Target = null;
+    public ActorType m_ActorTypeData    = null;
+    public CActor m_Target              = null;
+    public CActor m_MyActor             = null;
+    public int m_Hp                     = 3;
 };
 
 public abstract class CActor : CMovableBase
@@ -15,6 +17,12 @@ public abstract class CActor : CMovableBase
     //  abstract public EMovableType MyMovableType();
     protected CActorMemoryShare m_MyActorMemoryShare = null;
     [SerializeField] ActorType m_ActorData = null;
+
+    public int ActorTypeDataHp
+    {
+        set { m_MyActorMemoryShare.m_Hp = value; }
+        get { return m_MyActorMemoryShare.m_Hp; }
+    }
 
     public CActor m_wachTarget = null;
 

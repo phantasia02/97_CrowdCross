@@ -22,14 +22,16 @@ public class CEnemy : CActor
         //m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogue(this));
         //m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStatePlayerRogue(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CTargetMoveStateActor(this));         // eMove index 0
+
+        m_AllState[(int)StaticGlobalDel.EMovableState.eAtk].AllThisState.Add(new CAtkStateActor(this));
     }
 
     protected override void CreateMemoryShare()
     {
         m_MyEnemyMemoryShare = new CEnemyMemoryShare();
         m_MyMemoryShare = m_MyActorMemoryShare = m_MyEnemyMemoryShare;
-        m_MyEnemyMemoryShare.m_MyEnemy = this;
-
+        m_MyActorMemoryShare.m_MyActor = m_MyEnemyMemoryShare.m_MyEnemy = this;
+        
         SetBaseMemoryShare();
     }
 

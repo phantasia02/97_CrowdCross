@@ -220,6 +220,21 @@ public class CAnimatorStateCtl : MonoBehaviour
        return m_AllAnimatorData[iCurStatIndex][index].m_AnimationTime;
     }
 
+    public float CurActionTimeRatio()
+    {
+        int lTempCurState = (int)m_CurState;
+        cAnimatorData lTempAnimatorData = m_AllAnimatorData[lTempCurState][m_StateIndividualIndex[lTempCurState]];
+        if (lTempAnimatorData.m_AnimationName.Length == 0)
+            return 0.0f;
+
+        AnimatorStateInfo info = m_ThisAnimator.GetCurrentAnimatorStateInfo(0);
+
+        if (info.IsName(lTempAnimatorData.m_AnimationStateName))
+            return info.normalizedTime;
+
+        return 0.0f;
+    }
+
     public void OpenAnimatorComponent(bool open)
     {
         if (!m_ThisAnimator || m_ThisAnimator.enabled == open)
