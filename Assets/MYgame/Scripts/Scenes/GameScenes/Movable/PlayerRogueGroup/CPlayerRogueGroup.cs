@@ -484,7 +484,7 @@ public class CPlayerRogueGroup : CMovableBase
             AllEnemy[i].SetTarget(AllPlayerRogue[i]);
 
             AllPlayerRogue[i].ChangState = StaticGlobalDel.EMovableState.eMove;
-            AllEnemy[i].ChangState = StaticGlobalDel.EMovableState.eMove;
+           // AllEnemy[i].ChangState = StaticGlobalDel.EMovableState.eMove;
         }
 
         if (AllPlayerRogue.Length == AllEnemy.Length)

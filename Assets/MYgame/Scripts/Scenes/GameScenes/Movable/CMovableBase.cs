@@ -317,6 +317,9 @@ public abstract class CMovableBase : CGameObjBas
         if (lTempDataState == null)
             return;
 
+        if (m_AllState[(int)pamState].AllThisState.Count <= index)
+            return;
+
         if (m_AllState[(int)pamState].AllThisState[index] == null)
             return;
 
