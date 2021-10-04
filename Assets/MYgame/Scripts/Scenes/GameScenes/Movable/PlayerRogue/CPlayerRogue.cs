@@ -64,6 +64,7 @@ public class CPlayerRogue : CActor
     public StaticGlobalDel.EBoolState MoveTargetDummyOK { set { m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK =  StaticGlobalDel.EBoolState.eTrue; } }
     protected CPlayerRogueMemoryShare m_MyPlayerRogueMemoryShare = null;
     public override int TargetMask() { return (int)StaticGlobalDel.g_EndEnemyActorMask; }
+    public override int TargetIndex() { return (int)StaticGlobalDel.ELayerIndex.eEndEnemyActor; }
 
     public void SetParentData(ref CSetParentData data)
     {
@@ -217,6 +218,7 @@ public class CPlayerRogue : CActor
         SetStateIndex(StaticGlobalDel.EMovableState.eMove, 1);
         SetStateIndex(StaticGlobalDel.EMovableState.eDeath, 1);
         AnimatorStateCtl.SetStateIndividualIndex(CAnimatorStateCtl.EState.eDeath, 1);
+        m_MyActorMemoryShare.m_MyMovable.gameObject.layer = (int)StaticGlobalDel.ELayerIndex.eEndPlayerActor;
 
         for (int i = 0; i < m_MyActorMemoryShare.m_AllChildCollider.Length; i++)
             m_MyActorMemoryShare.m_AllChildCollider[i].gameObject.layer = (int)StaticGlobalDel.ELayerIndex.eEndPlayerActor;

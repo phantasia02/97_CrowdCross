@@ -15,7 +15,7 @@ public class CEnemy : CActor
 
     protected CEnemyMemoryShare m_MyEnemyMemoryShare = null;
     public override int TargetMask() { return (int)StaticGlobalDel.g_EndPlayerActorMask; }
-
+    public override int TargetIndex() { return (int)StaticGlobalDel.ELayerIndex.eEndPlayerActor; }
 
     protected override void AddInitState()
     {

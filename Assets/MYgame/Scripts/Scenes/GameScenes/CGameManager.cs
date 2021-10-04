@@ -56,6 +56,10 @@ public class CGameManager : MonoBehaviour
     [SerializeField] GameObject m_PlayerResultCamera = null;
     public GameObject PlayerResultCamera { get { return m_PlayerResultCamera; } }
 
+    [SerializeField] CinemachineTargetGroup m_CinemachineTargetGroup = null;
+    public CinemachineTargetGroup CinemachineTargetGroup { get { return m_CinemachineTargetGroup; } }
+    
+
     private EState m_eCurState = EState.eReady;
     public EState CurState { get { return m_eCurState; } }
     protected float m_StateTime = 0.0f;
@@ -75,6 +79,8 @@ public class CGameManager : MonoBehaviour
         m_MyResultUI = gameObject.GetComponentInChildren<ResultUI>();
         m_EnemyGroup = gameObject.GetComponentInChildren<CEnemyGroup>(true);
         m_MyPlayerRogueGroup = gameObject.GetComponentInChildren<CPlayerRogueGroup>(true);
+
+  
     }
 
     // Start is called before the first frame update
@@ -332,4 +338,12 @@ public class CGameManager : MonoBehaviour
     {
         SetState( EState.ePlayOKPerformance);
     }
+
+    public void AddGroup(Transform lTempAddTransform)
+    {
+        CinemachineTargetGroup.AddMember(lTempAddTransform, 1.0f, 2.0f);
+    }
+
+    public void RemoveMemberGroup(Transform lTempAddTransform)
+    {CinemachineTargetGroup.RemoveMember(lTempAddTransform);}
 }

@@ -27,7 +27,7 @@ public class CAtkStateActor : CMoveStateBase
                 Vector3 lTempV3 = m_MyActorMemoryShare.m_Target.transform.position - m_MyActorMemoryShare.m_MyMovable.transform.position;
                 lTempV3.y = 0.0f;
                // Vector3 lTempDis = lTempV3;
-                float lTempAtkDis = m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis * m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis;
+                float lTempAtkDis = m_MyActorMemoryShare.m_ActorTypeData.m_AtkMaxDis * m_MyActorMemoryShare.m_ActorTypeData.m_AtkMaxDis;
                 if (lTempV3.sqrMagnitude <= lTempAtkDis)
                 {
                     m_MyActorMemoryShare.m_Target.ActorTypeDataHp = m_MyActorMemoryShare.m_Target.ActorTypeDataHp - m_MyActorMemoryShare.m_ActorTypeData.m_AtkPower;

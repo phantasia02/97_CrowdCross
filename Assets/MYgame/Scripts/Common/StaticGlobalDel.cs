@@ -111,6 +111,38 @@ public static class StaticGlobalDel
                 break;
         }
     }
+
+
+    public static List<CTargetPositionData> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
+    {
+        List<CTargetPositionData> positionList = new List<CTargetPositionData>();
+        CTargetPositionData lTempTargetPositionData = new CTargetPositionData();
+        lTempTargetPositionData.m_TargetPosition = startPosition;
+        lTempTargetPositionData.m_RingDis = 0.0f;
+        positionList.Add(lTempTargetPositionData);
+        for (int i = 0; i < ringDistanceArray.Length; i++)
+            positionList.AddRange(GetPositionListAround(startPosition, ringDistanceArray[i], ringPositionCountArray[i]));
+
+        return positionList;
+    }
+
+    public static List<CTargetPositionData> GetPositionListAround(Vector3 startPosition, float distance, int positionCount)
+    {
+        Vector3 ApplyRotationToVector(Vector3 vec, float angle) { return Quaternion.Euler(0, angle, 0) * vec; }
+        CTargetPositionData lTempTargetPositionData = null;
+        List<CTargetPositionData> positionList = new List<CTargetPositionData>();
+        for (int i = 0; i < positionCount; i++)
+        {
+            float angle = i * (360f / positionCount);
+            Vector3 dir = ApplyRotationToVector(new Vector3(1, 0, 0), angle);
+            Vector3 position = startPosition + dir * (distance + Random.Range(-0.5f, 0.5f));
+            lTempTargetPositionData = new CTargetPositionData();
+            lTempTargetPositionData.m_TargetPosition = position;
+            lTempTargetPositionData.m_RingDis = distance;
+            positionList.Add(lTempTargetPositionData);
+        }
+        return positionList;
+    }
 }
 
 

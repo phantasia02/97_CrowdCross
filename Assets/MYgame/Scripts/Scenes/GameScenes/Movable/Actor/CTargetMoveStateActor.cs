@@ -18,7 +18,7 @@ public class CTargetMoveStateActor : CMoveStateBase
         m_MyActorMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
         m_MyActorMemoryShare.m_MyRigidbody.drag = 10.0f;
 
-        m_MyActorMemoryShare.m_MyMovable.gameObject.layer = (int)StaticGlobalDel.ELayerIndex.eEndPlayerActor;
+        //m_MyActorMemoryShare.m_MyMovable.gameObject.layer = (int)StaticGlobalDel.ELayerIndex.eEndPlayerActor;
         SetAnimationState(CAnimatorStateCtl.EState.eRun, Random.Range(0.8f, 1.2f));
     }
 
@@ -40,19 +40,23 @@ public class CTargetMoveStateActor : CMoveStateBase
         }
 
 
+        Vector3 lTempMyforward = m_MyActorMemoryShare.m_MyMovable.transform.forward;
+        lTempMyforward.y = 0.0f;
         Vector3 lTemp2DDis = m_MyActorMemoryShare.m_Target.transform.position - m_MyActorMemoryShare.m_MyMovable.transform.position;
         lTemp2DDis.y = 0.0f;
         Vector3 lTemp2DDir = lTemp2DDis;
+        lTemp2DDir.Normalize();
         float lTempsqrDis = lTemp2DDis.sqrMagnitude;
         float lTempAtkDis = m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis * m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis;
-        if (lTempsqrDis >= lTempAtkDis)
+        if (lTempsqrDis >= lTempAtkDis || (Vector3.Dot(lTemp2DDir, lTempMyforward) < 0.95f))
         {
-            lTemp2DDir.Normalize();
+            if (Vector3.Dot(lTemp2DDir, lTempMyforward) < 0.95f)
+                m_MyActorMemoryShare.m_MyMovable.transform.forward = Vector3.Lerp(lTempMyforward, lTemp2DDir, Time.deltaTime * 10.0f);
+            else
+                m_MyActorMemoryShare.m_MyMovable.transform.forward = lTemp2DDir;
 
-            Vector3 lTempMyforward = m_MyActorMemoryShare.m_MyMovable.transform.forward;
-            lTempMyforward.y = 0.0f;
-            m_MyActorMemoryShare.m_MyMovable.transform.forward = Vector3.Lerp(lTempMyforward, lTemp2DDir, Time.deltaTime * 10.0f);
-            m_MyActorMemoryShare.m_MyMovable.transform.Translate(new Vector3(0.0f, 0.0f, Time.deltaTime * m_MyActorMemoryShare.m_ActorTypeData.m_Speed));
+            if (lTempsqrDis >= lTempAtkDis)
+                m_MyActorMemoryShare.m_MyMovable.transform.Translate(new Vector3(0.0f, 0.0f, Time.deltaTime * m_MyActorMemoryShare.m_ActorTypeData.m_Speed));
         }
         else
         {
@@ -63,5 +67,30 @@ public class CTargetMoveStateActor : CMoveStateBase
     protected override void OutState()
     {
         base.OutState();
+    }
+
+    public override void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.layer == m_MyActorMemoryShare.m_MyActor.TargetIndex())
+        {
+            CActor m_lBuffTarget = other.gameObject.GetComponentInParent<CActor>();
+
+            if (m_lBuffTarget != m_MyActorMemoryShare.m_Target)
+            {
+                if (m_MyActorMemoryShare.m_Target == null)
+                    m_MyActorMemoryShare.m_Target = m_lBuffTarget;
+                else
+                {
+                    Vector3 lTemp2DDis = m_MyActorMemoryShare.m_Target.transform.position - m_MyActorMemoryShare.m_MyMovable.transform.position;
+                    lTemp2DDis.y = 0.0f;
+                    float lTempAtkDis = m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis * m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis;
+
+                    if (lTemp2DDis.sqrMagnitude >= lTempAtkDis)
+                        m_MyActorMemoryShare.m_Target = m_lBuffTarget;
+                }
+            }
+        }
+
+        base.OnCollisionEnter(other);
     }
 }

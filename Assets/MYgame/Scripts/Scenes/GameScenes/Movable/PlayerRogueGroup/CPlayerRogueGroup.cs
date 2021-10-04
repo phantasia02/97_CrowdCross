@@ -122,7 +122,7 @@ public class CPlayerRogueGroup : CMovableBase
         SetBaseMemoryShare();
 
         CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
-        m_PlayerRogueGroupMemoryShare.m_TargetPositionList = GetPositionListAround(m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform.localPosition,
+        m_PlayerRogueGroupMemoryShare.m_TargetPositionList = StaticGlobalDel.GetPositionListAround(m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform.localPosition,
             new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f }, new int[] { 8, 20, 30, 50, 70, 100, 130, 160, 200});
 
         lTempAllPlayerRoguePool.NewObjFunc = NewPlayerRogue;
@@ -246,36 +246,7 @@ public class CPlayerRogueGroup : CMovableBase
     }
 
 
-    private List<CTargetPositionData> GetPositionListAround(Vector3 startPosition, float[] ringDistanceArray, int[] ringPositionCountArray)
-    {
-        List<CTargetPositionData> positionList = new List<CTargetPositionData>();
-        CTargetPositionData lTempTargetPositionData = new CTargetPositionData();
-        lTempTargetPositionData.m_TargetPosition = startPosition;
-        lTempTargetPositionData.m_RingDis = 0.0f;
-        positionList.Add(lTempTargetPositionData);
-        for (int i = 0; i < ringDistanceArray.Length; i++)
-            positionList.AddRange(GetPositionListAround(startPosition, ringDistanceArray[i], ringPositionCountArray[i]));
-
-        return positionList;
-    }
-
-    private List<CTargetPositionData> GetPositionListAround(Vector3 startPosition, float distance, int positionCount)
-    {
-        Vector3 ApplyRotationToVector(Vector3 vec, float angle) { return Quaternion.Euler(0, angle, 0) * vec; }
-        CTargetPositionData lTempTargetPositionData = null;
-        List<CTargetPositionData> positionList = new List<CTargetPositionData>();
-        for (int i = 0; i < positionCount; i++)
-        {
-            float angle = i * (360f / positionCount);
-            Vector3 dir = ApplyRotationToVector(new Vector3(1, 0, 0), angle);
-            Vector3 position = startPosition + dir * (distance + Random.Range(-0.5f, 0.5f));
-            lTempTargetPositionData = new CTargetPositionData();
-            lTempTargetPositionData.m_TargetPosition = position;
-            lTempTargetPositionData.m_RingDis = distance;
-            positionList.Add(lTempTargetPositionData);
-        }
-        return positionList;
-    }
+  
     
     public CPlayerRogue NewPlayerRogue()
     {
@@ -471,6 +442,8 @@ public class CPlayerRogueGroup : CMovableBase
         AllPlayerRogue.OrderBy(item => rnd.Next());
         AllEnemy.OrderBy(item => rnd.Next());
 
+        
+
         int lTempMaxCount = Mathf.Min(AllPlayerRogue.Count, AllEnemy.Count);
 
         
@@ -481,6 +454,9 @@ public class CPlayerRogueGroup : CMovableBase
 
             AllPlayerRogue[i].ChangState = StaticGlobalDel.EMovableState.eMove;
             AllEnemy[i].ChangState = StaticGlobalDel.EMovableState.eMove;
+
+            m_MyGameManager.AddGroup(AllPlayerRogue[i].transform);
+            m_MyGameManager.AddGroup(AllEnemy[i].transform);
         }
 
         //return;
@@ -495,6 +471,7 @@ public class CPlayerRogueGroup : CMovableBase
         {
             lTempMuchActor[i].SetTarget(lTempMinActor[i% lTempMinActor.Count]);
             lTempMuchActor[i].ChangState = StaticGlobalDel.EMovableState.eMove;
+            m_MyGameManager.AddGroup(lTempMuchActor[i].transform);
         }
     }
 }

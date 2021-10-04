@@ -20,6 +20,7 @@ public abstract class CActor : CMovableBase
     [SerializeField] ActorType m_ActorData = null;
 
     public virtual int TargetMask() { return 0; }
+    public virtual int TargetIndex() { return 0; }
 
     public int ActorTypeDataHp
     {
