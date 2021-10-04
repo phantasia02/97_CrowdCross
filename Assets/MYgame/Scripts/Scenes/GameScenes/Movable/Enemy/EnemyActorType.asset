@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: EnemyActorType
   m_EditorClassIdentifier: 
   m_AtkDis: 1.2
-  m_AtkPower: 3
+  m_AtkPower: 2
   m_Speed: 3

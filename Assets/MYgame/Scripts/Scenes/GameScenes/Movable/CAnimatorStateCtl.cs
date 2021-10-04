@@ -83,6 +83,14 @@ public class CAnimatorStateCtl : MonoBehaviour
 
     EState m_CurState = EState.eIdle;
     public EState CurState { get { return m_CurState; } }
+
+    EState m_LockState = EState.eMax;
+    public EState LockState
+    {
+        set { m_LockState = value; }
+        get { return m_LockState; }
+    }
+
     int[] m_StateIndividualIndex = new int[(int)EState.eMax];
     public int GetStateIndex(EState parstate) { return m_StateIndividualIndex[(int)CurState]; }
 
@@ -296,6 +304,9 @@ public class CAnimatorStateCtl : MonoBehaviour
             return;
 
         if (m_CurState == SetState)
+            return;
+
+        if (LockState != EState.eMax || (LockState != EState.eMax && LockState != SetState))
             return;
 
         EState oldState = m_CurState;

@@ -63,6 +63,7 @@ public class CPlayerRogue : CActor
     public Transform CurTargetDummy { get { return m_MyPlayerRogueMemoryShare.m_TargetDummy; } }
     public StaticGlobalDel.EBoolState MoveTargetDummyOK { set { m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK =  StaticGlobalDel.EBoolState.eTrue; } }
     protected CPlayerRogueMemoryShare m_MyPlayerRogueMemoryShare = null;
+    public override int TargetMask() { return (int)StaticGlobalDel.g_EndEnemyActorMask; }
 
     public void SetParentData(ref CSetParentData data)
     {
@@ -77,9 +78,10 @@ public class CPlayerRogue : CActor
     protected override void AddInitState()
     {
         m_AllState[(int)StaticGlobalDel.EMovableState.eWait].AllThisState.Add(new CWaitStatePlayerRogue(this));
-        m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStatePlayerRogue(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eAtk].AllThisState.Add(new CAtkStateActor(this));
 
+        m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStatePlayerRogue(this));       // eDeath index 0
+        m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStateActor(this));             // eDeath index 1
 
         m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogue(this));         // eMove index 0
         m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CTargetMoveStateActor(this));         // eMove index 1
@@ -168,6 +170,7 @@ public class CPlayerRogue : CActor
         CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
         if (Show)
         {
+            m_MyPlayerRogueMemoryShare.m_MyPlayerRogue.ShowMyCollision(true);
             m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeAll;
             m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState = StaticGlobalDel.EMovableState.eMax;
 
@@ -208,13 +211,26 @@ public class CPlayerRogue : CActor
         this.gameObject.SetActive(false);
     }
 
-    public void ShowMyCollision(bool show)
+    public void SetReadyResult()
     {
-        for (int i = 0; i < m_MyPlayerRogueMemoryShare.m_AllChildCollider.Length; i++)
-            m_MyPlayerRogueMemoryShare.m_AllChildCollider[i].gameObject.SetActive(show);
+        MoveTargetDummyOK = StaticGlobalDel.EBoolState.eTrue;
+        SetStateIndex(StaticGlobalDel.EMovableState.eMove, 1);
+        SetStateIndex(StaticGlobalDel.EMovableState.eDeath, 1);
+        AnimatorStateCtl.SetStateIndividualIndex(CAnimatorStateCtl.EState.eDeath, 1);
 
-        m_MyPlayerRogueMemoryShare.m_MyRigidbody.useGravity = !show;
+        for (int i = 0; i < m_MyActorMemoryShare.m_AllChildCollider.Length; i++)
+            m_MyActorMemoryShare.m_AllChildCollider[i].gameObject.layer = (int)StaticGlobalDel.ELayerIndex.eEndPlayerActor;
     }
 
+    public override void RemoveGroup()
+    {
+        m_MyPlayerRogueMemoryShare.m_MyGroup.RemoveAllPlayerRogue(this);
 
+        base.RemoveGroup();
+    }
+
+    //public override void RemoveMyObj()
+    //{
+
+    //}
 }

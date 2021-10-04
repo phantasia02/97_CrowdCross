@@ -32,7 +32,8 @@ public static class StaticGlobalDel
     {
         ePlayerRogue    = 6,
         eCarCollider    = 7,
-        eEndActor       = 8,
+        eEndPlayerActor = 8,
+        eEndEnemyActor  = 9,
         eMax
     }
 
@@ -44,9 +45,10 @@ public static class StaticGlobalDel
     public const string TagPlayerRogue      = "TagPlayerRogue";
     public const string TagEnemy            = "TagEnemy";
 
-    public const int g_PlayerRogueMask  = 1 << (int)ELayerIndex.ePlayerRogue;
-    public const int g_CarColliderMask  = 1 << (int)ELayerIndex.eCarCollider;
-    public const int g_EndActorMask     = 1 << (int)ELayerIndex.eEndActor;
+    public const int g_PlayerRogueMask      = 1 << (int)ELayerIndex.ePlayerRogue;
+    public const int g_CarColliderMask      = 1 << (int)ELayerIndex.eCarCollider;
+    public const int g_EndPlayerActorMask   = 1 << (int)ELayerIndex.eEndPlayerActor;
+    public const int g_EndEnemyActorMask    = 1 << (int)ELayerIndex.eEndEnemyActor;
     
     public const float  g_fcbaseWidth                   = 1080.0f;
     public const float  g_fcbaseHeight                  = 2340.0f;

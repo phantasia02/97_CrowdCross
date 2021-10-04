@@ -44,8 +44,17 @@ public class CGameManager : MonoBehaviour
     protected CEnemyGroup m_EnemyGroup = null;
     public CEnemyGroup EnemyGroup { get { return m_EnemyGroup; } }
 
+    protected CPlayerRogueGroup m_MyPlayerRogueGroup = null;
+    public CPlayerRogueGroup MyPlayerRogueGroup { get { return m_MyPlayerRogueGroup; } }
+
     [SerializeField] Transform m_ResulPos = null;
     public Transform ResulPos { get { return m_ResulPos; } }
+
+    [SerializeField] GameObject m_PlayerNormalCamera = null;
+    public GameObject PlayerNormalFollowObj { get { return m_PlayerNormalCamera; } }
+
+    [SerializeField] GameObject m_PlayerResultCamera = null;
+    public GameObject PlayerResultCamera { get { return m_PlayerResultCamera; } }
 
     private EState m_eCurState = EState.eReady;
     public EState CurState { get { return m_eCurState; } }
@@ -65,6 +74,7 @@ public class CGameManager : MonoBehaviour
 
         m_MyResultUI = gameObject.GetComponentInChildren<ResultUI>();
         m_EnemyGroup = gameObject.GetComponentInChildren<CEnemyGroup>(true);
+        m_MyPlayerRogueGroup = gameObject.GetComponentInChildren<CPlayerRogueGroup>(true);
     }
 
     // Start is called before the first frame update

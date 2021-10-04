@@ -8,9 +8,9 @@ public class CEnemyGroup : CGameObjBas
 
     [SerializeField] protected int m_EnemyCount = 1;
     protected float m_RingDis = 30.0f;
-    protected List<CEnemy> m_AllEnemy = new List<CEnemy>();
+    public List<CEnemy> m_AllEnemy = new List<CEnemy>();
+    public List<CEnemy> AllEnemy { get { return m_AllEnemy; } }
     
-
     protected override void Awake()
     {
         CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
@@ -51,7 +51,11 @@ public class CEnemyGroup : CGameObjBas
         return m_AllEnemy[index];
     }
 
-  
+    public bool RemoveEnemy(CEnemy remove)
+    {
+        return m_AllEnemy.Remove(remove);
+    }
+
 
     //// Start is called before the first frame update
     //void Start()

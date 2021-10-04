@@ -18,7 +18,7 @@ public class CTargetMoveStateActor : CMoveStateBase
         m_MyActorMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
         m_MyActorMemoryShare.m_MyRigidbody.drag = 10.0f;
 
-        m_MyActorMemoryShare.m_MyMovable.gameObject.layer = (int)StaticGlobalDel.ELayerIndex.eEndActor;
+        m_MyActorMemoryShare.m_MyMovable.gameObject.layer = (int)StaticGlobalDel.ELayerIndex.eEndPlayerActor;
         SetAnimationState(CAnimatorStateCtl.EState.eRun, Random.Range(0.8f, 1.2f));
     }
 
@@ -28,6 +28,17 @@ public class CTargetMoveStateActor : CMoveStateBase
 
         if (m_MyActorMemoryShare.m_Target == null)
             return;
+        else if (m_MyActorMemoryShare.m_Target.CurState == StaticGlobalDel.EMovableState.eDeath)
+        {
+            m_MyActorMemoryShare.m_Target = m_MyActorMemoryShare.m_MyActor.GetNextTarget();
+
+            if (m_MyActorMemoryShare.m_Target == null)
+            {
+                m_MyActorMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eWin;
+                return;
+            }
+        }
+
 
         Vector3 lTemp2DDis = m_MyActorMemoryShare.m_Target.transform.position - m_MyActorMemoryShare.m_MyMovable.transform.position;
         lTemp2DDis.y = 0.0f;

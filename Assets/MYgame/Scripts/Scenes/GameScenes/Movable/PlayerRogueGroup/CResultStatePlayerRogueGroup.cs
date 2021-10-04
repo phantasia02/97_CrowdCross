@@ -17,7 +17,8 @@ public class CResultStatePlayerRogueGroup : CWinStateBase
         base.InState();
 
         m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.enabled = false;
-        m_MyPlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent.gameObject.SetActive(false);
+        m_MyGameManager.PlayerResultCamera.SetActive(true);
+        //m_MyPlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent.gameObject.SetActive(false);
         CEnemyGroup lTempEnemyGroup = m_MyGameManager.EnemyGroup;
 
         lTempEnemyGroup.gameObject.SetActive(true);

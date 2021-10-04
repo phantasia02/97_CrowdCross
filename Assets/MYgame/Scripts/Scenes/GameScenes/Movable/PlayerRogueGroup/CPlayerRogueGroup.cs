@@ -40,7 +40,7 @@ public class CPlayerRogueGroup : CMovableBase
 {
     const float CfHalfWidth = 3.0f;
     const float CfTotleWidth = CfHalfWidth * 2.0f;
-    const int CstInitQueueCount = 700;
+    const int CstInitQueueCount = 50;
 
     protected CPlayerRogueGroupMemoryShare m_PlayerRogueGroupMemoryShare = null;
 
@@ -48,11 +48,7 @@ public class CPlayerRogueGroup : CMovableBase
 
     // ==================== SerializeField ===========================================
 
-    [SerializeField] CinemachineVirtualCamera m_PlayerNormalCamera = null;
-    public CinemachineVirtualCamera PlayerNormalFollowObj { get { return m_PlayerNormalCamera; } }
 
-    [SerializeField] CinemachineVirtualCamera m_PlayerWinLoseCamera = null;
-    public CinemachineVirtualCamera PlayerWinLoseCamera { get { return m_PlayerWinLoseCamera; } }
 
     [SerializeField] Transform m_AllPlayerRogueTransform = null;
     public Transform AllPlayerRogueTransform { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform; } }
@@ -68,6 +64,7 @@ public class CPlayerRogueGroup : CMovableBase
 
     public SplineFollower MySplineFollower { get { return m_PlayerRogueGroupMemoryShare.m_MySplineFollower; } }
     public int CurPlayerRogueCount { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count; } }
+    public List<CPlayerRogue> AllPlayerRogueList { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj; } }
     public CObjPool<CPlayerRogue> AllPlayerRoguePool { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool; } }
 
     protected CPlayerRogue.CSetParentData m_BuffSetParentData = new CPlayerRogue.CSetParentData();
@@ -299,7 +296,6 @@ public class CPlayerRogueGroup : CMovableBase
         bool lTempbool = lTempAllPlayerRogue.Remove(RemovePlayerRogue);
         RemovePlayerRogue.transform.parent = m_PlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent;
 
-
         CountText();
         return lTempbool;
     }
@@ -466,16 +462,16 @@ public class CPlayerRogueGroup : CMovableBase
         int i = 0;
 
         for (i = 0; i < m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count; i++)
-        {
-            m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].MoveTargetDummyOK = StaticGlobalDel.EBoolState.eTrue;
-            m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].SetStateIndex(StaticGlobalDel.EMovableState.eMove, 1);
-            m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].SetStateIndex(StaticGlobalDel.EMovableState.eDeath, 1);
-        }
+            m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].SetReadyResult();
 
-        CActor[] AllPlayerRogue   = m_MyGameManager.GetComponentsInChildren<CPlayerRogue>();
-        CActor[] AllEnemy         = m_MyGameManager.GetComponentsInChildren<CEnemy>();
 
-        int lTempMaxCount = Mathf.Min(AllPlayerRogue.Length, AllEnemy.Length);
+        List<CActor> AllPlayerRogue = m_MyGameManager.MyPlayerRogueGroup.AllPlayerRogueList.ToList<CActor>();
+        List<CActor> AllEnemy         = m_MyGameManager.EnemyGroup.AllEnemy.ToList<CActor>();
+        var rnd = new System.Random();
+        AllPlayerRogue.OrderBy(item => rnd.Next());
+        AllEnemy.OrderBy(item => rnd.Next());
+
+        int lTempMaxCount = Mathf.Min(AllPlayerRogue.Count, AllEnemy.Count);
 
         
         for (i = 0; i < lTempMaxCount; i++)
@@ -484,18 +480,20 @@ public class CPlayerRogueGroup : CMovableBase
             AllEnemy[i].SetTarget(AllPlayerRogue[i]);
 
             AllPlayerRogue[i].ChangState = StaticGlobalDel.EMovableState.eMove;
-           // AllEnemy[i].ChangState = StaticGlobalDel.EMovableState.eMove;
+            AllEnemy[i].ChangState = StaticGlobalDel.EMovableState.eMove;
         }
 
-        if (AllPlayerRogue.Length == AllEnemy.Length)
+        //return;
+
+        if (AllPlayerRogue.Count == AllEnemy.Count)
             return;
 
-        CActor[] lTempMuchActor = AllPlayerRogue.Length > AllEnemy.Length ? AllPlayerRogue : AllEnemy;
-        CActor[] lTempMinActor = AllPlayerRogue.Length < AllEnemy.Length ? AllPlayerRogue : AllEnemy;
+        List<CActor> lTempMuchActor = AllPlayerRogue.Count > AllEnemy.Count ? AllPlayerRogue : AllEnemy;
+        List<CActor> lTempMinActor = AllPlayerRogue.Count < AllEnemy.Count ? AllPlayerRogue : AllEnemy;
 
-        for (; i < lTempMuchActor.Length; i++)
+        for (; i < lTempMuchActor.Count; i++)
         {
-            lTempMuchActor[i].SetTarget(lTempMinActor[i% lTempMinActor.Length]);
+            lTempMuchActor[i].SetTarget(lTempMinActor[i% lTempMinActor.Count]);
             lTempMuchActor[i].ChangState = StaticGlobalDel.EMovableState.eMove;
         }
     }
