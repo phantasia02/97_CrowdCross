@@ -17,7 +17,7 @@ public class CTargetMoveStateActor : CMoveStateBase
 
         m_MyActorMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
         m_MyActorMemoryShare.m_MyRigidbody.drag = 10.0f;
-
+        m_MyActorMemoryShare.m_MyRigidbody.mass = 1.0f;
         //m_MyActorMemoryShare.m_MyMovable.gameObject.layer = (int)StaticGlobalDel.ELayerIndex.eEndPlayerActor;
         SetAnimationState(CAnimatorStateCtl.EState.eRun, Random.Range(0.8f, 1.2f));
     }

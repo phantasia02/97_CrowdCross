@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Cinemachine;
-
+using UniRx;
 
 
 public class CGameManager : MonoBehaviour
@@ -79,8 +79,6 @@ public class CGameManager : MonoBehaviour
         m_MyResultUI = gameObject.GetComponentInChildren<ResultUI>();
         m_EnemyGroup = gameObject.GetComponentInChildren<CEnemyGroup>(true);
         m_MyPlayerRogueGroup = gameObject.GetComponentInChildren<CPlayerRogueGroup>(true);
-
-  
     }
 
     // Start is called before the first frame update
@@ -92,10 +90,6 @@ public class CGameManager : MonoBehaviour
             if (lTempCameraObj != null)
                 m_Camera = lTempCameraObj.GetComponent<Camera>();
 
-            //if (m_Player == null)
-            //    m_Player = gameObject.GetComponentInChildren<CPlayer>();
-
-           // if (m_Camera != null && m_Player != null )
             if (m_Camera != null )
             {
                 m_bInitOK = true;
@@ -203,10 +197,6 @@ public class CGameManager : MonoBehaviour
                 break;
             case EState.ePlayOKPerformance:
                 {
-                    if (lTempGameSceneWindow != null)
-                        lTempGameSceneWindow.SetGoButton(CGameSceneWindow.EButtonState.eHide);
-
-  
                 }
                 break;
             case EState.eReadyEnd:
@@ -223,7 +213,7 @@ public class CGameManager : MonoBehaviour
                     if (lTempGameSceneWindow)
                         lTempGameSceneWindow.ShowObj(false);
 
-                    m_MyResultUI.ShowSuccessUI(1.0f);
+                    m_MyResultUI.ShowSuccessUI(2.0f);
                 }
                 break;
             case EState.eGameOver:
@@ -231,7 +221,7 @@ public class CGameManager : MonoBehaviour
                     if (lTempGameSceneWindow)
                         lTempGameSceneWindow.ShowObj(false);
 
-                    m_MyResultUI.ShowFailedUI(4.5f);
+                    m_MyResultUI.ShowFailedUI(1.0f);
                 }
                 break;
         }
@@ -333,17 +323,18 @@ public class CGameManager : MonoBehaviour
         m_ChangeScenes.ResetScene();
     }
 
-
-    public void GoPlayPerformance()
-    {
-        SetState( EState.ePlayOKPerformance);
-    }
-
     public void AddGroup(Transform lTempAddTransform)
     {
         CinemachineTargetGroup.AddMember(lTempAddTransform, 1.0f, 2.0f);
+
+        
     }
 
     public void RemoveMemberGroup(Transform lTempAddTransform)
     {CinemachineTargetGroup.RemoveMember(lTempAddTransform);}
+
+
+
+
+
 }

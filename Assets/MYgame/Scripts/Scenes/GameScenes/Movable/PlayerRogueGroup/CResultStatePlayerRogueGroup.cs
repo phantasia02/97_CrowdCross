@@ -25,7 +25,7 @@ public class CResultStatePlayerRogueGroup : CWinStateBase
         Transform lTempResulPos = m_MyGameManager.ResulPos;
 
         Sequence lTempSequence = DOTween.Sequence();
-        lTempSequence.Append(m_MyPlayerRogueGroupMemoryShare.m_MyMovable.transform.DOMove(lTempResulPos.position, 2.0f).SetEase(Ease.Linear));
+        lTempSequence.Append(m_MyPlayerRogueGroupMemoryShare.m_MyMovable.transform.DOMove(lTempResulPos.position, 5.0f).SetEase(Ease.Linear));
         lTempSequence.AppendCallback(() =>
         {
 

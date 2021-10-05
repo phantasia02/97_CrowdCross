@@ -12,6 +12,7 @@ public abstract class CGameObjBas : MonoBehaviour
         eCarCreatePos       = 3,
         eAllCarCreatePos    = 4,
         eEnemyGroup         = 5,
+        ePlayerRogueGroup   = 6,
         eMax
     }
 

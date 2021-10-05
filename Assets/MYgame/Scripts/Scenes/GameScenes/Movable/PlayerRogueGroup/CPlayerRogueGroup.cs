@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Cinemachine;
 using System.Linq;
 using DG.Tweening;
+using UniRx;
 
 public class CTargetPositionData
 {
@@ -38,6 +39,7 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
 
 public class CPlayerRogueGroup : CMovableBase
 {
+    public override EObjType ObjType() { return EObjType.ePlayerRogueGroup; }
     const float CfHalfWidth = 3.0f;
     const float CfTotleWidth = CfHalfWidth * 2.0f;
     const int CstInitQueueCount = 50;
@@ -140,6 +142,12 @@ public class CPlayerRogueGroup : CMovableBase
         base.Start();
         SetCurState(StaticGlobalDel.EMovableState.eWait);
         m_PlayerRogueUpdatapos = false;
+
+
+        UpdatePlayerRogueCountObservable().Subscribe(value => {
+            if (value == 0)
+            {m_MyGameManager.SetState( CGameManager.EState.eGameOver);}
+        }).AddTo(this.gameObject);
     }
 
     protected override void Update()
@@ -266,6 +274,8 @@ public class CPlayerRogueGroup : CMovableBase
         List<CPlayerRogue> lTempAllPlayerRogue = m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj;
         bool lTempbool = lTempAllPlayerRogue.Remove(RemovePlayerRogue);
         RemovePlayerRogue.transform.parent = m_PlayerRogueGroupMemoryShare.m_PlayerRoguePoolParent;
+
+        OnUpdatePlayerRogueCount(lTempAllPlayerRogue.Count);
 
         CountText();
         return lTempbool;
@@ -431,10 +441,9 @@ public class CPlayerRogueGroup : CMovableBase
     public void UpdateTarget()
     {
         int i = 0;
-
+        
         for (i = 0; i < m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count; i++)
             m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].SetReadyResult();
-
 
         List<CActor> AllPlayerRogue = m_MyGameManager.MyPlayerRogueGroup.AllPlayerRogueList.ToList<CActor>();
         List<CActor> AllEnemy         = m_MyGameManager.EnemyGroup.AllEnemy.ToList<CActor>();
@@ -473,5 +482,23 @@ public class CPlayerRogueGroup : CMovableBase
             lTempMuchActor[i].ChangState = StaticGlobalDel.EMovableState.eMove;
             m_MyGameManager.AddGroup(lTempMuchActor[i].transform);
         }
+
+
     }
+
+    // ===================== UniRx ======================
+    Subject<int> m_PlayerRogueCountEvent;
+
+    public void OnUpdatePlayerRogueCount(int value)
+    {
+        if (m_PlayerRogueCountEvent != null)
+            m_PlayerRogueCountEvent.OnNext(value);
+    }
+
+    public UniRx.Subject<int> UpdatePlayerRogueCountObservable()
+    {
+        return m_PlayerRogueCountEvent ?? (m_PlayerRogueCountEvent = new Subject<int>());
+    }
+
+    // ===================== UniRx ======================
 }

@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: PlayerRogueActorType
   m_EditorClassIdentifier: 
   m_AtkDis: 1.2
-  m_AtkPower: 15
+  m_AtkMaxDis: 1.6
+  m_AtkPower: 3
   m_Speed: 3

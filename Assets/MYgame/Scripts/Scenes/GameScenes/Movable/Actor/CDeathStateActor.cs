@@ -30,7 +30,8 @@ public class CDeathStateActor : CMoveStateBase
 
         m_MyActorMemoryShare.m_MyMovable.transform.forward = -m_MyActorMemoryShare.m_DeathImpactDir;
         m_MyActorMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-        m_MyActorMemoryShare.m_MyRigidbody.drag = 1.0f;
+        m_MyActorMemoryShare.m_MyRigidbody.drag = 1.1f;
+        m_MyActorMemoryShare.m_MyRigidbody.mass = 1.0f;
         m_MyActorMemoryShare.m_MyRigidbody.useGravity = true;
         Vector3 lTempForce = m_MyActorMemoryShare.m_DeathImpactDir + Vector3.up * 2.0f;
         m_MyActorMemoryShare.m_MyRigidbody.AddForce(lTempForce * Random.Range(100.0f, 200.0f));

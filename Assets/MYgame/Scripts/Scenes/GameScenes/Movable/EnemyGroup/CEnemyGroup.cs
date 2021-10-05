@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class CEnemyGroup : CGameObjBas
 {
@@ -13,6 +14,8 @@ public class CEnemyGroup : CGameObjBas
     
     protected override void Awake()
     {
+
+
         CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
         GameObject lpototypeObj = null;
 
@@ -51,6 +54,13 @@ public class CEnemyGroup : CGameObjBas
             lTempEnemy = lpototypeObj.GetComponent<CEnemy>();
             m_AllEnemy.Add(lTempEnemy);
         }
+
+        base.Awake();
+
+        UpdateEnemyCountObservable().Subscribe(value => {
+            if (value == 0)
+            { m_MyGameManager.SetState(CGameManager.EState.eWinUI); }
+        }).AddTo(this.gameObject);
     }
 
 
@@ -65,19 +75,26 @@ public class CEnemyGroup : CGameObjBas
 
     public bool RemoveEnemy(CEnemy remove)
     {
-        return m_AllEnemy.Remove(remove);
+        bool lTempb = m_AllEnemy.Remove(remove);
+        OnUpdateEnemyCount(m_AllEnemy.Count);
+
+        return lTempb;
     }
 
 
-    //// Start is called before the first frame update
-    //void Start()
-    //{
+    // ===================== UniRx ======================
+    Subject<int> m_EnemyCountEvent;
 
-    //}
+    public void OnUpdateEnemyCount(int value)
+    {
+        if (m_EnemyCountEvent != null)
+            m_EnemyCountEvent.OnNext(value);
+    }
 
-    //// Update is called once per frame
-    //void Update()
-    //{
+    public UniRx.Subject<int> UpdateEnemyCountObservable()
+    {
+        return m_EnemyCountEvent ?? (m_EnemyCountEvent = new Subject<int>());
+    }
 
-    //}
+    // ===================== UniRx ======================
 }
