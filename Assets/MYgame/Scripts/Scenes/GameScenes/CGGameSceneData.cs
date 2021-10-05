@@ -28,7 +28,15 @@ public class CGGameSceneData : CSingletonMonoBehaviour<CGGameSceneData>
 
     public enum EArmsType
     {
-        eMace = 0,
+        eMace           = 0,
+        eArmature       = 1,
+        eAxe            = 2,
+        eHam            = 3,
+        ePlunger        = 4,
+        eLollipop_02    = 5,
+        eLeg            = 6,
+        eRolling_Pin    = 7,
+        eBaby_Hammer    = 8,
         eMax,
     };
 
@@ -44,17 +52,18 @@ public class CGGameSceneData : CSingletonMonoBehaviour<CGGameSceneData>
     {
         for (int i = 0; i < (int)EArmsType.eMax; i++)
         {
+            m_CurNewArmsCount = i;
             m_AllArmsPool[i] = new CObjPool<GameObject>();
             m_AllArmsPool[i].NewObjFunc = NewArms;
             m_AllArmsPool[i].RemoveObjFunc = RemoveArms;
             m_AllArmsPool[i].InitDefPool(10);
-            m_CurNewArmsCount = i;
         }
     }
 
     public GameObject GetArms(EArmsType lType)
     {
         int lTempindex = (int)lType;
+        m_CurNewArmsCount = lTempindex;
         GameObject lTempObj = m_AllArmsPool[lTempindex].AddObj();
         lTempObj.SetActive(true);
 
@@ -63,6 +72,9 @@ public class CGGameSceneData : CSingletonMonoBehaviour<CGGameSceneData>
 
     public void RemoveArmsType(EArmsType lTempType, GameObject lTempObj)
     {
+        if (lTempType == EArmsType.eMax)
+            return;
+
         int lTempindex = (int)lTempType;
 
         m_AllArmsPool[lTempindex].RemoveObj(lTempObj);

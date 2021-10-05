@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using DG.Tweening;
 
 public class CEnemyGroup : CGameObjBas
 {
     public override EObjType ObjType() { return EObjType.eEnemyGroup; }
 
     [SerializeField] protected int m_EnemyCount = 1;
+    [SerializeField] protected Transform m_Targetpos = null;
+
     protected float m_RingDis = 30.0f;
-    public List<CEnemy> m_AllEnemy = new List<CEnemy>();
+    protected List<CEnemy> m_AllEnemy = new List<CEnemy>();
     public List<CEnemy> AllEnemy { get { return m_AllEnemy; } }
     
     protected override void Awake()
@@ -52,8 +55,11 @@ public class CEnemyGroup : CGameObjBas
             lpototypeObj.transform.rotation = this.transform.rotation;
             lpototypeObj.transform.position = lTempTargetPositionData[i].m_TargetPosition;
             lTempEnemy = lpototypeObj.GetComponent<CEnemy>();
+            lTempEnemy.ChangState = StaticGlobalDel.EMovableState.eMove;
             m_AllEnemy.Add(lTempEnemy);
         }
+
+        this.transform.DOMove(m_Targetpos.position, 5.0f).SetEase(Ease.Linear);
 
         base.Awake();
 

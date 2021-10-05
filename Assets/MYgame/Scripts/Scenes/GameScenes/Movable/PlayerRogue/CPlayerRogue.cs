@@ -15,6 +15,7 @@ public class CPlayerRogueMemoryShare : CActorMemoryShare
     public CCarCollisionPlayerRogue         m_MyCarCollisionPlayerRogue = null;
     public Transform                        m_HandTransform             = null;
     public GameObject                       m_MyArms                    = null;
+    public CGGameSceneData.EArmsType        m_MyArmsType                = CGGameSceneData.EArmsType.eMax;
    // public CEnemy                           m_TargetEnemy               = null;
 };
 
@@ -176,7 +177,8 @@ public class CPlayerRogue : CActor
             m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeAll;
             m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState = StaticGlobalDel.EMovableState.eMax;
 
-            m_MyPlayerRogueMemoryShare.m_MyArms = lTempCGGameSceneData.GetArms(CGGameSceneData.EArmsType.eMace) ;
+            m_MyPlayerRogueMemoryShare.m_MyArmsType = (CGGameSceneData.EArmsType)Random.Range(0, (int)CGGameSceneData.EArmsType.eMax);
+            m_MyPlayerRogueMemoryShare.m_MyArms = lTempCGGameSceneData.GetArms(m_MyPlayerRogueMemoryShare.m_MyArmsType) ;
             m_MyPlayerRogueMemoryShare.m_MyArms.transform.parent = m_MyPlayerRogueMemoryShare.m_HandTransform;
             m_MyPlayerRogueMemoryShare.m_MyArms.transform.localPosition = Vector3.zero;
             m_MyPlayerRogueMemoryShare.m_MyArms.transform.rotation = m_MyPlayerRogueMemoryShare.m_HandTransform.rotation;
@@ -202,7 +204,8 @@ public class CPlayerRogue : CActor
     public void MyRemove()
     {
         CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
-        lTempCGGameSceneData.RemoveArmsType(CGGameSceneData.EArmsType.eMace, m_MyPlayerRogueMemoryShare.m_MyArms);
+        lTempCGGameSceneData.RemoveArmsType(m_MyPlayerRogueMemoryShare.m_MyArmsType, m_MyPlayerRogueMemoryShare.m_MyArms);
+        m_MyPlayerRogueMemoryShare.m_MyArmsType = CGGameSceneData.EArmsType.eMax;
         m_MyPlayerRogueMemoryShare.m_MyArms = null;
         m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints =  RigidbodyConstraints.FreezeAll;
 

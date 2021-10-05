@@ -326,8 +326,6 @@ public class CGameManager : MonoBehaviour
     public void AddGroup(Transform lTempAddTransform)
     {
         CinemachineTargetGroup.AddMember(lTempAddTransform, 1.0f, 2.0f);
-
-        
     }
 
     public void RemoveMemberGroup(Transform lTempAddTransform)

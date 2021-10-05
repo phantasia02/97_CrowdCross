@@ -438,6 +438,18 @@ public class CPlayerRogueGroup : CMovableBase
         base.OnTriggerExit(other);
     }
 
+    public void AddTargetGroup()
+    {
+        List<CActor> AllPlayerRogue = m_MyGameManager.MyPlayerRogueGroup.AllPlayerRogueList.ToList<CActor>();
+        List<CActor> AllEnemy = m_MyGameManager.EnemyGroup.AllEnemy.ToList<CActor>();
+
+        for (int i = 0; i < AllPlayerRogue.Count; i++)
+            m_MyGameManager.AddGroup(AllPlayerRogue[i].transform);
+
+        for (int i = 0; i < AllEnemy.Count; i++)
+            m_MyGameManager.AddGroup(AllEnemy[i].transform);
+    }
+
     public void UpdateTarget()
     {
         int i = 0;
@@ -464,8 +476,8 @@ public class CPlayerRogueGroup : CMovableBase
             AllPlayerRogue[i].ChangState = StaticGlobalDel.EMovableState.eMove;
             AllEnemy[i].ChangState = StaticGlobalDel.EMovableState.eMove;
 
-            m_MyGameManager.AddGroup(AllPlayerRogue[i].transform);
-            m_MyGameManager.AddGroup(AllEnemy[i].transform);
+            //m_MyGameManager.AddGroup(AllPlayerRogue[i].transform);
+            //m_MyGameManager.AddGroup(AllEnemy[i].transform);
         }
 
         //return;
@@ -480,7 +492,7 @@ public class CPlayerRogueGroup : CMovableBase
         {
             lTempMuchActor[i].SetTarget(lTempMinActor[i% lTempMinActor.Count]);
             lTempMuchActor[i].ChangState = StaticGlobalDel.EMovableState.eMove;
-            m_MyGameManager.AddGroup(lTempMuchActor[i].transform);
+        //    m_MyGameManager.AddGroup(lTempMuchActor[i].transform);
         }
 
 
