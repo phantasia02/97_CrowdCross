@@ -47,7 +47,7 @@ public class CAtkStateActor : CMoveStateBase
                     CActor lTempActor = m_MyActorMemoryShare.m_MyActor.GetNextTarget();
                     if (lTempActor == null)
                     {
-                        m_MyActorMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eWait;
+                        m_MyActorMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eWin;
                         return;
                     }
                     else

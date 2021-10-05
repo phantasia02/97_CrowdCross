@@ -614,9 +614,9 @@ MonoBehaviour:
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
   m_AllWinAnima:
-  - m_flagName: 
-    m_AnimationName: 
-    m_AnimationStateName: 
+  - m_flagName: Twist Dance
+    m_AnimationName: Twist Dance
+    m_AnimationStateName: Twist Dance
     m_Speed: 1
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0

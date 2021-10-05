@@ -80,6 +80,7 @@ public class CPlayerRogue : CActor
     {
         m_AllState[(int)StaticGlobalDel.EMovableState.eWait].AllThisState.Add(new CWaitStatePlayerRogue(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eAtk].AllThisState.Add(new CAtkStateActor(this));
+        m_AllState[(int)StaticGlobalDel.EMovableState.eWin].AllThisState.Add(new CWinStateActor(this));
 
         m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStatePlayerRogue(this));       // eDeath index 0
         m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStateActor(this));             // eDeath index 1

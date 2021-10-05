@@ -25,6 +25,7 @@ public class CEnemy : CActor
         m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CTargetMoveStateActor(this));         // eMove index 0
 
         m_AllState[(int)StaticGlobalDel.EMovableState.eAtk].AllThisState.Add(new CAtkStateActor(this));
+        m_AllState[(int)StaticGlobalDel.EMovableState.eWin].AllThisState.Add(new CWinStateActor(this));
     }
 
     protected override void CreateMemoryShare()

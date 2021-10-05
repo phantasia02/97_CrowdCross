@@ -878,9 +878,9 @@ MonoBehaviour:
   m_ThisAnimator: {fileID: 0}
   m_MyMovableBase: {fileID: 0}
   m_AllIdleAnima:
-  - m_flagName: Idle_Crouching
-    m_AnimationName: Idle_Crouching
-    m_AnimationStateName: Idle_Crouching
+  - m_flagName: Idle_Generic
+    m_AnimationName: Idle_Generic
+    m_AnimationStateName: Idle_Generic
     m_Speed: 1
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
@@ -899,9 +899,9 @@ MonoBehaviour:
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
   m_AllWinAnima:
-  - m_flagName: 
-    m_AnimationName: 
-    m_AnimationStateName: 
+  - m_flagName: Twist Dance
+    m_AnimationName: Idle_Generic
+    m_AnimationStateName: Twist Dance
     m_Speed: 1
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
