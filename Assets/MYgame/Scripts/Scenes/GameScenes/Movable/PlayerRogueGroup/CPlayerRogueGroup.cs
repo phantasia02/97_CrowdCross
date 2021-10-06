@@ -444,16 +444,17 @@ public class CPlayerRogueGroup : CMovableBase
         List<CActor> AllEnemy = m_MyGameManager.EnemyGroup.AllEnemy.ToList<CActor>();
 
         for (int i = 0; i < AllPlayerRogue.Count; i++)
-            m_MyGameManager.AddGroup(AllPlayerRogue[i].transform);
+            m_MyGameManager.AddGroup(AllPlayerRogue[i].DummyRef);
 
         for (int i = 0; i < AllEnemy.Count; i++)
-            m_MyGameManager.AddGroup(AllEnemy[i].transform);
+            m_MyGameManager.AddGroup(AllEnemy[i].DummyRef);
     }
 
     public void UpdateTarget()
     {
+        m_MyGameManager.ResultEndCamera.gameObject.SetActive(true);
+
         int i = 0;
-        
         for (i = 0; i < m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count; i++)
             m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].SetReadyResult();
 

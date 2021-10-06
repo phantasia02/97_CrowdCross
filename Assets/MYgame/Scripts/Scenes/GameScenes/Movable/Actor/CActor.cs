@@ -9,6 +9,7 @@ public class CActorMemoryShare : CMemoryShareBase
     public CActor       m_MyActor          = null;
     public int          m_Hp               = 10;
     public Vector3      m_DeathImpactDir   = Vector3.forward;
+
 };
 
 public abstract class CActor : CMovableBase
@@ -18,6 +19,8 @@ public abstract class CActor : CMovableBase
     //  abstract public EMovableType MyMovableType();
     protected CActorMemoryShare m_MyActorMemoryShare = null;
     [SerializeField] ActorType m_ActorData = null;
+    [SerializeField] Transform m_DummyRef = null;
+    public Transform DummyRef { get { return m_DummyRef; } }
 
     public virtual int TargetMask() { return 0; }
     public virtual int TargetIndex() { return 0; }
@@ -38,7 +41,6 @@ public abstract class CActor : CMovableBase
         get { return m_MyActorMemoryShare.m_DeathImpactDir; }
     }
 
-    public CActor m_wachTarget = null;
 
     protected override void Start()
     {
@@ -49,7 +51,6 @@ public abstract class CActor : CMovableBase
     public bool SetTarget(CActor target)
     {
         m_MyActorMemoryShare.m_Target = target;
-        m_wachTarget = m_MyActorMemoryShare.m_Target;
 
         return true;
     }

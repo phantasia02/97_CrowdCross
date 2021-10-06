@@ -232,6 +232,20 @@ public class CPlayerRogue : CActor
     {
         m_MyPlayerRogueMemoryShare.m_MyGroup.RemoveAllPlayerRogue(this);
 
+        if (m_MyPlayerRogueMemoryShare.m_MyArms != null)
+        {
+            m_MyPlayerRogueMemoryShare.m_MyArms.transform.parent = null;
+            Rigidbody lTempRigidbody = m_MyPlayerRogueMemoryShare.m_MyArms.GetComponent<Rigidbody>();
+            lTempRigidbody.useGravity = true;
+            lTempRigidbody.constraints = RigidbodyConstraints.None;
+
+            Vector3 lTempV3 = m_MyPlayerRogueMemoryShare.m_DeathImpactDir + Vector3.up;
+            lTempRigidbody.AddForceAtPosition(lTempV3 * Random.Range(150.0f, 300.0f), Random.insideUnitSphere);
+
+            Collider lTempCollider = lTempRigidbody.GetComponentInChildren<Collider>(true);
+            lTempCollider.enabled = true;
+        }
+
         base.RemoveGroup();
     }
 

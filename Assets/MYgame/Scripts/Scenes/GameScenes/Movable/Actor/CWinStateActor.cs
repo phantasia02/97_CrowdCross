@@ -19,8 +19,10 @@ public class CWinStateActor : CMoveStateBase
 
         if (m_MyActorMemoryShare.m_MyMovable.MyMovableType() == CMovableBase.EMovableType.ePlayerRogue)
         {
-            Tween lTempTween = m_MyActorMemoryShare.m_MyMovable.transform.DOLocalRotate(new Vector3(0.0f, 360.0f, 0.0f), Random.Range(5.0f, 6.2f), RotateMode.LocalAxisAdd).SetEase(Ease.Linear);
-            lTempTween.SetLoops(-1, LoopType.Incremental);
+            Vector3 lTempDir = m_MyGameManager.PlayerResultCamera.transform.position;
+            lTempDir.y = 0.0f;
+            Tween lTempTween = m_MyActorMemoryShare.m_MyMovable.transform.DOLookAt(lTempDir, Random.Range(5.0f, 10.2f)).SetEase(Ease.Linear);
+          //  lTempTween.SetLoops(-1, LoopType.Incremental);
         }
     }
 

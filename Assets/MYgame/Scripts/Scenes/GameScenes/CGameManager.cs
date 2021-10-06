@@ -56,6 +56,9 @@ public class CGameManager : MonoBehaviour
     [SerializeField] GameObject m_PlayerResultCamera = null;
     public GameObject PlayerResultCamera { get { return m_PlayerResultCamera; } }
 
+    [SerializeField] GameObject m_ResultEndCamera = null;
+    public GameObject ResultEndCamera { get { return m_ResultEndCamera; } }
+
     [SerializeField] CinemachineTargetGroup m_CinemachineTargetGroup = null;
     public CinemachineTargetGroup CinemachineTargetGroup { get { return m_CinemachineTargetGroup; } }
     

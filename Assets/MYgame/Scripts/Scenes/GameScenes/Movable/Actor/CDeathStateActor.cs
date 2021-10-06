@@ -26,7 +26,7 @@ public class CDeathStateActor : CMoveStateBase
         //    m_MyActorMemoryShare.m_AllChildCollider[i].gameObject.SetActive(false);
         //}
 
-        m_MyGameManager.RemoveMemberGroup(m_MyActorMemoryShare.m_MyMovable.transform);
+        m_MyGameManager.RemoveMemberGroup(m_MyActorMemoryShare.m_MyActor.DummyRef);
 
         m_MyActorMemoryShare.m_MyMovable.transform.forward = -m_MyActorMemoryShare.m_DeathImpactDir;
         m_MyActorMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeRotation;

@@ -159,44 +159,44 @@ public class CAnimatorStateCtl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!m_ThisAnimator)
-            return;
+        //if (!m_ThisAnimator)
+        //    return;
 
-        int lTempCurState = (int)m_CurState;
-        cAnimatorData lTempAnimatorData = m_AllAnimatorData[lTempCurState][m_StateIndividualIndex[lTempCurState]];
-        if (lTempAnimatorData.m_AnimationName.Length == 0)
-            return;
+        //int lTempCurState = (int)m_CurState;
+        //cAnimatorData lTempAnimatorData = m_AllAnimatorData[lTempCurState][m_StateIndividualIndex[lTempCurState]];
+        //if (lTempAnimatorData.m_AnimationName.Length == 0)
+        //    return;
 
-        AnimatorStateInfo info = m_ThisAnimator.GetCurrentAnimatorStateInfo(0);
+        //AnimatorStateInfo info = m_ThisAnimator.GetCurrentAnimatorStateInfo(0);
 
-        if (info.speed == 0)
-            return;
+        //if (info.speed == 0)
+        //    return;
 
 
-        if (ResetForward)
-        {
-            float lTempsqr = Vector3.SqrMagnitude(m_MyMovableBase.transform.forward - this.transform.forward);
-            if (lTempsqr >= 0.01f)
-                this.transform.forward = Vector3.Lerp(this.transform.forward, m_MyMovableBase.transform.forward, 5.0f * Time.deltaTime);
-            else
-            {
-                this.transform.forward = m_MyMovableBase.transform.forward;
-                ResetForward = false;
-            }
-        }
+        //if (ResetForward)
+        //{
+        //    float lTempsqr = Vector3.SqrMagnitude(m_MyMovableBase.transform.forward - this.transform.forward);
+        //    if (lTempsqr >= 0.01f)
+        //        this.transform.forward = Vector3.Lerp(this.transform.forward, m_MyMovableBase.transform.forward, 5.0f * Time.deltaTime);
+        //    else
+        //    {
+        //        this.transform.forward = m_MyMovableBase.transform.forward;
+        //        ResetForward = false;
+        //    }
+        //}
 
-        if (info.normalizedTime >= (1.0f / info.speed) && info.IsName(lTempAnimatorData.m_AnimationStateName) && !m_PlayingEnd)
-        {
-            if (m_EndCallBack != null)
-            {
-                cAnimationCallBackPar lTempAnimationCallBackPar = new cAnimationCallBackPar();
-                lTempAnimationCallBackPar.eAnimationState = m_CurState;
-                m_EndCallBack(lTempAnimationCallBackPar);
-                m_EndCallBack = null;
-            }
+        //if (info.normalizedTime >= (1.0f / info.speed) && info.IsName(lTempAnimatorData.m_AnimationStateName) && !m_PlayingEnd)
+        //{
+        //    if (m_EndCallBack != null)
+        //    {
+        //        cAnimationCallBackPar lTempAnimationCallBackPar = new cAnimationCallBackPar();
+        //        lTempAnimationCallBackPar.eAnimationState = m_CurState;
+        //        m_EndCallBack(lTempAnimationCallBackPar);
+        //        m_EndCallBack = null;
+        //    }
 
-            m_PlayingEnd = true;
-        }
+        //    m_PlayingEnd = true;
+        //}
     }
 
     //public float GetCurrentNormalizedTime()
