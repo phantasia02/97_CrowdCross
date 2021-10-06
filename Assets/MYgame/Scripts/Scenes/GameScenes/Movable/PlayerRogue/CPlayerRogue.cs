@@ -16,6 +16,7 @@ public class CPlayerRogueMemoryShare : CActorMemoryShare
     public Transform                        m_HandTransform             = null;
     public GameObject                       m_MyArms                    = null;
     public CGGameSceneData.EArmsType        m_MyArmsType                = CGGameSceneData.EArmsType.eMax;
+    public Vector3                          m_TargetDir                 = Vector3.forward;
    // public CEnemy                           m_TargetEnemy               = null;
 };
 
@@ -58,11 +59,18 @@ public class CPlayerRogue : CActor
 
     [SerializeField] protected Transform m_HandTransform = null;
     // ==================== SerializeField ===========================================
+    public Vector3 TargetDir
+    {
+        set {m_MyPlayerRogueMemoryShare.m_TargetDir = value; }
+        get { return m_MyPlayerRogueMemoryShare.m_TargetDir; }
+    }
+    
 
     public int CurGroupIndex { set { m_MyPlayerRogueMemoryShare.m_GroupIndex = value; } }
     public float CurRingDis { get { return m_MyPlayerRogueMemoryShare.m_CurRingDis; } }
     public Transform CurTargetDummy { get { return m_MyPlayerRogueMemoryShare.m_TargetDummy; } }
     public StaticGlobalDel.EBoolState MoveTargetDummyOK { set { m_MyPlayerRogueMemoryShare.m_MoveTargetDummyOK =  StaticGlobalDel.EBoolState.eTrue; } }
+
     protected CPlayerRogueMemoryShare m_MyPlayerRogueMemoryShare = null;
     public override int TargetMask() { return (int)StaticGlobalDel.g_EndEnemyActorMask; }
     public override int TargetIndex() { return (int)StaticGlobalDel.ELayerIndex.eEndEnemyActor; }
@@ -247,6 +255,14 @@ public class CPlayerRogue : CActor
         }
 
         base.RemoveGroup();
+    }
+
+    public void UpdataDir()
+    {
+        Vector3 lTempV3 = this.transform.forward;
+        lTempV3.y = 0.0f;
+        if (Vector3.Dot(TargetDir, lTempV3) < 0.99f)
+            this.transform.forward = Vector3.Lerp(this.transform.forward, TargetDir, 0.3f);
     }
 
     //public override void RemoveMyObj()

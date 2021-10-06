@@ -26,6 +26,7 @@ public class CMoveStatePlayerRogueGroup : CMoveStateBase
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSpeed();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateRearrangementTime();
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSplineFollowerOffset();
     }
 
     protected override void OutState()

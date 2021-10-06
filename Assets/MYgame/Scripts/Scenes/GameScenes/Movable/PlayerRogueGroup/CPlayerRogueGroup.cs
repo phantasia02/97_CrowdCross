@@ -35,6 +35,7 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
     public Transform                    m_CountCanvasTarget         = null;
     public int                          m_CarInCount                = 0;
     public bool                         m_bRearrangement            = false;
+   // public float                        m_bTargetMoveX              = 0.0f;
 };
 
 public class CPlayerRogueGroup : CMovableBase
@@ -187,17 +188,17 @@ public class CPlayerRogueGroup : CMovableBase
 
     public void UpdateSplineFollowerOffset()
     {
-        //if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) < 0.0001f)
-        //{
-        //    Vector2 lTempV2 = Vector2.MoveTowards(m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset, m_PlayerRogueGroupMemoryShare.m_TargetOffset, CfTotleWidth * Time.deltaTime);
-        //    Debug.Log($" 3333333333333333 lTempV2 = {lTempV2}");
-        //    if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) < 0.001f)
-        //        lTempV2 = m_PlayerRogueGroupMemoryShare.m_TargetOffset;
+        if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) > 0.0001f)
+        {
+            Vector2 lTempV2 = Vector2.MoveTowards(m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset, m_PlayerRogueGroupMemoryShare.m_TargetOffset, CfTotleWidth * 2.0f * Time.deltaTime);
+            Debug.Log($" 3333333333333333 lTempV2 = {lTempV2}");
+            if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) < 0.01f)
+                lTempV2 = m_PlayerRogueGroupMemoryShare.m_TargetOffset;
 
 
-        //    Debug.Log($" lTempV2 = {lTempV2}");
-        //    m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempV2;
-        //}
+            Debug.Log($" lTempV2 = {lTempV2}");
+            m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempV2;
+        }
     }
 
     public override void InputUpdata()
@@ -243,19 +244,19 @@ public class CPlayerRogueGroup : CMovableBase
         //float lTempMoveRatio = TotleSpeedRatio;
 
         lTempMoveX = (lTempMoveX / Screen.width) * CfTotleWidth;
-        Vector2 lTempOffset = m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset;
+        //Vector2 lTempOffset = m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset;
+        Vector2 lTempOffset = m_PlayerRogueGroupMemoryShare.m_TargetOffset;
        // lTempOffset.x += lTempMoveX * lTempMoveRatio;
         lTempOffset.x += lTempMoveX;
-        lTempOffset = Vector2.ClampMagnitude(lTempOffset, CfHalfWidth);
+        m_PlayerRogueGroupMemoryShare.m_TargetOffset = Vector2.ClampMagnitude(lTempOffset, CfHalfWidth);
 
-       // m_PlayerRogueGroupMemoryShare.m_TargetOffset = lTempOffset;
-       // Debug.Log($"m_PlayerRogueGroupMemoryShare.m_TargetOffset = {m_PlayerRogueGroupMemoryShare.m_TargetOffset}");
-        m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempOffset;
+
+
+        // m_PlayerRogueGroupMemoryShare.m_TargetOffset = lTempOffset;
+        Debug.Log($"m_PlayerRogueGroupMemoryShare.m_TargetOffset = {m_PlayerRogueGroupMemoryShare.m_TargetOffset}");
+       // m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempOffset;
     }
 
-
-  
-    
     public CPlayerRogue NewPlayerRogue()
     {
         CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
@@ -438,6 +439,13 @@ public class CPlayerRogueGroup : CMovableBase
         base.OnTriggerExit(other);
     }
 
+    public void SetPlayerTargetDir(Vector3 Dir)
+    {
+        for (int i = 0; i < m_MyGameManager.MyPlayerRogueGroup.AllPlayerRogueList.Count; i++)
+            m_MyGameManager.MyPlayerRogueGroup.AllPlayerRogueList[i].TargetDir = Dir;
+
+    }
+
     public void AddTargetGroup()
     {
         List<CActor> AllPlayerRogue = m_MyGameManager.MyPlayerRogueGroup.AllPlayerRogueList.ToList<CActor>();
@@ -495,8 +503,6 @@ public class CPlayerRogueGroup : CMovableBase
             lTempMuchActor[i].ChangState = StaticGlobalDel.EMovableState.eMove;
         //    m_MyGameManager.AddGroup(lTempMuchActor[i].transform);
         }
-
-
     }
 
     // ===================== UniRx ======================

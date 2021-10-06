@@ -19,10 +19,15 @@ public class CResultStatePlayerRogueGroup : CWinStateBase
         m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.enabled = false;
         m_MyGameManager.PlayerResultCamera.SetActive(true);
         m_MyPlayerRogueGroupMemoryShare.m_MyCanvas.gameObject.SetActive(false);
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetPlayerTargetDir(m_MyPlayerRogueGroupMemoryShare.m_MyMovable.transform.forward);
 
         CEnemyGroup lTempEnemyGroup = m_MyGameManager.EnemyGroup;
         lTempEnemyGroup.gameObject.SetActive(true);
         Transform lTempResulPos = m_MyGameManager.ResulPos;
+
+        for (int i = 0; i < m_MyPlayerRogueGroupMemoryShare.m_AllPlayerRogueObj.Count; i++)
+            m_MyPlayerRogueGroupMemoryShare.m_AllPlayerRogueObj[i].ChangState = StaticGlobalDel.EMovableState.eMove;
+
 
         Sequence lTempSequence = DOTween.Sequence();
         lTempSequence.AppendInterval(3.0f);

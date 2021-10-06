@@ -20,6 +20,8 @@ public class CWaitStatePlayerRogueGroup : CWaitStateBase
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetAllPlayerRogueState(StaticGlobalDel.EMovableState.eWait);
 
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetMoveBuff(CMovableBase.ESpeedBuff.eDrag, 0.0f);
+
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetPlayerTargetDir(m_MyPlayerRogueGroupMemoryShare.m_MyMovable.transform.forward);
     }
 
     protected override void updataState()

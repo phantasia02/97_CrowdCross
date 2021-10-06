@@ -31,6 +31,17 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSpeed();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateRearrangementTime();
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSplineFollowerOffset();
+
+        Vector2 lTempDirV2 = m_MyPlayerRogueGroupMemoryShare.m_TargetOffset - m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset;
+        Vector3 lTempDirV3 = Vector3.zero;
+        lTempDirV3.x = lTempDirV2.x;
+        lTempDirV3.z = lTempDirV2.y;
+        lTempDirV3 = lTempDirV3.normalized + m_MyPlayerRogueGroupMemoryShare.m_MyMovable.transform.forward;
+
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetPlayerTargetDir(lTempDirV3.normalized);
+
+        
     }
 
     protected override void OutState()

@@ -20,6 +20,8 @@ public class CWaitStatePlayerRogue : CWaitStateBase
     protected override void updataState()
     {
         base.updataState();
+
+        m_MyPlayerRogueMemoryShare.m_MyPlayerRogue.UpdataDir();
     }
 
     protected override void OutState()
