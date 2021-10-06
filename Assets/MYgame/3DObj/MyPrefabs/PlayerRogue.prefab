@@ -144,6 +144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActorData: {fileID: 11400000, guid: db43289e1967bc042aeaf178cecc9988, type: 2}
   m_DummyRef: {fileID: 971394068319936875}
+  m_RendererMesh: {fileID: 7656431868683385853}
   m_HandTransform: {fileID: 7656431868669946579}
 --- !u!54 &7922840944937871394
 Rigidbody:
@@ -666,10 +667,10 @@ MonoBehaviour:
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
   m_AllAtkAnima:
-  - m_flagName: Standing Melee Attack Downward
-    m_AnimationName: Standing Melee Attack Downward
-    m_AnimationStateName: Standing Melee Attack Downward
-    m_Speed: 2
+  - m_flagName: Punch_LeftHand
+    m_AnimationName: Punch_LeftHand
+    m_AnimationStateName: Punch_LeftHand
+    m_Speed: 1
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
 --- !u!1 &7656431868669785749

@@ -109,7 +109,7 @@ public class CPlayerRogue : CActor
         m_MyPlayerRogueMemoryShare.m_MyCarCollisionPlayerRogue = new CCarCollisionPlayerRogue(m_MyPlayerRogueMemoryShare);
         m_MyPlayerRogueMemoryShare.m_HandTransform = m_HandTransform;
         // m_MyPlayerRogueMemoryShare.m_TargetDummy = this;
-        m_updateDirval = Random.Range(3.0f, 8.0f);
+        m_updateDirval = Random.Range(10.0f, 15.0f);
         SetBaseMemoryShare();
     }
 

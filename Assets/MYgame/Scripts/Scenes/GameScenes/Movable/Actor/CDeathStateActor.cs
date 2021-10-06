@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class CDeathStateActor : CMoveStateBase
 {
     CActorMemoryShare m_MyActorMemoryShare = null;
     CActor m_TargetActorBuff = null;
     bool m_End = false;
+
+    public readonly int BaseColorID = Shader.PropertyToID("_BaseColor");
 
     public CDeathStateActor(CMovableBase pamMovableBase) : base(pamMovableBase)
     {
@@ -25,7 +28,7 @@ public class CDeathStateActor : CMoveStateBase
         //{
         //    m_MyActorMemoryShare.m_AllChildCollider[i].gameObject.SetActive(false);
         //}
-
+        m_MyActorMemoryShare.m_RendererMesh.material.DOColor(new Color(0.7f, 0.7f, 0.7f), BaseColorID, 3.0f);
         m_MyGameManager.RemoveMemberGroup(m_MyActorMemoryShare.m_MyActor.DummyRef);
 
         m_MyActorMemoryShare.m_MyMovable.transform.forward = -m_MyActorMemoryShare.m_DeathImpactDir;

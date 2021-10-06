@@ -16,8 +16,8 @@ public class CAtkStateActor : CMoveStateBase
         base.InState();
         SetAnimationState(CAnimatorStateCtl.EState.eAtk);
         m_MyActorMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
-        m_MyActorMemoryShare.m_MyRigidbody.drag = 1000.0f;
-        m_MyActorMemoryShare.m_MyRigidbody.mass = 1000.0f;
+        m_MyActorMemoryShare.m_MyRigidbody.drag = 10000.0f;
+        m_MyActorMemoryShare.m_MyRigidbody.mass = 10000.0f;
        // Time.timeScale = 0.1f;
 
         CAnimatorStateCtl lTempAnimatorStateCtl = m_MyActorMemoryShare.m_MyMovable.AnimatorStateCtl;

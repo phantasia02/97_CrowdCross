@@ -174,6 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActorData: {fileID: 11400000, guid: 351002c5b192c6e45ad719e90533ef79, type: 2}
   m_DummyRef: {fileID: 402672870800620628}
+  m_RendererMesh: {fileID: 8605775946900188071}
 --- !u!54 &8133309904312957048
 Rigidbody:
   m_ObjectHideFlags: 0
