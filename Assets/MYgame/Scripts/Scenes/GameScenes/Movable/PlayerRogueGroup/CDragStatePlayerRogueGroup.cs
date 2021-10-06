@@ -37,7 +37,7 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
         Vector3 lTempDirV3 = Vector3.zero;
         lTempDirV3.x = lTempDirV2.x;
         lTempDirV3.z = lTempDirV2.y;
-        lTempDirV3 = lTempDirV3.normalized + m_MyPlayerRogueGroupMemoryShare.m_MyMovable.transform.forward;
+        lTempDirV3 = lTempDirV3.normalized + (m_MyPlayerRogueGroupMemoryShare.m_MyMovable.transform.forward * 0.5f);
 
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetPlayerTargetDir(lTempDirV3.normalized);
 

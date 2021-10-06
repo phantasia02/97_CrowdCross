@@ -497,22 +497,9 @@ public abstract class CMovableBase : CGameObjBas
     }
 
 
-    public void OpenColliderFloor(bool lColliderFloor)
+    public void OpenCollider(bool lCollider)
     {
-        //if (lColliderFloor)
-        //{
-        //    for (int i = 0; i < m_ChildCollider.Length; i++)
-        //        m_ChildCollider[i].gameObject.layer = (int)StaticGlobalDel.ELayerIndex.eMovable;
-
-
-        //    m_MyMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-        //}
-        //else
-        //{
-        //    for (int i = 0; i < m_ChildCollider.Length; i++)
-        //        m_ChildCollider[i].gameObject.layer = 0;
-
-        //    m_MyMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-        //}
+        for (int i = 0; i < m_MyMemoryShare.m_AllChildCollider.Length; i++)
+            m_MyMemoryShare.m_AllChildCollider[i].gameObject.SetActive(lCollider);
     } 
 }

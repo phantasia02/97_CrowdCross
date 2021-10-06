@@ -50,14 +50,14 @@ public class CGGameSceneData : CSingletonMonoBehaviour<CGGameSceneData>
 
     private void Awake()
     {
-        for (int i = 0; i < (int)EArmsType.eMax; i++)
-        {
-            m_CurNewArmsCount = i;
-            m_AllArmsPool[i] = new CObjPool<GameObject>();
-            m_AllArmsPool[i].NewObjFunc = NewArms;
-            m_AllArmsPool[i].RemoveObjFunc = RemoveArms;
-            m_AllArmsPool[i].InitDefPool(10);
-        }
+        //for (int i = 0; i < (int)EArmsType.eMax; i++)
+        //{
+        //    m_CurNewArmsCount = i;
+        //    m_AllArmsPool[i] = new CObjPool<GameObject>();
+        //    m_AllArmsPool[i].NewObjFunc = NewArms;
+        //    m_AllArmsPool[i].RemoveObjFunc = RemoveArms;
+        //    m_AllArmsPool[i].InitDefPool(10);
+        //}
     }
 
     public GameObject GetArms(EArmsType lType)

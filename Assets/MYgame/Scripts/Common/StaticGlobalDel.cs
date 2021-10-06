@@ -44,6 +44,7 @@ public static class StaticGlobalDel
     public const string TagEndResult        = "EndResult";
     public const string TagPlayerRogue      = "TagPlayerRogue";
     public const string TagEnemy            = "TagEnemy";
+    public const string TagShowEnemy        = "ShowEnemy";
 
     public const int g_PlayerRogueMask      = 1 << (int)ELayerIndex.ePlayerRogue;
     public const int g_CarColliderMask      = 1 << (int)ELayerIndex.eCarCollider;

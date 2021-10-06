@@ -36,6 +36,8 @@ public class CEnemy : CActor
        
 
         SetBaseMemoryShare();
+
+      
     }
 
     // Start is called before the first frame update
@@ -43,7 +45,8 @@ public class CEnemy : CActor
     {
         base.Start();
         m_MyEnemyMemoryShare.m_MyEnemyGroup = this.GetComponentInParent<CEnemyGroup>();
-
+        OpenCollider(false);
+        m_MyEnemyMemoryShare.m_MyEnemy.AnimatorStateCtl.m_ThisAnimator.enabled = false;
         // SetCurState(StaticGlobalDel.EMovableState.eWait);
     }
 

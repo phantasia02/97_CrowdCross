@@ -75,6 +75,8 @@ public class CPlayerRogue : CActor
     public override int TargetMask() { return (int)StaticGlobalDel.g_EndEnemyActorMask; }
     public override int TargetIndex() { return (int)StaticGlobalDel.ELayerIndex.eEndEnemyActor; }
 
+    float m_updateDirval = 1.0f;
+
     public void SetParentData(ref CSetParentData data)
     {
         m_MyPlayerRogueMemoryShare.m_MyGroup = data.Group;
@@ -106,8 +108,8 @@ public class CPlayerRogue : CActor
 
         m_MyPlayerRogueMemoryShare.m_MyCarCollisionPlayerRogue = new CCarCollisionPlayerRogue(m_MyPlayerRogueMemoryShare);
         m_MyPlayerRogueMemoryShare.m_HandTransform = m_HandTransform;
-       // m_MyPlayerRogueMemoryShare.m_TargetDummy = this;
-
+        // m_MyPlayerRogueMemoryShare.m_TargetDummy = this;
+        m_updateDirval = Random.Range(3.0f, 8.0f);
         SetBaseMemoryShare();
     }
 
@@ -185,15 +187,14 @@ public class CPlayerRogue : CActor
             m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeAll;
             m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState = StaticGlobalDel.EMovableState.eMax;
 
-            m_MyPlayerRogueMemoryShare.m_MyArmsType = (CGGameSceneData.EArmsType)Random.Range(0, (int)CGGameSceneData.EArmsType.eMax);
-            m_MyPlayerRogueMemoryShare.m_MyArms = lTempCGGameSceneData.GetArms(m_MyPlayerRogueMemoryShare.m_MyArmsType) ;
-            m_MyPlayerRogueMemoryShare.m_MyArms.transform.parent = m_MyPlayerRogueMemoryShare.m_HandTransform;
-            m_MyPlayerRogueMemoryShare.m_MyArms.transform.localPosition = Vector3.zero;
-            m_MyPlayerRogueMemoryShare.m_MyArms.transform.rotation = m_MyPlayerRogueMemoryShare.m_HandTransform.rotation;
-
-            Rigidbody lTempRigidbody = m_MyPlayerRogueMemoryShare.m_MyArms.GetComponent<Rigidbody>();
-            lTempRigidbody.constraints = RigidbodyConstraints.FreezeAll;
-            lTempRigidbody.useGravity = false;
+            //m_MyPlayerRogueMemoryShare.m_MyArmsType = (CGGameSceneData.EArmsType)Random.Range(0, (int)CGGameSceneData.EArmsType.eMax);
+            //m_MyPlayerRogueMemoryShare.m_MyArms = lTempCGGameSceneData.GetArms(m_MyPlayerRogueMemoryShare.m_MyArmsType) ;
+            //m_MyPlayerRogueMemoryShare.m_MyArms.transform.parent = m_MyPlayerRogueMemoryShare.m_HandTransform;
+            //m_MyPlayerRogueMemoryShare.m_MyArms.transform.localPosition = Vector3.zero;
+            //m_MyPlayerRogueMemoryShare.m_MyArms.transform.rotation = m_MyPlayerRogueMemoryShare.m_HandTransform.rotation;
+            //Rigidbody lTempRigidbody = m_MyPlayerRogueMemoryShare.m_MyArms.GetComponent<Rigidbody>();
+            //lTempRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            //lTempRigidbody.useGravity = false;
         }
         else
         {
@@ -211,11 +212,14 @@ public class CPlayerRogue : CActor
 
     public void MyRemove()
     {
-        CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
-        lTempCGGameSceneData.RemoveArmsType(m_MyPlayerRogueMemoryShare.m_MyArmsType, m_MyPlayerRogueMemoryShare.m_MyArms);
-        m_MyPlayerRogueMemoryShare.m_MyArmsType = CGGameSceneData.EArmsType.eMax;
-        m_MyPlayerRogueMemoryShare.m_MyArms = null;
-        m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints =  RigidbodyConstraints.FreezeAll;
+        if (m_MyPlayerRogueMemoryShare.m_MyArms != null)
+        {
+            CGGameSceneData lTempCGGameSceneData = CGGameSceneData.SharedInstance;
+            lTempCGGameSceneData.RemoveArmsType(m_MyPlayerRogueMemoryShare.m_MyArmsType, m_MyPlayerRogueMemoryShare.m_MyArms);
+            m_MyPlayerRogueMemoryShare.m_MyArmsType = CGGameSceneData.EArmsType.eMax;
+            m_MyPlayerRogueMemoryShare.m_MyArms = null;
+            m_MyPlayerRogueMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        }
 
         CurGroupIndex = -1;
         ShowAdd(false);
@@ -262,7 +266,7 @@ public class CPlayerRogue : CActor
         Vector3 lTempV3 = this.transform.forward;
         lTempV3.y = 0.0f;
         if (Vector3.Dot(TargetDir, lTempV3) < 0.99f)
-            this.transform.forward = Vector3.Lerp(this.transform.forward, TargetDir, 0.3f);
+            this.transform.forward = Vector3.Lerp(this.transform.forward, TargetDir, m_updateDirval * Time.deltaTime);
     }
 
     //public override void RemoveMyObj()

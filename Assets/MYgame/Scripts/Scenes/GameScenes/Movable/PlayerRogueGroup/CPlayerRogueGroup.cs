@@ -191,12 +191,10 @@ public class CPlayerRogueGroup : CMovableBase
         if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) > 0.0001f)
         {
             Vector2 lTempV2 = Vector2.MoveTowards(m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset, m_PlayerRogueGroupMemoryShare.m_TargetOffset, CfTotleWidth * 2.0f * Time.deltaTime);
-            Debug.Log($" 3333333333333333 lTempV2 = {lTempV2}");
+
             if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) < 0.01f)
                 lTempV2 = m_PlayerRogueGroupMemoryShare.m_TargetOffset;
 
-
-            Debug.Log($" lTempV2 = {lTempV2}");
             m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempV2;
         }
     }
@@ -253,7 +251,7 @@ public class CPlayerRogueGroup : CMovableBase
 
 
         // m_PlayerRogueGroupMemoryShare.m_TargetOffset = lTempOffset;
-        Debug.Log($"m_PlayerRogueGroupMemoryShare.m_TargetOffset = {m_PlayerRogueGroupMemoryShare.m_TargetOffset}");
+        //Debug.Log($"m_PlayerRogueGroupMemoryShare.m_TargetOffset = {m_PlayerRogueGroupMemoryShare.m_TargetOffset}");
        // m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempOffset;
     }
 
@@ -418,7 +416,11 @@ public class CPlayerRogueGroup : CMovableBase
             LockChangState = StaticGlobalDel.EMovableState.eWin;
             ChangState = StaticGlobalDel.EMovableState.eWin;
         }
-
+        else if (other.tag == StaticGlobalDel.TagShowEnemy)
+        {
+            m_MyGameManager.EnemyGroup.gameObject.SetActive(true);
+            other.gameObject.SetActive(false);
+        }
 
         base.OnTriggerEnter(other);
     }
@@ -455,7 +457,11 @@ public class CPlayerRogueGroup : CMovableBase
             m_MyGameManager.AddGroup(AllPlayerRogue[i].DummyRef);
 
         for (int i = 0; i < AllEnemy.Count; i++)
+        {
             m_MyGameManager.AddGroup(AllEnemy[i].DummyRef);
+            AllEnemy[i].AnimatorStateCtl.m_ThisAnimator.enabled = true;
+            AllEnemy[i].OpenCollider(true);
+        }
     }
 
     public void UpdateTarget()

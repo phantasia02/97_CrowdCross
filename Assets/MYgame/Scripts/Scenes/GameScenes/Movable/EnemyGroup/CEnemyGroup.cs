@@ -59,13 +59,12 @@ public class CEnemyGroup : CGameObjBas
             m_AllEnemy.Add(lTempEnemy);
         }
 
-        this.transform.DOMove(m_Targetpos.position, 5.0f).SetEase(Ease.Linear);
+        this.transform.DOMove(m_Targetpos.position, 10.0f).SetEase(Ease.Linear);
 
         base.Awake();
 
         UpdateEnemyCountObservable().Subscribe(value => {
-            if (value == 0)
-            { m_MyGameManager.SetState(CGameManager.EState.eWinUI); }
+            if (value == 0){ m_MyGameManager.SetState(CGameManager.EState.eWinUI); }
         }).AddTo(this.gameObject);
     }
 
