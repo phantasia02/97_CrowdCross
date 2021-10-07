@@ -21,6 +21,7 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
 
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.ResetMoveBuff();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSpeed();
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
     }
 
     protected override void updataState()
@@ -28,8 +29,8 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
         base.updataState();
 
         //m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSplineFollowerOffset();
+    
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSpeed();
-        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateRearrangementTime();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSplineFollowerOffset();
 
@@ -42,6 +43,13 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetPlayerTargetDir(lTempDirV3.normalized);
 
         
+    }
+
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
+
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
     }
 
     protected override void OutState()

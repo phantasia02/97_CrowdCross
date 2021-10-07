@@ -7,6 +7,7 @@ using Cinemachine;
 using System.Linq;
 using DG.Tweening;
 using UniRx;
+using System;
 
 public class CTargetPositionData
 {
@@ -43,7 +44,7 @@ public class CPlayerRogueGroup : CMovableBase
     public override EObjType ObjType() { return EObjType.ePlayerRogueGroup; }
     const float CfHalfWidth = 3.0f;
     const float CfTotleWidth = CfHalfWidth * 2.0f;
-    const int CstInitQueueCount = 50;
+    const int CstInitQueueCount = 300;
 
     protected CPlayerRogueGroupMemoryShare m_PlayerRogueGroupMemoryShare = null;
 
@@ -146,8 +147,7 @@ public class CPlayerRogueGroup : CMovableBase
 
 
         UpdatePlayerRogueCountObservable().Subscribe(value => {
-            if (value == 0)
-            {m_MyGameManager.SetState( CGameManager.EState.eGameOver);}
+            if (value == 0){m_MyGameManager.SetState( CGameManager.EState.eGameOver);}
         }).AddTo(this.gameObject);
     }
 
@@ -509,6 +509,8 @@ public class CPlayerRogueGroup : CMovableBase
             lTempMuchActor[i].ChangState = StaticGlobalDel.EMovableState.eMove;
         //    m_MyGameManager.AddGroup(lTempMuchActor[i].transform);
         }
+
+
     }
 
     // ===================== UniRx ======================

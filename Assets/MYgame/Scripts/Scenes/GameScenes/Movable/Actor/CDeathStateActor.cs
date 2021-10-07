@@ -6,8 +6,7 @@ using DG.Tweening;
 public class CDeathStateActor : CMoveStateBase
 {
     CActorMemoryShare m_MyActorMemoryShare = null;
-    CActor m_TargetActorBuff = null;
-    bool m_End = false;
+  //  CActor m_TargetActorBuff = null;
 
     public readonly int BaseColorID = Shader.PropertyToID("_BaseColor");
 

@@ -232,10 +232,9 @@ public class CGameManager : MonoBehaviour
 
     public void UsePlayTick()
     {
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
-            
             m_bDown = true;
             m_OldInput = Input.mousePosition;
             //InputRay();
@@ -255,40 +254,43 @@ public class CGameManager : MonoBehaviour
             }
         }
 
-#else
-        if (Input.touchCount == 1)
-        {
-            Touch touch = Input.GetTouch(0);
-            bool isTouchUIElement = EventSystem.current.IsPointerOverGameObject(touch.fingerId);
+//#elif UNITY_ANDROID
+//        testbugtext.Add("UsePlayTick 2222222222222222222222");
+//        if (Input.touchCount == 1)
+//        {
+//        testbugtext.Add("UsePlayTick 3333333333333333");
+//            Touch touch = Input.GetTouch(0);
+//            bool isTouchUIElement = EventSystem.current.IsPointerOverGameObject(touch.fingerId);
 
-            if (!isTouchUIElement)
-            {
-                switch (touch.phase)
-                {
-                    case TouchPhase.Began:
-                        {
-                            m_bDown = true;
-                            m_OldInput = Input.mousePosition;
-                        }
-                        break;
-                    case TouchPhase.Moved:
-                        {
-                            m_OldInput = Input.mousePosition;
-                        }
-                        break;
-                    case TouchPhase.Ended:
-                        {
-                            if (m_bDown)
-                            {
-                                m_bDown = false;
-                            }
-                        }
-                        break;
+//            if (!isTouchUIElement)
+//            {
+//                switch (touch.phase)
+//                {
+//                    case TouchPhase.Began:
+//                        {
+//        testbugtext.Add("UsePlayTick 4444444444444444444");
+//                            m_bDown = true;
+//                            m_OldInput = Input.mousePosition;
+//                        }
+//                        break;
+//                    case TouchPhase.Moved:
+//                        {
+//                            m_OldInput = Input.mousePosition;
+//                        }
+//                        break;
+//                    case TouchPhase.Ended:
+//                        {
+//                            if (m_bDown)
+//                            {
+//                                m_bDown = false;
+//                            }
+//                        }
+//                        break;
 
-                }
-            }
-        }
-#endif
+//                }
+//            }
+//        }
+//#endif
 
 
         if (m_eCurState == EState.eReady)
@@ -303,12 +305,22 @@ public class CGameManager : MonoBehaviour
 
                 CGameSceneWindow lTempGameSceneWindow = CGameSceneWindow.SharedInstance;
                 if (lTempGameSceneWindow && !lTempGameSceneWindow.GetShow())
-                {
                     lTempGameSceneWindow.ShowObj(true);
-                }
+
             }
         }
 
+    }
+    private GUIStyle guiStyle = new GUIStyle(); //create a new variable
+    List<string> testbugtext = new List<string>();
+    private void OnGUI()
+    {
+        string test = "";
+        for (int i = testbugtext.Count - 1; i >= 0; i--)
+            test += $"{testbugtext[i]}\n";
+
+        guiStyle.fontSize = 60; //change the font size
+        GUI.Label(new Rect(10, 10, 1000, 2000), test, guiStyle);
     }
 
     public void InputRay()
