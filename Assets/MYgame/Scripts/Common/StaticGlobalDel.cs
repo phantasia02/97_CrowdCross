@@ -34,6 +34,7 @@ public static class StaticGlobalDel
         eCarCollider    = 7,
         eEndPlayerActor = 8,
         eEndEnemyActor  = 9,
+        eFloor          = 10,
         eMax
     }
 
@@ -46,11 +47,13 @@ public static class StaticGlobalDel
     public const string TagEnemy                = "TagEnemy";
     public const string TagShowEnemy            = "ShowEnemy";
     public const string TagTrafficLightGroup    = "TagTrafficLightGroup";
+    public const string TagFloor                = "TagFloor";
 
     public const int g_PlayerRogueMask      = 1 << (int)ELayerIndex.ePlayerRogue;
     public const int g_CarColliderMask      = 1 << (int)ELayerIndex.eCarCollider;
     public const int g_EndPlayerActorMask   = 1 << (int)ELayerIndex.eEndPlayerActor;
     public const int g_EndEnemyActorMask    = 1 << (int)ELayerIndex.eEndEnemyActor;
+    public const int g_FloorMask            = 1 << (int)ELayerIndex.eFloor;
     
     public const float  g_fcbaseWidth                   = 1080.0f;
     public const float  g_fcbaseHeight                  = 2340.0f;

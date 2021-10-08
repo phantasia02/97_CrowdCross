@@ -13,6 +13,7 @@ TagManager:
   - TagEnemy
   - ShowEnemy
   - TagTrafficLightGroup
+  - TagFloor
   layers:
   - Default
   - TransparentFX
@@ -24,7 +25,7 @@ TagManager:
   - CarCollider
   - EndPlayerActor
   - EndEnemyActor
-  - 
+  - Floor
   - 
   - 
   - 
