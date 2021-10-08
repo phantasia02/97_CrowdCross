@@ -102,7 +102,7 @@ public abstract class CMovableStatePototype
     {
         if (m_MyMemoryShare.m_MyMovable.AnimatorStateCtl != null)
         {
-            m_MyMemoryShare.m_MyMovable.AnimatorStateCtl.SetCurState(AniState);
+            m_MyMemoryShare.m_MyMovable.AnimatorStateCtl.SetCurState(AniState, index);
             m_MyMemoryShare.m_MyMovable.AnimatorStateCtl.AnimatorSpeed = Speed;
         }
     }

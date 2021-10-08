@@ -36,13 +36,13 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
     public Transform                    m_CountCanvasTarget         = null;
     public int                          m_CarInCount                = 0;
     public bool                         m_bRearrangement            = false;
-   // public float                        m_bTargetMoveX              = 0.0f;
+    public float                        m_HalfRingDis               = 0.0f;
 };
 
 public class CPlayerRogueGroup : CMovableBase
 {
     public override EObjType ObjType() { return EObjType.ePlayerRogueGroup; }
-    const float CfHalfWidth = 3.0f;
+    const float CfHalfWidth = 4.0f;
     const float CfTotleWidth = CfHalfWidth * 2.0f;
     const int CstInitQueueCount = 300;
 
@@ -246,13 +246,12 @@ public class CPlayerRogueGroup : CMovableBase
         Vector2 lTempOffset = m_PlayerRogueGroupMemoryShare.m_TargetOffset;
        // lTempOffset.x += lTempMoveX * lTempMoveRatio;
         lTempOffset.x += lTempMoveX;
-        m_PlayerRogueGroupMemoryShare.m_TargetOffset = Vector2.ClampMagnitude(lTempOffset, CfHalfWidth);
 
-
-
+        float lTemp = Math.Max(CfHalfWidth - m_PlayerRogueGroupMemoryShare.m_HalfRingDis, 0.0f);
+        m_PlayerRogueGroupMemoryShare.m_TargetOffset = Vector2.ClampMagnitude(lTempOffset, lTemp);
         // m_PlayerRogueGroupMemoryShare.m_TargetOffset = lTempOffset;
         //Debug.Log($"m_PlayerRogueGroupMemoryShare.m_TargetOffset = {m_PlayerRogueGroupMemoryShare.m_TargetOffset}");
-       // m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempOffset;
+        // m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempOffset;
     }
 
     public CPlayerRogue NewPlayerRogue()
@@ -300,6 +299,9 @@ public class CPlayerRogueGroup : CMovableBase
             m_PlayerRogueGroupMemoryShare.m_MyCanvas.transform.localPosition = new Vector3(0.0f, 3.0f, lTempMagnitude);
         else
             m_PlayerRogueGroupMemoryShare.m_MyCanvas.transform.DOLocalMoveZ(lTempMagnitude, 0.3f).SetEase(Ease.Linear);
+
+
+        m_PlayerRogueGroupMemoryShare.m_HalfRingDis = lTempMagnitude * 0.5f;
     }
 
     public void AddCurPlayerRogueCount(int Count)

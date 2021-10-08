@@ -673,6 +673,18 @@ MonoBehaviour:
     m_Speed: 1
     m_AnimationClip: {fileID: 0}
     m_AnimationTime: 0
+  - m_flagName: Punch_RightHand
+    m_AnimationName: Punch_RightHand
+    m_AnimationStateName: Punch_RightHand
+    m_Speed: 1
+    m_AnimationClip: {fileID: 0}
+    m_AnimationTime: 0
+  - m_flagName: Kick_LeftFoot
+    m_AnimationName: Kick_LeftFoot
+    m_AnimationStateName: Kick_LeftFoot
+    m_Speed: 1
+    m_AnimationClip: {fileID: 0}
+    m_AnimationTime: 0
 --- !u!1 &7656431868669785749
 GameObject:
   m_ObjectHideFlags: 0

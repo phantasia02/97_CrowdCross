@@ -14,7 +14,7 @@ public class CAtkStateActor : CMoveStateBase
     protected override void InState()
     {
         base.InState();
-        SetAnimationState(CAnimatorStateCtl.EState.eAtk);
+        SetAnimationState(CAnimatorStateCtl.EState.eAtk, Random.Range(0.9f, 1.1f), Random.Range(0, 3));
         m_MyActorMemoryShare.m_MyRigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
         m_MyActorMemoryShare.m_MyRigidbody.drag = 10000.0f;
         m_MyActorMemoryShare.m_MyRigidbody.mass = 10000.0f;

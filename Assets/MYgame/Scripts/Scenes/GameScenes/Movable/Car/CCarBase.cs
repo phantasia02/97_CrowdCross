@@ -42,6 +42,7 @@ public abstract class CCarBase : CMovableBase
     public override float DefSpeed { get { return m_DefSpeed; } }
 
     [SerializeField] protected CCarMod[] m_AllCarMod = null;
+    [SerializeField] protected Transform m_RaycastTransform = null;
 
     protected float m_CarLong = 1.0f;
     public float CarLong { get { return m_CarLong; } }
@@ -153,7 +154,7 @@ public abstract class CCarBase : CMovableBase
     public void ForwardObjCheck()
     {
         bool lTempStopRaycast = false;
-        Ray Tempray = new Ray(this.transform.position + Vector3.up, this.transform.forward);
+        Ray Tempray = new Ray(m_RaycastTransform.position, this.transform.forward);
         bool lTempRaycast = Physics.Raycast(Tempray, out RaycastHit hit, m_CarLong + (m_DefSpeed * 0.1f));
         if (lTempRaycast)
         {

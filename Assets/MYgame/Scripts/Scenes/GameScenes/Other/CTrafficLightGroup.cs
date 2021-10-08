@@ -58,7 +58,7 @@ public class CTrafficLightGroup : MonoBehaviour
         {
             case ELightIndex.eRed:
                 {
-                    UniRx.Observable.Timer(TimeSpan.FromSeconds(UnityEngine.Random.Range(1.0f, 5.0f))).Subscribe(_=> { SetState(ELightIndex.eGreen); }).AddTo(this);
+                    UniRx.Observable.Timer(TimeSpan.FromSeconds(UnityEngine.Random.Range(0.3f, 3.0f))).Subscribe(_=> { SetState(ELightIndex.eGreen); }).AddTo(this);
                 }
                 break;
             case ELightIndex.eYellow:
