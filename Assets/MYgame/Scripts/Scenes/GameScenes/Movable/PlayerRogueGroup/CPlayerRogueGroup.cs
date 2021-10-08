@@ -147,7 +147,11 @@ public class CPlayerRogueGroup : CMovableBase
 
 
         UpdatePlayerRogueCountObservable().Subscribe(value => {
-            if (value == 0){m_MyGameManager.SetState( CGameManager.EState.eGameOver);}
+            if (value == 0)
+            {
+                this.ChangState = StaticGlobalDel.EMovableState.eDeath;
+                m_MyGameManager.SetState( CGameManager.EState.eGameOver);
+            }
         }).AddTo(this.gameObject);
     }
 
@@ -390,6 +394,7 @@ public class CPlayerRogueGroup : CMovableBase
                 lTempDoorDis = CDoorGroup.EAllPosDoorType.eRPosDoor;
 
             CDoor m_TempDoorObj = lTempDoorGroup.GetDoor(lTempDoorDis);
+            m_TempDoorObj.gameObject.SetActive(false);
 
             if (m_TempDoorObj.MyMathematicsSymbol == CDoor.EMathematicsSymbol.eAdd)
             {
