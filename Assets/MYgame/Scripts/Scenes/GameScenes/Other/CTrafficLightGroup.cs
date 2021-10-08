@@ -16,11 +16,10 @@ public class CTrafficLightGroup : MonoBehaviour
 
     protected ELightIndex m_CurLightIndex = ELightIndex.eGreen;
     protected CTrafficLightObj[] m_AllTrafficLightObj = null;
-    protected int m_CarCount = 0;
     [SerializeField] protected CCarCreatePos[] m_AllCarCreatePos = null;
-    //protected List<CCarBase> m_TriggerInCar = new List<CCarBase>();
+
     protected UniRx.ReactiveCollection<CCarBase> m_ReactiveTriggerInCar = new UniRx.ReactiveCollection<CCarBase>();
-   // protected UniRx.ReactiveProperty<int> m_ReactiveTriggerInCarCount = new UniRx.ReactiveProperty<int>();
+
 
     private void Awake()
     {
@@ -35,7 +34,7 @@ public class CTrafficLightGroup : MonoBehaviour
                 if (m_ReactiveTriggerInCar.Count == 0)
                     SetState(ELightIndex.eRed);
             }
-        });
+        }).AddTo(this);
     }
 
     // Start is called before the first frame update
@@ -59,23 +58,25 @@ public class CTrafficLightGroup : MonoBehaviour
         {
             case ELightIndex.eRed:
                 {
-                    UniRx.Observable.Timer(TimeSpan.FromSeconds(5.0f)).Subscribe(_=> { SetState(ELightIndex.eGreen); });
+                    UniRx.Observable.Timer(TimeSpan.FromSeconds(UnityEngine.Random.Range(1.0f, 5.0f))).Subscribe(_=> { SetState(ELightIndex.eGreen); }).AddTo(this);
                 }
                 break;
             case ELightIndex.eYellow:
                 {
-
+                    
                 }
                 break;
             case ELightIndex.eGreen:
                 {
+
+                    //double lTemp = UnityEngine.Random.Range(1.0f, 5.0f);
                     UniRx.Observable.Timer(TimeSpan.FromSeconds(5.0f)).Subscribe(_ => 
                     {
                         if (m_ReactiveTriggerInCar.Count ==  0)
                             SetState(ELightIndex.eRed);
                         else
                             SetState(ELightIndex.eYellow);
-                    });
+                    }).AddTo(this);
                 }
                 break;
         }
@@ -96,16 +97,11 @@ public class CTrafficLightGroup : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-
         if (other.tag == StaticGlobalDel.TagCarCollider)
         {
             CCarBase lTempCarBase = other.gameObject.GetComponentInParent<CCarBase>();
             m_ReactiveTriggerInCar.Add(lTempCarBase);
         }
-
-      //  m_TriggerInCar.Add();
-        m_CarCount++;
-        //Debug.Log("OnTriggerEnter 1111111111111");
     }
 
     public virtual void OnTriggerExit(Collider other)
@@ -115,23 +111,6 @@ public class CTrafficLightGroup : MonoBehaviour
             CCarBase lTempCarBase = other.gameObject.GetComponentInParent<CCarBase>();
             m_ReactiveTriggerInCar.Remove(lTempCarBase);
         }
-
-        m_CarCount--;
-      //  Debug.Log("OnTriggerExit 222222222222222222");
     }
 
-    // ===================== UniRx ======================
-   
-    //public void OnUpdatePlayerRogueCount(int value)
-    //{
-    //    //if (m_ReactiveTriggerInCar != null)
-    //    //    m_PlayerRogueCountEvent.OnNext(value);
-    //}
-
-    //public UniRx.ReactiveProperty<List<CCarBase>> ReactiveTriggerInCar()
-    //{
-    //    return m_ReactiveTriggerInCar ?? (m_ReactiveTriggerInCar = new UniRx.ReactiveProperty<List<CCarBase>>());
-    //}
-
-    // ===================== UniRx ======================
 }
