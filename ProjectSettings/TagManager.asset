@@ -12,6 +12,7 @@ TagManager:
   - TagPlayerRogue
   - TagEnemy
   - ShowEnemy
+  - TagTrafficLightGroup
   layers:
   - Default
   - TransparentFX

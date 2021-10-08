@@ -18,6 +18,18 @@ public class CCarCreatePos : CGameObjBas
 
     protected float m_NextAddCarDisSqr = float.MaxValue;
 
+    protected CTrafficLightGroup.ELightIndex m_CurTrafficLight = CTrafficLightGroup.ELightIndex.eMax;
+    public CTrafficLightGroup.ELightIndex CurTrafficLight
+    {
+        set
+        {
+            m_CurTrafficLight = value;
+
+            for (int i = 0; i < m_MyAllCar.Count; i++)
+                m_MyAllCar[i].CurTrafficLight = value;
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -74,6 +86,7 @@ public class CCarCreatePos : CGameObjBas
 
     public void RemoveCar(CCarBase car)
     {
+        m_MyAllCar.Remove(car);
         m_MyAllCarCreatePos.AllCarBasePool.RemoveObj(car);
     }
 
@@ -83,6 +96,7 @@ public class CCarCreatePos : CGameObjBas
         //AddCar(lTempCarBase);
 
         int Addindex = m_MyAllCar.Count;
+        int Forwardindex = Addindex - 1;
         m_MyAllCar.Add(lTempCarBase);
         lTempCarBase.transform.parent = this.transform;
         lTempCarBase.transform.localPosition = Vector3.zero;
@@ -92,6 +106,12 @@ public class CCarCreatePos : CGameObjBas
         lTempCarBase.AddToList(Addindex);
 
         lTempCarBase.transform.position = lpos;
+        if (Forwardindex >= 0)
+        {
+            m_MyAllCar[Forwardindex].NextCarBase = lTempCarBase;
+            lTempCarBase.ForwardCarBase = m_MyAllCar[Forwardindex];
+        }
+
         return lTempCarBase;
     }
 

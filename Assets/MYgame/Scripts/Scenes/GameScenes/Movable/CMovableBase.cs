@@ -39,6 +39,7 @@ public abstract class CMovableBase : CGameObjBas
     public enum ESpeedBuff
     {
         eDrag = 0,
+        eCar  = 1,
         eMax
     };
 
