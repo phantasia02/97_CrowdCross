@@ -180,7 +180,7 @@ public class CPlayerRogueGroup : CMovableBase
     {
         if (m_MyMemoryShare.m_TotleSpeed != m_MyMemoryShare.m_TargetTotleSpeed)
         {
-            m_MyMemoryShare.m_TotleSpeed = Mathf.Lerp(m_MyMemoryShare.m_TotleSpeed, m_MyMemoryShare.m_TargetTotleSpeed, 10.0f * Time.deltaTime);
+            m_MyMemoryShare.m_TotleSpeed = Mathf.Lerp(m_MyMemoryShare.m_TotleSpeed, m_MyMemoryShare.m_TargetTotleSpeed, 5.0f * Time.deltaTime);
 
             if (Mathf.Abs(m_MyMemoryShare.m_TotleSpeed - m_MyMemoryShare.m_TargetTotleSpeed) < 0.01f)
                 m_MyMemoryShare.m_TotleSpeed = m_MyMemoryShare.m_TargetTotleSpeed;
@@ -194,7 +194,7 @@ public class CPlayerRogueGroup : CMovableBase
     {
         if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) > 0.0001f)
         {
-            Vector2 lTempV2 = Vector2.MoveTowards(m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset, m_PlayerRogueGroupMemoryShare.m_TargetOffset, CfTotleWidth * 2.0f * Time.deltaTime);
+            Vector2 lTempV2 = Vector2.MoveTowards(m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset, m_PlayerRogueGroupMemoryShare.m_TargetOffset, CfTotleWidth * 1.0f * Time.deltaTime);
 
             if (Mathf.Abs(m_PlayerRogueGroupMemoryShare.m_TargetOffset.x - m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset.x) < 0.01f)
                 lTempV2 = m_PlayerRogueGroupMemoryShare.m_TargetOffset;

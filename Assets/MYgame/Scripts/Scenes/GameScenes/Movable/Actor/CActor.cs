@@ -86,7 +86,7 @@ public abstract class CActor : CMovableBase
 
     public CActor GetNextTarget()
     {
-        const int CMaxint = 10;
+        const int CMaxint = 7;
         Collider[] lTempCollider = null;
         float lTempRingDis = 2.0f;
         float lTempOldRingDis = lTempRingDis;
@@ -111,7 +111,7 @@ public abstract class CActor : CMovableBase
         lTempRingDis -= lTempOldRingDis;
         float lTempAddDis = lTempOldRingDis / 4.0f;
 
-        for (i = 0; i < 8; i++)
+        for (i = 0; i < 4; i++)
         {
             lTempCollider = Physics.OverlapSphere(this.transform.position, lTempRingDis, TargetMask());
             if (lTempCollider.Length != 0)

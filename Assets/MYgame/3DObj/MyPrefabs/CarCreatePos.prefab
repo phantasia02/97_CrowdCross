@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EndCollider: {fileID: 7641075894784957531}
   m_MaxCreateCarDis: 50
   m_MinCreateCarDis: 5
+  m_CarMod: 0
 --- !u!1 &6695532502675372485
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,7 +96,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6695532502675372485}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
