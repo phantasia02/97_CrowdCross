@@ -307,6 +307,9 @@ public class CGameManager : MonoBehaviour
                 if (lTempGameSceneWindow && !lTempGameSceneWindow.GetShow())
                     lTempGameSceneWindow.ShowObj(true);
 
+
+                CPlayerRogueGroup lTempPlayerRogueGroup = this.GetComponentInChildren<CPlayerRogueGroup>();
+                lTempPlayerRogueGroup.ShowHandIcon(true);
             }
         }
 

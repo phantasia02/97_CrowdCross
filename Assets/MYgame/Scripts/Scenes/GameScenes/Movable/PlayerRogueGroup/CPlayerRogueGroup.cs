@@ -99,6 +99,14 @@ public class CPlayerRogueGroup : CMovableBase
         }
     }
 
+    public void ShowHandIcon(bool show)
+    {
+        if (m_MyHandTransform == null)
+            return;
+
+        m_MyHandTransform.gameObject.SetActive(show);
+    }
+
     protected override void AddInitState()
     {
         m_AllState[(int)StaticGlobalDel.EMovableState.eWait].AllThisState.Add(new CWaitStatePlayerRogueGroup(this));
