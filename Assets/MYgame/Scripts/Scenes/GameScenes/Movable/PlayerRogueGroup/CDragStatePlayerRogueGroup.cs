@@ -29,10 +29,10 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
         base.updataState();
 
         //m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSplineFollowerOffset();
-    
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSpeed();
         m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateRearrangementTime();
-        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSplineFollowerOffset();
+    
 
         Vector2 lTempDirV2 = m_MyPlayerRogueGroupMemoryShare.m_TargetOffset - m_MyPlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset;
         Vector3 lTempDirV3 = Vector3.zero;
@@ -49,7 +49,8 @@ public class CDragStatePlayerRogueGroup : CDragStateBase
     {
         base.LateUpdate();
 
-        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.updateFollwer();
+        
+        m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateSplineFollowerOffset();
     }
 
     protected override void OutState()

@@ -40,7 +40,8 @@ public class CDeathStateActor : CMoveStateBase
         m_MyActorMemoryShare.m_MyRigidbody.AddForce(lTempForce * Random.Range(200.0f, 400.0f));
         //m_End = false;
         // Time.timeScale = 0.1f;
-
+        for (int i = 0; i < m_MyActorMemoryShare.m_AllChildCollider.Length; i++)
+            m_MyActorMemoryShare.m_AllChildCollider[i].gameObject.SetActive(false);
 
     }
 
@@ -70,8 +71,7 @@ public class CDeathStateActor : CMoveStateBase
 
     public void CloseCollider()
     {
-        for (int i = 0; i < m_MyActorMemoryShare.m_AllChildCollider.Length; i++)
-            m_MyActorMemoryShare.m_AllChildCollider[i].gameObject.SetActive(false);
+
 
 
         m_MyActorMemoryShare.m_MyRigidbody.useGravity = false;

@@ -37,6 +37,7 @@ public class CPlayerRogueGroupMemoryShare : CMemoryShareBase
     public int                          m_CarInCount                = 0;
     public bool                         m_bRearrangement            = false;
     public float                        m_HalfRingDis               = 0.0f;
+    public RectTransform                m_MyHandTransform           = null;
 };
 
 public class CPlayerRogueGroup : CMovableBase
@@ -54,15 +55,16 @@ public class CPlayerRogueGroup : CMovableBase
 
 
 
-    [SerializeField] Transform m_AllPlayerRogueTransform = null;
+    [SerializeField] protected Transform m_AllPlayerRogueTransform = null;
     public Transform AllPlayerRogueTransform { get { return m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform; } }
-    [SerializeField] Transform m_AllTargetDummyTransform = null;
+    [SerializeField] protected Transform m_AllTargetDummyTransform = null;
     public Transform AllTargetDummyTransform { get { return m_PlayerRogueGroupMemoryShare.m_AllTargetDummyTransform; } }
 
-    [SerializeField] Transform m_PlayerRoguePoolParent      = null;
-    [SerializeField] Transform m_PlayerRogueGroupTrigger    = null;
-    [SerializeField] Transform m_CountTargetDummy           = null;
-    [SerializeField] SplineFollower m_DummyCameraFollwer    = null;
+    [SerializeField] protected Transform m_PlayerRoguePoolParent        = null;
+    [SerializeField] protected Transform m_PlayerRogueGroupTrigger      = null;
+    [SerializeField] protected Transform m_CountTargetDummy             = null;
+    [SerializeField] protected SplineFollower m_DummyCameraFollwer      = null;
+    [SerializeField] protected RectTransform m_MyHandTransform          = null;
     [SerializeField] [Range(1, 300)] protected int m_InitCurListCount = 1;
     // ==================== SerializeField ===========================================
 
@@ -103,6 +105,7 @@ public class CPlayerRogueGroup : CMovableBase
         m_AllState[(int)StaticGlobalDel.EMovableState.eMove].AllThisState.Add(new CMoveStatePlayerRogueGroup(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eDrag].AllThisState.Add(new CDragStatePlayerRogueGroup(this));
         m_AllState[(int)StaticGlobalDel.EMovableState.eWin].AllThisState.Add(new CResultStatePlayerRogueGroup(this));
+        m_AllState[(int)StaticGlobalDel.EMovableState.eDeath].AllThisState.Add(new CDeathStatePlayerRogueGroup(this));
     }
 
     protected override void CreateMemoryShare()
@@ -127,7 +130,7 @@ public class CPlayerRogueGroup : CMovableBase
 
         CObjPool<CPlayerRogue> lTempAllPlayerRoguePool = m_PlayerRogueGroupMemoryShare.m_AllPlayerRoguePool;
         m_PlayerRogueGroupMemoryShare.m_TargetPositionList = StaticGlobalDel.GetPositionListAround(m_PlayerRogueGroupMemoryShare.m_AllPlayerRogueTransform.localPosition,
-            new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f }, new int[] { 8, 20, 30, 50, 70, 100, 130, 160, 200});
+            new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f }, new int[] { 8, 20, 30, 50, 70, 100, 130, 160, 200, 240});
 
         lTempAllPlayerRoguePool.NewObjFunc = NewPlayerRogue;
         lTempAllPlayerRoguePool.RemoveObjFunc = RemovePlayerRogue;
@@ -136,6 +139,7 @@ public class CPlayerRogueGroup : CMovableBase
 
         AddCurPlayerRogueCount(m_InitCurListCount);
         ResetMoveBuff(true);
+        
     }
 
     // Start is called before the first frame update
@@ -144,14 +148,22 @@ public class CPlayerRogueGroup : CMovableBase
         base.Start();
         SetCurState(StaticGlobalDel.EMovableState.eWait);
         m_PlayerRogueUpdatapos = false;
+        m_PlayerRogueGroupMemoryShare.m_MyHandTransform = m_MyHandTransform;
 
+        UpdateHandIcon();
 
         UpdatePlayerRogueCountObservable().Subscribe(value => {
             if (value == 0)
             {
+                this.LockChangState = StaticGlobalDel.EMovableState.eDeath;
                 this.ChangState = StaticGlobalDel.EMovableState.eDeath;
-                m_MyGameManager.SetState( CGameManager.EState.eGameOver);
             }
+        }).AddTo(this.gameObject);
+
+        UpdatePlayerRogueSpeedObservable().Subscribe(value => {
+            if (value <= 0.0f)
+                m_PlayerRogueGroupMemoryShare.m_PlayerRogueGroup.SetAllPlayerRogueState(StaticGlobalDel.EMovableState.eWait);
+
         }).AddTo(this.gameObject);
     }
 
@@ -187,6 +199,7 @@ public class CPlayerRogueGroup : CMovableBase
 
 
             m_PlayerRogueGroupMemoryShare.m_MySplineFollower.followSpeed = m_MyMemoryShare.m_TotleSpeed;
+            OnUpdatePlayerRogueSpeed(m_PlayerRogueGroupMemoryShare.m_MySplineFollower.followSpeed);
         }
     }
 
@@ -200,7 +213,20 @@ public class CPlayerRogueGroup : CMovableBase
                 lTempV2 = m_PlayerRogueGroupMemoryShare.m_TargetOffset;
 
             m_PlayerRogueGroupMemoryShare.m_MySplineFollower.motion.offset = lTempV2;
+            UpdateHandIcon();
         }
+    }
+
+    public void UpdateHandIcon()
+    {
+        if (m_MyHandTransform == null)
+            return;
+
+        Vector3 lTempMyTransformPosition = transform.position;
+        lTempMyTransformPosition.y -= 0.5f;
+        lTempMyTransformPosition.x += 0.5f;
+        Vector3 lTempv3 = m_MyGameManager.MainCamera.WorldToScreenPoint(lTempMyTransformPosition);
+        m_MyHandTransform.position = lTempv3;
     }
 
     public override void InputUpdata()
@@ -522,6 +548,7 @@ public class CPlayerRogueGroup : CMovableBase
 
     // ===================== UniRx ======================
     Subject<int> m_PlayerRogueCountEvent;
+    Subject<float> m_PlayerRogueSpeedEvent;
 
     public void OnUpdatePlayerRogueCount(int value)
     {
@@ -529,10 +556,20 @@ public class CPlayerRogueGroup : CMovableBase
             m_PlayerRogueCountEvent.OnNext(value);
     }
 
+    public void OnUpdatePlayerRogueSpeed(float value)
+    {
+        if (m_PlayerRogueSpeedEvent != null)
+            m_PlayerRogueSpeedEvent.OnNext(value);
+    }
+
     public UniRx.Subject<int> UpdatePlayerRogueCountObservable()
     {
         return m_PlayerRogueCountEvent ?? (m_PlayerRogueCountEvent = new Subject<int>());
     }
 
+    public UniRx.Subject<float> UpdatePlayerRogueSpeedObservable()
+    {
+        return m_PlayerRogueSpeedEvent ?? (m_PlayerRogueSpeedEvent = new Subject<float>());
+    }
     // ===================== UniRx ======================
 }

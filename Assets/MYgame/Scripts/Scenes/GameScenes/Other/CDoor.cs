@@ -12,8 +12,8 @@ public class CDoor : CGameObjBas
     public enum EMathematicsSymbol
     {
         eAdd        = 0,
-        eSubtract   = 1,
-        eMultiply   = 2,
+        eMultiply   = 1,
+        eSubtract   = 2,
         eDivide     = 3,
         eMax
     };
@@ -26,12 +26,20 @@ public class CDoor : CGameObjBas
     public int Number { get { return m_Number; } }
     // ==================== SerializeField ===========================================
 
-    readonly string[] CntMathematicsSymbolStr = { "+", "-", "x", "กา" };
+    readonly string[] CntMathematicsSymbolStr = { "+", "x", "-", "กา" };
 
     protected CDoorGroup m_MyDoorGroup = null;
 
     protected override void Awake()
     {
+        
+
+        m_MyMathematicsSymbol = (EMathematicsSymbol)Random.Range(0, 2);
+        if (m_MyMathematicsSymbol == EMathematicsSymbol.eAdd)
+            m_Number = Random.Range(5, 30);
+        else
+            m_Number = Random.Range(2, 5);
+
         UpdateShowText();
         base.Awake();
     }

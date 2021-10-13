@@ -48,20 +48,20 @@ public class CTargetMoveStateActor : CMoveStateBase
         lTemp2DDir.Normalize();
         float lTempsqrDis = lTemp2DDis.sqrMagnitude;
         float lTempAtkDis = m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis * m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis;
-        if (lTempsqrDis >= lTempAtkDis || (Vector3.Dot(lTemp2DDir, lTempMyforward) < 0.95f))
-        {
+        //if (lTempsqrDis >= lTempAtkDis || (Vector3.Dot(lTemp2DDir, lTempMyforward) < 0.95f))
+        //{
             if (Vector3.Dot(lTemp2DDir, lTempMyforward) < 0.95f)
                 m_MyActorMemoryShare.m_MyMovable.transform.forward = Vector3.Lerp(lTempMyforward, lTemp2DDir, Time.deltaTime * 10.0f);
             else
                 m_MyActorMemoryShare.m_MyMovable.transform.forward = lTemp2DDir;
 
-            if (lTempsqrDis >= lTempAtkDis)
+           // if (lTempsqrDis >= lTempAtkDis)
                 m_MyActorMemoryShare.m_MyMovable.transform.Translate(new Vector3(0.0f, 0.0f, Time.deltaTime * m_MyActorMemoryShare.m_ActorTypeData.m_Speed));
-        }
-        else
-        {
-            m_MyActorMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eAtk;
-        }
+        //}
+        //else
+        //{
+        //    m_MyActorMemoryShare.m_MyMovable.ChangState = StaticGlobalDel.EMovableState.eAtk;
+        //}
     }
 
     protected override void OutState()
@@ -75,20 +75,35 @@ public class CTargetMoveStateActor : CMoveStateBase
         {
             CActor m_lBuffTarget = other.gameObject.GetComponentInParent<CActor>();
 
-            if (m_lBuffTarget != m_MyActorMemoryShare.m_Target)
+            if (!(m_lBuffTarget.CurState == StaticGlobalDel.EMovableState.eDeath || m_lBuffTarget.ChangState == StaticGlobalDel.EMovableState.eDeath))
             {
-                if (m_MyActorMemoryShare.m_Target == null)
-                    m_MyActorMemoryShare.m_Target = m_lBuffTarget;
-                else
-                {
-                    Vector3 lTemp2DDis = m_MyActorMemoryShare.m_Target.transform.position - m_MyActorMemoryShare.m_MyMovable.transform.position;
-                    lTemp2DDis.y = 0.0f;
-                    float lTempAtkDis = m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis * m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis;
+                Vector3 lTempV3 = m_lBuffTarget.transform.position - m_MyActorMemoryShare.m_MyMovable.transform.position;
+                lTempV3.y = 0.0f;
+                lTempV3.Normalize();
 
-                    if (lTemp2DDis.sqrMagnitude >= lTempAtkDis)
-                        m_MyActorMemoryShare.m_Target = m_lBuffTarget;
-                }
+
+                m_lBuffTarget.SetReadyDeath(lTempV3);
+                m_lBuffTarget.LockChangState = StaticGlobalDel.EMovableState.eDeath;
+                m_lBuffTarget.ChangState = StaticGlobalDel.EMovableState.eDeath;
+
+                m_MyActorMemoryShare.m_MyActor.SetReadyDeath(-lTempV3);
+                m_MyActorMemoryShare.m_MyActor.LockChangState = StaticGlobalDel.EMovableState.eDeath;
+                m_MyActorMemoryShare.m_MyActor.ChangState = StaticGlobalDel.EMovableState.eDeath;
             }
+            //if (m_lBuffTarget != m_MyActorMemoryShare.m_Target)
+            //{
+            //    if (m_MyActorMemoryShare.m_Target == null)
+            //        m_MyActorMemoryShare.m_Target = m_lBuffTarget;
+            //    else
+            //    {
+            //        Vector3 lTemp2DDis = m_MyActorMemoryShare.m_Target.transform.position - m_MyActorMemoryShare.m_MyMovable.transform.position;
+            //        lTemp2DDis.y = 0.0f;
+            //        float lTempAtkDis = m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis * m_MyActorMemoryShare.m_ActorTypeData.m_AtkDis;
+
+            //        if (lTemp2DDis.sqrMagnitude >= lTempAtkDis)
+            //            m_MyActorMemoryShare.m_Target = m_lBuffTarget;
+            //    }
+            //}
         }
 
         base.OnCollisionEnter(other);

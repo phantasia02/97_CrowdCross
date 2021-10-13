@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-//using GameAnalyticsSDK;
+using DG.Tweening;
+
 
 public class CReadyGameWindow : CSingletonMonoBehaviour<CReadyGameWindow>
 {
@@ -18,6 +19,7 @@ public class CReadyGameWindow : CSingletonMonoBehaviour<CReadyGameWindow>
     [SerializeField] TextMeshProUGUI m_PlayerNumberTextShadow = null;
     [SerializeField] GameObject m_ShowObj = null;
     [SerializeField] GameObject m_ReadyBack = null;
+    [SerializeField] Image m_HandImage = null;
     //[SerializeField] GameObject m_OptionShowObj;
     //[SerializeField] GameObject m_SkinShowObj;
     bool m_CloseShowUI = false;
@@ -30,24 +32,25 @@ public class CReadyGameWindow : CSingletonMonoBehaviour<CReadyGameWindow>
         m_ShowObj.SetActive(true);
 
        // m_ReadyBack.SetActive(true);
-
-        
         CSaveManager lTempCSaveManager = CSaveManager.SharedInstance;
         if (lTempCSaveManager)
             m_CurLevelTextShadow.text = m_CurLevelText.text = (SceneManager.GetActiveScene().buildIndex).ToString() + "\n" + GlobalData.g_ShowCurLevelNamePrefix;
 
-            //m_AllText = this.GetComponentsInChildren<Text>();
-            //  GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, m_CurLevelText.text);
 
-            //m_OptionButton.onClick.AddListener(() => {
-            //    m_OptionShowObj.SetActive(true);
-            //});
+        Tween lTempTween = m_HandImage.rectTransform.DOLocalMoveX(300.0f, 1.0f).SetEase( Ease.Linear);
+        lTempTween.SetLoops(-1,  LoopType.Yoyo);
+        //m_AllText = this.GetComponentsInChildren<Text>();
+        //  GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, m_CurLevelText.text);
 
-            //m_SkinButton.onClick.AddListener(() => {
-            //    m_SkinShowObj.SetActive(true);
-            //});
+        //m_OptionButton.onClick.AddListener(() => {
+        //    m_OptionShowObj.SetActive(true);
+        //});
 
-        }
+        //m_SkinButton.onClick.AddListener(() => {
+        //    m_SkinShowObj.SetActive(true);
+        //});
+
+    }
 
     // Start is called before the first frame update
     void Start()

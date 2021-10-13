@@ -33,7 +33,13 @@ public class CPlayerRogue : CActor
     {
         set
         {
-            if (LockChangState != StaticGlobalDel.EMovableState.eMax && m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState != value)
+            if (m_MyPlayerRogueMemoryShare.m_MyMovable.LockChangState == value)
+            {
+                base.ChangState = value;
+                return;
+            }
+
+            if (LockChangState != StaticGlobalDel.EMovableState.eMax)
                 return;
 
 

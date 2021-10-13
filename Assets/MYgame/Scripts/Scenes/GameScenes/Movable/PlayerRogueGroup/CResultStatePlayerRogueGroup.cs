@@ -41,6 +41,9 @@ public class CResultStatePlayerRogueGroup : CWinStateBase
         {
             m_MyPlayerRogueGroupMemoryShare.m_PlayerRogueGroup.UpdateTarget();
         });
+
+        if (m_MyPlayerRogueGroupMemoryShare.m_MyHandTransform != null)
+            m_MyPlayerRogueGroupMemoryShare.m_MyHandTransform.gameObject.SetActive(false);
     }
 
     protected override void updataState()
