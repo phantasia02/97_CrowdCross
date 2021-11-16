@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
-//using GameAnalyticsSDK;
+using GameAnalyticsSDK;
 
 namespace UnityUtility {
 	public class DontDestroyOnLoadObject : MonoBehaviour {
 		void Awake () {
-           // GameAnalytics.Initialize();
+            GameAnalytics.Initialize();
             DontDestroyOnLoad( this );
 		}
 	}
